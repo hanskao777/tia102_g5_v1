@@ -41,15 +41,22 @@ public class ArticleImg {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  articleImgCreateTime;
 	
-	@PrePersist
-	protected void onCreate() {
-	    this.articleImgCreateTime = new Date();
-	}
+//	@PrePersist
+//	protected void onCreate() {
+//	    this.articleImgCreateTime = new Date();
+//	}
 		
+	
+	public ArticleImg() {
+
+	}
+	
+	
 	
 	public Integer getArticleImgID() {
 		return articleImgID;
 	}
+
 
 	public void setArticleImgID(Integer articleImgID) {
 		this.articleImgID = articleImgID;

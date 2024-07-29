@@ -98,9 +98,10 @@ public class Article implements java.io.Serializable {
 	
 	
 	
-	
-	
-	
+	public Article() {
+		
+	}
+
 	public Integer getArticleID() {
 		return articleID;
 	}

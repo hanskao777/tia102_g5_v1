@@ -45,6 +45,13 @@ public class ArticleCollection {
 	private Date  collectionCreateTime;
 		
 	
+	
+	
+
+	public ArticleCollection() {
+		
+	}
+
 
 	public Integer getArticleCollectionID() {
 		return articleCollectionID;

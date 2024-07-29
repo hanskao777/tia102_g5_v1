@@ -49,6 +49,10 @@ public class Heart {
 	
 	
 
+	public Heart() {
+		
+	}
+
 	public Integer getHeartID() {
 		return heartID;
 	}
