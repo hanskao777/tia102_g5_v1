@@ -52,12 +52,14 @@ public class Message {
 	private Date  messageCreateTime;
 
 	
-	
-
 	@OneToOne(mappedBy = "message", fetch = FetchType.LAZY)
 	private Prosecute prosecute; 
 	
-	
+
+	public Message() {
+		
+	}
+
 
 	public Integer getMessageID() {
 		return messageID;

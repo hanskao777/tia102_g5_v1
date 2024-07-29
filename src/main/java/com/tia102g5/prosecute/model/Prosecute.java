@@ -58,6 +58,12 @@ public class Prosecute {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date   prosecuteCreateTime;
 
+	
+
+	public Prosecute() {
+		
+	}
+
 
 	public Integer getProsecuteID() {
 		return prosecuteID;
