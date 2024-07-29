@@ -3,30 +3,65 @@ package com.tia102g5.activity.model;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 //活動
-public class ActivityVO implements Serializable {
+@Entity
+@Table(name = "activity")
+public class Activity implements Serializable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "activityID", updatable = false)
 	private Integer activityID; // 活動ID
+	
+	@Column(name = "partnerID")
 	private Integer partnerID; // 廠商ID
+	
+	@Column(name = "venueID")
 	private Integer venueID; // 場館ID
+	
+	@Column(name = "venueRentalID")
 	private Integer venueRentalID; // 申請資料ID
+	
+	@Column(name = "activityName")
 	private String activityName; // 名稱
+	
+	@Column(name = "activityContent")
 	private String activityContent; // 內容
+	
+	@Column(name = "activityPicture")
 	private byte[] activityPicture; // 圖片
+	
+	@Column(name = "activityCreateTime")
 	private Timestamp activityCreateTime; // 建立時間
+	
+	@Column(name = "activityPostTime")
 	private Date activityPostTime; // 排程時間
+	
+	@Column(name = "activityTag")
 	private String activityTag; // 類型標籤
+	
+	@Column(name = "activityStatus")
 	private Integer activityStatus; // 設定狀態
+	
+	@Column(name = "ticketSetStatus")
 	private Integer ticketSetStatus; // 票券設定狀態
+	
+	@Column(name = "sellTime")
 	private Date sellTime; // 起售日
 
 	// 建構子
-	public ActivityVO() {
+	public Activity() {
 		super();
 	}
 
-	public ActivityVO(Integer activityID, Integer partnerID, Integer venueID, Integer venueRentalID,
+	public Activity(Integer activityID, Integer partnerID, Integer venueID, Integer venueRentalID,
 			String activityName, String activityContent, byte[] activityPicture, Timestamp activityCreateTime,
 			Date activityPostTime, String activityTag, Integer activityStatus, Integer ticketSetStatus,
 			Date sellTime) {

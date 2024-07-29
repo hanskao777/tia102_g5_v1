@@ -3,20 +3,41 @@ package com.tia102g5.activitytimeslot.model;
 import java.io.Serializable;
 import java.sql.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 //活動時段
-public class ActivityTimeSlotVO implements Serializable{
+
+@Entity
+@Table(name = "activitytimeslot")
+public class ActivityTimeSlot implements Serializable{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "activityTimeSlot", updatable = false)
 	private Integer activityTimeSlotID; //時段ID
+	
+	@Column(name = "activityID")
 	private Integer activityID; //活動ID
+	
+	@Column(name = "activityTimeSlotDate")
 	private Date activityTimeSlotDate; //日期
+	
+	@Column(name = "activityTimeSlot")
 	private Integer activityTimeSlot; //時段
+	
+	@Column(name = "activityTimeSlotSeatAmount")
 	private Integer activityTimeSlotSeatAmount; //時段剩餘座位數
 	
-	public ActivityTimeSlotVO() {
+	public ActivityTimeSlot() {
 		super();
 	}
 
-	public ActivityTimeSlotVO(Integer activityTimeSlotID, Integer activityID, Date activityTimeSlotDate,
+	public ActivityTimeSlot(Integer activityTimeSlotID, Integer activityID, Date activityTimeSlotDate,
 			Integer activityTimeSlot, Integer activitytimeSlotStatus, Integer activityTimeSlotSeatAmount) {
 		super();
 		this.activityTimeSlotID = activityTimeSlotID;
