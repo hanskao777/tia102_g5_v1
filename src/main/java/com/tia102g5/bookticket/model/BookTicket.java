@@ -2,24 +2,49 @@ package com.tia102g5.bookticket.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 //票券訂單
-public class BookTicketVO implements Serializable{
+@Entity
+@Table(name = "bookticket")
+public class BookTicket implements Serializable{
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "bookTicketID", updatable = false)
 	private Integer bookTicketID; //票券訂單ID
+	
+	@Column(name = "memberID")
 	private Integer memberID; //會員ID (買家)
+	
+	@Column(name = "activityID")
 	private Integer activityID; //活動ID
+	
+	@Column(name = "activityTimeSlotID")
 	private Integer activityTimeSlotID; //時段ID
+	
+	@Column(name = "couponID")
 	private Integer couponID; //優惠券類型ID
+	
+	@Column(name = "bookTime")
 	private Timestamp bookTime; //訂購日期
+	
+	@Column(name = "ticketQuantity")
 	private Integer ticketQuantity; //數量
+	
+	@Column(name = "totalPrice")
 	private Integer totalPrice; //總金額
 	
-	public BookTicketVO() {
+	public BookTicket() {
 		super();
 	}
 
-	public BookTicketVO(Integer bookTicketID, Integer memberID, Integer activityID, Integer activityTimeSlotID,
+	public BookTicket(Integer bookTicketID, Integer memberID, Integer activityID, Integer activityTimeSlotID,
 			Integer couponID, Timestamp bookTime, Integer ticketQuantity, Integer totalPrice) {
 		super();
 		this.bookTicketID = bookTicketID;

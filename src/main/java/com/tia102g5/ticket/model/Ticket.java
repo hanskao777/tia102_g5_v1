@@ -2,21 +2,43 @@ package com.tia102g5.ticket.model;
 
 import java.io.Serializable;
 
-//票券
-public class TicketVO implements Serializable{
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+//票券
+@Entity
+@Table(name = "ticket")
+public class Ticket implements Serializable{
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ticketID", updatable = false)
 	private Integer ticketID; //票券ID
+	
+	@Column(name = "memberID")
 	private Integer memberID; //會員ID (擁有者)
+	
+	@Column(name = "seatStatusID")
 	private Integer seatStatusID; //座位狀態ID
+	
+	@Column(name = "activityAreaPriceID")
 	private Integer activityAreaPriceID; //票價
+	
+	@Column(name = "bookTicketID")
 	private Integer bookTicketID; //票券訂單ID
+	
+	@Column(name = "activityTimeSlotID")
 	private Integer activityTimeSlotID; //時段ID
 	
-	public TicketVO() {
+	public Ticket() {
 		super();
 	}
 
-	public TicketVO(Integer ticketID, Integer memberID, Integer seatStatusID, Integer activityAreaPriceID,
+	public Ticket(Integer ticketID, Integer memberID, Integer seatStatusID, Integer activityAreaPriceID,
 			Integer bookTicketID, Integer activityTimeSlotID) {
 		super();
 		this.ticketID = ticketID;

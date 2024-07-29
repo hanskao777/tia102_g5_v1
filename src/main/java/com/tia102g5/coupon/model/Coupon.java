@@ -3,20 +3,40 @@ package com.tia102g5.coupon.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 //優惠券
-public class CouponVO implements Serializable{
+@Entity
+@Table(name = "coupon")
+public class Coupon implements Serializable{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "couponID", updatable = false)
 	private Integer couponID; //優惠券類型ID
+	
+	@Column(name = "couponName")
 	private String couponName; //優惠券名稱
+	
+	@Column(name = "couponType")
 	private String couponType; //優惠券類型
+	
+	@Column(name = "couponRegulation")
 	private String couponRegulation; //使用規則
+	
+	@Column(name = "couponDiscount")
 	private BigDecimal couponDiscount; //折扣數
 	
-	public CouponVO() {
+	public Coupon() {
 		super();
 	}
 
-	public CouponVO(Integer couponID, String couponName, String couponType, String couponRegulation,
+	public Coupon(Integer couponID, String couponName, String couponType, String couponRegulation,
 			BigDecimal couponDiscount) {
 		super();
 		this.couponID = couponID;

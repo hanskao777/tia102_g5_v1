@@ -73,7 +73,7 @@ CREATE TABLE Administrator(
 CREATE TABLE MemberCoupon(
 	memberCouponID              INT          AUTO_INCREMENT    COMMENT "會員優惠券ID",
 	memberID                    INT          NOT NULL          COMMENT "會員ID",
-	couponID                    INT          NOT NULL          COMMENT "優惠券ID",
+	couponTypeID                INT          NOT NULL          COMMENT "優惠券類型ID",
     memberCouponExpirationDate  DATE         NOT NULL          COMMENT "有效期限",
     memberCouponStatus          INT          NOT NULL          COMMENT "使用狀態 0:未使用 1:已使用",
     memberCouponCreateTime      DATETIME
@@ -212,7 +212,7 @@ CREATE TABLE BookTicket(
     memberID                     INT            NOT NULL           COMMENT "會員ID(買家)",
     activityID                   INT            NOT NULL           COMMENT "活動ID",
     activityTimeSlotID           INT            NOT NULL           COMMENT "時段ID",
-    couponID                     INT            NOT NULL           COMMENT "優惠券類型ID",
+    memberCouponID               INT            NOT NULL           COMMENT "會員優惠券ID",
     bookTime                     DATETIME 
                                                 DEFAULT CURRENT_TIMESTAMP 
 						                        ON UPDATE CURRENT_TIMESTAMP 
@@ -234,12 +234,11 @@ CREATE TABLE Ticket(
     CONSTRAINT pk_Ticket PRIMARY KEY (ticketID)
 ) COMMENT "票券";
 
-CREATE TABLE Coupon(
-	couponID                     INT            AUTO_INCREMENT     COMMENT "優惠券類型ID",
-    couponName                   VARCHAR(255)   NOT NULL           COMMENT "優惠券名稱",
-    couponType                   VARCHAR(255)   NOT NULL           COMMENT "優惠券類型",
-    couponRegulation             TEXT           NOT NULL           COMMENT "使用規則",
-    couponDiscount               DECIMAL(3,2)   NOT NULL           COMMENT "折扣數",
+CREATE TABLE CouponType(
+	couponTypeID                 INT            AUTO_INCREMENT     COMMENT "優惠券類型ID",
+    couponTypeName               VARCHAR(255)   NOT NULL           COMMENT "優惠券類型名稱",
+    couponTypeRegulation         TEXT           NOT NULL           COMMENT "使用規則",
+    couponTypeDiscount           DECIMAL(3,2)   NOT NULL           COMMENT "折扣數",
     
     CONSTRAINT pk_Coupon PRIMARY KEY (couponID)
 ) COMMENT "優惠券";
@@ -362,7 +361,7 @@ CREATE TABLE Orders(
     recipientPhone      		 VARCHAR(255)   NOT NULL            COMMENT "收件人電話",
     recipientEmail      		 VARCHAR(255)   NOT NULL            COMMENT "收件人E-mail",
     recipientAddress     		 VARCHAR(255)   NOT NULL            COMMENT "收件地址",
-    couponID            		 INT                                COMMENT "優惠券ID",
+    memberCouponID               INT                                COMMENT "優惠券ID",
     actualAmount        	     INT            NOT NULL            COMMENT "實付金額",
     orderStatus          	     INT            NOT NULL            COMMENT "訂單狀態 0:取消 1:未出貨 2:已出貨 3:完成訂單 4:退貨中 5:完成退貨",
     payStatus           		 INT            NOT NULL            COMMENT "支付狀態",
@@ -446,8 +445,8 @@ CREATE TABLE Announcement(
 ALTER TABLE MemberCoupon
 	ADD CONSTRAINT fk_MemberCoupon_GeneralMember_memberID
 	FOREIGN KEY (memberID) REFERENCES GeneralMember (memberID),
-	ADD CONSTRAINT fk_MemberCoupon__Coupon_couponID
-	FOREIGN KEY (couponID) REFERENCES  Coupon (couponID);
+	ADD CONSTRAINT fk_MemberCoupon__CouponType_couponTypeID
+	FOREIGN KEY (couponTypeID) REFERENCES  CouponType (couponTypeID);
 -- 會員相關 ---------------------------------------------------------------
 
 -- 場館相關 ---------------------------------------------------------------
@@ -511,7 +510,9 @@ ALTER TABLE BookTicket
 	ADD CONSTRAINT fk_BookTicket_Activity_activityID
 	FOREIGN KEY (activityID) REFERENCES Activity (activityID),
 	ADD CONSTRAINT fk_BookTicket_ActivityTimeSlot_activityTimeSlotID
-	FOREIGN KEY (activityTimeSlotID) REFERENCES ActivityTimeSlot (activityTimeSlotID);
+	FOREIGN KEY (activityTimeSlotID) REFERENCES ActivityTimeSlot (activityTimeSlotID),
+    ADD CONSTRAINT fk_BookTicket_MemberCoupon_memberCouponID
+    FOREIGN KEY (memberCouponID) REFERENCES MemberCoupon (memberCouponID);
 
 ALTER TABLE Ticket
 	ADD CONSTRAINT fk_Ticket_GeneralMember_memberID
@@ -576,8 +577,8 @@ ALTER TABLE Commodity
 ALTER TABLE Orders
 	ADD CONSTRAINT fk_Orders_GeneralMember_memberID
 	FOREIGN KEY (memberID) REFERENCES GeneralMember (memberID),
-	ADD CONSTRAINT fk_Orders_Coupon_couponID
-	FOREIGN KEY (couponID) REFERENCES Coupon (couponID);
+	ADD CONSTRAINT fk_Orders_MemberCoupon_memberCouponID
+	FOREIGN KEY (memberCouponID) REFERENCES MemberCoupon (memberCouponID);
 
 ALTER TABLE OrderItem
 	ADD CONSTRAINT fk_OrderItem_Orders_orderID
