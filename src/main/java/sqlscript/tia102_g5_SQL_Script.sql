@@ -183,6 +183,14 @@ CREATE TABLE Activity(
     CONSTRAINT pk_Activity PRIMARY KEY (activityID)
 ) COMMENT "活動";
 
+CREATE TABLE ActivityPicture(
+	activityPictureID            INT           AUTO_INCREMENT     COMMENT "活動圖片",
+    activityID                   INT           NOT NULL           COMMENT "活動ID",
+    activityPicture              MEDIUMBLOB                       COMMENT "活動圖片",
+    
+    CONSTRAINT pk_ActivityPicture PRIMARY KEY (activityPictureID)
+) COMMENT "活動圖片";
+
 CREATE TABLE ActivityCollection(
 	activityCollectionID         INT           AUTO_INCREMENT     COMMENT "活動收藏ID",
     memberID                     INT           NOT NULL           COMMENT "會員ID",
@@ -491,6 +499,10 @@ ALTER TABLE Activity
 	FOREIGN KEY (venueID) REFERENCES Venue (venueID),
 	ADD CONSTRAINT fk_Activity_VenueRental_venueRentalID
 	FOREIGN KEY (venueRentalID) REFERENCES VenueRental (venueRentalID);
+    
+ALTER TABLE ActivityPicture
+	ADD CONSTRAINT fk_ActivityPicture_Activity_activityID
+    FOREIGN KEY (activityID) REFERENCES Activity (activityID);
 
 ALTER TABLE ActivityCollection
 	ADD CONSTRAINT fk_ActivityCollection_GeneralMember_memberID
