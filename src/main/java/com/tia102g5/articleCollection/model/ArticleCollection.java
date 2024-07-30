@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.tia102g5.article.model.Article;
+import com.tia102g5.generalmember.model.GeneralMember;
 
 
 @Entity
@@ -28,9 +29,9 @@ public class ArticleCollection {
 	private Integer articleCollectionID;
 	
 	
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-//	private GeneralMember generalMember; 
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; 
 	
 
 
@@ -40,18 +41,14 @@ public class ArticleCollection {
 	
 
 
-	@Column(name = "collectionCreateTime", updatable = false)
+	@Column(name = "collectionCreateTime", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  collectionCreateTime;
 		
 	
-	
-	
-
-	public ArticleCollection() {
-		
+	public ArticleCollection() { 
 	}
-
+	
 
 	public Integer getArticleCollectionID() {
 		return articleCollectionID;
@@ -68,14 +65,14 @@ public class ArticleCollection {
 	}
 	
 
-//	public GeneralMember getGeneralMember() {
-//		return this.generalMember;
-//	}
-//
-//
-//	public void setGeneralMember(GeneralMember generalMember) {
-//		this.generalMember = generalMember;
-//	}
+	public GeneralMember getGeneralMember() {
+		return this.generalMember;
+	}
+
+
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
+	}
 
 
 	public Article getArticle() {

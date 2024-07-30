@@ -37,7 +37,7 @@ public class ArticleImg {
 	@Column(name = "articlePic", columnDefinition = "mediumblob")
 	private byte[] articlePic;
 
-	@Column(name = "articleImgCreateTime", updatable = false)
+	@Column(name = "articleImgCreateTime", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  articleImgCreateTime;
 	
@@ -45,18 +45,16 @@ public class ArticleImg {
 //	protected void onCreate() {
 //	    this.articleImgCreateTime = new Date();
 //	}
-		
 	
-	public ArticleImg() {
-
+	
+	
+	public ArticleImg() { 
 	}
-	
-	
+		
 	
 	public Integer getArticleImgID() {
 		return articleImgID;
 	}
-
 
 	public void setArticleImgID(Integer articleImgID) {
 		this.articleImgID = articleImgID;

@@ -2,6 +2,7 @@
 
 package com.tia102g5.articleImg.model;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,16 +10,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tia102g5.board.model.Board;
+import com.tia102g5.article.model.Article;
 
-public interface ArticleImgRepository extends JpaRepository<Board, Integer> {
+public interface ArticleImgRepository extends JpaRepository<ArticleImg, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "delete from board where boardID =?1", nativeQuery = true)
-	void deleteByBoardID(int boardID);
+	@Query(value = "delete from articleImg where articleImgID =?1", nativeQuery = true)
+	void deleteByaArticleImgID(int articleImgID);
 
 	//● (自訂)條件查詢
-	@Query(value = "from Board where boardID=?1 and boardName like?2 order by boardID")
-	List<Board> findByOthers(int boardID , String boardName );
+	@Query(value = "from ArticleImg where articleImgID=?1 and article like ?2 and articlePic like ?3 and articleImgCreateTime like ?4 order by articleImgID")
+	List<ArticleImg> findByOthers(Integer articleImgID, Article article, byte[] articlePic, Date articleImgCreateTime);
 }

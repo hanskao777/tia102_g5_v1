@@ -2,12 +2,16 @@
 
 package com.tia102g5.article.model;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.tia102g5.board.model.Board;
+import com.tia102g5.generalmember.model.GeneralMember;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
@@ -17,6 +21,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 	void deleteByArticleID(int articleID);
 
 	//● (自訂)條件查詢
-	@Query(value = "from Article where articleID=?1 and articleCategory like ?2 and articleTitle like ?3 and articleContent like ?4 and articleStatus=?5 and board.boardID=?6 order by articleID")
-	List<Article> findByOthers(int articleID, String articleCategory, String articleTitle, String articleContent, Integer articleStatus, Integer boardID);
+	@Query(value = "FROM Article WHERE articleID=?1 AND articleCategory LIKE ?2 AND articleTitle LIKE ?3 AND memberID = ?4 AND articleContent LIKE ?5 AND boardID = ?6 AND articleStatus = ?7 AND articleCreateTime = ?8 ORDER BY articleID")
+	List<Article> findByOthers(Integer articleID, String articleCategory, String articleTitle, GeneralMember memberID, String articleContent, Board boardID, Integer articleStatus, Date articleCreateTime);
 }
