@@ -2,12 +2,16 @@ package com.tia102g5.administrator.model;
 
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -31,6 +35,16 @@ public class Administrator {
 	
 	@Column(name = "administratorStatus") // "帳號狀態 0:帳號正常 1:帳號停用"
 	private Integer administratorStatus;
+	
+	
+//	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
+//	@OrderBy(newsID asc)
+//	private Set<News> news;
+	
+	
+//	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
+//	@OrderBy(announcementID asc)
+//	private Set<Announcement> announcements;
 
 	public Administrator() {
 		super();

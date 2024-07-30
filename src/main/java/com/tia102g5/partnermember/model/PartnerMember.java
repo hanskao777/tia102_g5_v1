@@ -1,13 +1,20 @@
 package com.tia102g5.partnermember.model;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.venuerental.model.VenueRental;
 
 @Entity
 @Table(name = "PartnerMember")
@@ -48,6 +55,19 @@ public class PartnerMember {
 	
 	@Column(name = "partnerAccountStatus") // "帳號狀態 0:黑名單 1.使用中 2.申請中"
 	private Integer partnerAccountStatus;
+	
+	
+//	@OneToMany(mappedBy = partnermember, cascade = CascadeType.ALL)
+//	@OrderBy(commodityID asc)
+//	private Set<Commodity> commodities;
+	
+//	@OneToMany(mappedBy = partnermember, cascade = CascadeType.ALL)
+//	@OrderBy(activityID asc)
+//	private Set<Activity> activities;
+	
+//	@OneToMany(mappedBy = partnermember, cascade = CascadeType.ALL)
+//	@OrderBy(venueRentalID asc)
+//	private Set<VenueRental> venueRentals;
 
 	public Integer getPartnerID() {
 		return partnerID;

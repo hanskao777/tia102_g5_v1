@@ -1,0 +1,42 @@
+package com.tia102g5.generalmember.model;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service("generalmemberService")
+public class GeneralMemberService {
+
+	@Autowired
+	GeneralMemberRepository repository;
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	public void addGeneralMember(GeneralMember generalmember) {
+		repository.save(generalmember);
+	}
+
+	public void updateGeneralMember(GeneralMember generalmember) {
+		repository.save(generalmember);
+	}
+
+//	public void deleteGeneralMember(Integer memberID) {
+//		if (repository.existsById(memberID))
+//			repository.deleteByMemberID(memberID);
+//			repository.deleteById(memberID);
+//	}
+	
+	public GeneralMember getoneGeneralMember(Integer memberID) {
+		Optional<GeneralMember> optional = repository.findById(memberID);
+//		return optional.get();
+		return optional.orElse(null); // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
+	}
+	
+	public List<GeneralMember> getAll(){
+		return repository.findAll();
+	}
+}
