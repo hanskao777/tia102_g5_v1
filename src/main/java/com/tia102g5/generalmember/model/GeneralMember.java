@@ -4,15 +4,27 @@ package com.tia102g5.generalmember.model;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.tia102g5.activitycollection.model.ActivityCollection;
+import com.tia102g5.article.model.Article;
+import com.tia102g5.articleCollection.model.ArticleCollection;
+import com.tia102g5.heart.model.Heart;
+import com.tia102g5.membercoupon.model.MemberCoupon;
+import com.tia102g5.message.model.Message;
+import com.tia102g5.prosecute.model.Prosecute;
 
 
 @Entity
@@ -59,6 +71,65 @@ public class GeneralMember {
 
 	@Column(name = "memberCreateTime", updatable = false) // "帳號建立時間"
 	private Date memberCreateTime;
+	
+	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("memberCouponID asc")
+//	private Set<MemberCoupon> membercoupons;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("cartID asc")
+//	private Set<Cart> carts;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("articleCollectionID asc")
+//	private Set<ArticleCollection> articleCollections;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("articleID asc")
+//	private Set<Article> articles;
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("heartID asc")
+//	private Set<Heart> hearts;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("messageID asc")
+//	private Set<Message> messages;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("activityCollectionID asc")
+//	private Set<ActivityCollection> activitycollections;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("orderID asc")
+//	private Set<Orders> orders;
+//	
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("ticketID asc")
+//	private Set<Ticket> tickets;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("bookTicketID asc")
+//	private Set<BookTicket> booktickets;
+//	
+//	
+//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OrderBy("prosecuteID asc")
+//	private Set<Prosecute> prosecutes;
+
+	public GeneralMember() {
+		super();
+	}
 
 	public Integer getMemberID() {
 		return memberID;

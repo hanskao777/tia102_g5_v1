@@ -1,7 +1,9 @@
 package com.tia102g5.membercoupon.model;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.tia102g5.generalmember.model.GeneralMember;
@@ -49,7 +53,8 @@ public class MemberCoupon {
 //	@ManyToOne
 //	@JoinColumn(name = "couponTypeID", referencedColumnName = "couponID")
 //	private CouponType coupontype;
-//	
+	
+	
 
 	public MemberCoupon() {
 		super();
