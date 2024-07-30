@@ -169,7 +169,6 @@ CREATE TABLE Activity(
     venueRentalID                INT           NOT NULL           COMMENT "申請資料ID",
     activityName                 VARCHAR(255)  NOT NULL           COMMENT "名稱",
     activityContent              TEXT          NOT NULL           COMMENT "內容",
-    activityPicture              MEDIUMBLOB                       COMMENT "圖片",
     activityCreateTime           DATETIME 
 		                                       DEFAULT CURRENT_TIMESTAMP 
                                                ON UPDATE CURRENT_TIMESTAMP
