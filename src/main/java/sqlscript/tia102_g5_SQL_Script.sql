@@ -169,7 +169,6 @@ CREATE TABLE Activity(
     venueRentalID                INT           NOT NULL           COMMENT "申請資料ID",
     activityName                 VARCHAR(255)  NOT NULL           COMMENT "名稱",
     activityContent              TEXT          NOT NULL           COMMENT "內容",
-    activityPicture              MEDIUMBLOB                       COMMENT "圖片",
     activityCreateTime           DATETIME 
 		                                       DEFAULT CURRENT_TIMESTAMP 
                                                ON UPDATE CURRENT_TIMESTAMP
@@ -182,6 +181,14 @@ CREATE TABLE Activity(
     
     CONSTRAINT pk_Activity PRIMARY KEY (activityID)
 ) COMMENT "活動";
+
+CREATE TABLE ActivityPicture(
+	activityPictureID            INT           AUTO_INCREMENT     COMMENT "活動圖片",
+    activityID                   INT           NOT NULL           COMMENT "活動ID",
+    activityPicture              MEDIUMBLOB                       COMMENT "活動圖片",
+    
+    CONSTRAINT pk_ActivityPicture PRIMARY KEY (activityPictureID)
+) COMMENT "活動圖片";
 
 CREATE TABLE ActivityCollection(
 	activityCollectionID         INT           AUTO_INCREMENT     COMMENT "活動收藏ID",
@@ -491,6 +498,10 @@ ALTER TABLE Activity
 	FOREIGN KEY (venueID) REFERENCES Venue (venueID),
 	ADD CONSTRAINT fk_Activity_VenueRental_venueRentalID
 	FOREIGN KEY (venueRentalID) REFERENCES VenueRental (venueRentalID);
+    
+ALTER TABLE ActivityPicture
+	ADD CONSTRAINT fk_ActivityPicture_Activity_activityID
+    FOREIGN KEY (activityID) REFERENCES Activity (activityID);
 
 ALTER TABLE ActivityCollection
 	ADD CONSTRAINT fk_ActivityCollection_GeneralMember_memberID
