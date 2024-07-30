@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.tia102g5.article.model.Article;
+import com.tia102g5.generalmember.model.GeneralMember;
 
 
 @Entity
@@ -29,29 +29,26 @@ public class Heart {
 	
 	
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-//	private GeneralMember generalMember; 
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; 
 
 	
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "articleID", referencedColumnName = "articleID")
 	private Article article; 
 	
 	
 
-	@Column(name = "heartCreateTime", updatable = false)
+	@Column(name = "heartCreateTime", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  heartCreateTime;
 	
 	
-	
-	
-
-	public Heart() {
-		
+	public Heart() { 
 	}
+	
 
 	public Integer getHeartID() {
 		return heartID;
@@ -69,13 +66,13 @@ public class Heart {
 
 
 
-//	public GeneralMember getGeneralMember() {
-//		return this.generalMember;
-//	}
-//
-//	public void setGeneralMember(GeneralMember generalMember) {
-//		this.generalMember = generalMember;
-//	}
+	public GeneralMember getGeneralMember() {
+		return this.generalMember;
+	}
+
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
+	}
 
 	
 	public Article getArticle() {

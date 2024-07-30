@@ -23,6 +23,7 @@ import javax.persistence.TemporalType;
 import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.articleImg.model.ArticleImg;
 import com.tia102g5.board.model.Board;
+import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.heart.model.Heart;
 import com.tia102g5.message.model.Message;
 import com.tia102g5.prosecute.model.Prosecute;
@@ -46,9 +47,9 @@ public class Article implements java.io.Serializable {
 	private String articleTitle;
 
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-//	private GeneralMember generalMember; 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; 
 
 	
 
@@ -57,7 +58,7 @@ public class Article implements java.io.Serializable {
 
 	
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "boardID", referencedColumnName = "boardID")
 	private Board board; 
 	
@@ -98,10 +99,11 @@ public class Article implements java.io.Serializable {
 	
 	
 	
-	public Article() {
-		
+	public Article() { 
 	}
 
+	
+	
 	public Integer getArticleID() {
 		return articleID;
 	}
@@ -131,13 +133,13 @@ public class Article implements java.io.Serializable {
 	
 	
 	
-//	public GeneralMember getGeneralMember() {
-//		return this.generalMember;
-//	}
-//	
-//	public void setGeneralMember(GeneralMember generalMember) {
-//		this.generalMember = generalMember;
-//	}
+	public GeneralMember getGeneralMember() {
+		return this.generalMember;
+	}
+	
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
+	}
 	
 
 	

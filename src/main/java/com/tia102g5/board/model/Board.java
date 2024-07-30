@@ -38,11 +38,10 @@ public class Board {
 	
 	
 	
-
-	public Board() {
-		
+	public Board() { 
 	}
-
+	
+	
 	public Integer getBoardID() {
 		return boardID;
 	}

@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.tia102g5.article.model.Article;
+import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.message.model.Message;
 
 
@@ -30,9 +31,9 @@ public class Prosecute {
 	private Integer prosecuteID;
 	
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-//	private GeneralMember generalMember; 
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; 
 	
 	
 	@OneToOne(fetch = FetchType.LAZY)
@@ -54,16 +55,14 @@ public class Prosecute {
 	private Integer prosecuteStatus ;
 		
 
-	@Column(name = "prosecuteCreateTime", updatable = false)
+	@Column(name = "prosecuteCreateTime", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date   prosecuteCreateTime;
 
 	
-
-	public Prosecute() {
-		
+	public Prosecute() { 
 	}
-
+	
 
 	public Integer getProsecuteID() {
 		return prosecuteID;
@@ -73,8 +72,6 @@ public class Prosecute {
 	public void setProsecuteID(Integer prosecuteID) {
 		this.prosecuteID = prosecuteID;
 	}
-
-
 
 
 	public String getProsecuteReason() {
@@ -105,14 +102,14 @@ public class Prosecute {
 
 	
 
-//	public GeneralMember getGeneralMember() {
-//		return this.generalMember;
-//	}
-//
-//
-//	public void setGeneralMember(GeneralMember generalMember) {
-//		this.generalMember = generalMember;
-//	}
+	public GeneralMember getGeneralMember() {
+		return this.generalMember;
+	}
+
+
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
+	}
 
 
 	public Article getArticle() {
