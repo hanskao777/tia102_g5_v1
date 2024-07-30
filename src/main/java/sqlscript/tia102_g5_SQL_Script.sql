@@ -240,19 +240,19 @@ CREATE TABLE CouponType(
     couponTypeRegulation         TEXT           NOT NULL           COMMENT "使用規則",
     couponTypeDiscount           DECIMAL(3,2)   NOT NULL           COMMENT "折扣數",
     
-    CONSTRAINT pk_Coupon PRIMARY KEY (couponID)
+    CONSTRAINT pk_CouponType PRIMARY KEY (couponTypeID)
 ) COMMENT "優惠券";
 -- 票券相關 ---------------------------------------------------------------
 
 -- 社群相關 ---------------------------------------------------------------
 CREATE TABLE Article (
 	articleID	                 INT            AUTO_INCREMENT     COMMENT "文章ID",
+    articleCategory              VARCHAR(100)   NOT NULL           COMMENT "文章類別",
 	articleTitle	             VARCHAR(100)   NOT NULL           COMMENT "文章標題",
 	memberID		             INT            NOT NULL           COMMENT "會員ID",
     articleContent               TEXT           NOT NULL           COMMENT "文章內容",
     boardID                      INT            NOT NULL           COMMENT "各板ID",
     articleStatus                INT            NOT NULL           COMMENT "文章狀態 0.不顯示 1.顯示",
-    articleCategory              VARCHAR(100)   NOT NULL           COMMENT "文章類別",
 	articleCreateTime            DATETIME 
 					                            DEFAULT CURRENT_TIMESTAMP 
 					                            ON UPDATE CURRENT_TIMESTAMP 
