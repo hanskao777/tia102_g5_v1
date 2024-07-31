@@ -88,6 +88,10 @@ public class Administrator {
 		return administratorCreateTime;
 	}
 
+	public void setAdministratorCreateTime(Date administratorCreateTime) {
+		this.administratorCreateTime = administratorCreateTime;
+	}
+
 	public Integer getAdministratorStatus() {
 		return administratorStatus;
 	}

@@ -73,9 +73,9 @@ public class GeneralMember {
 	private Date memberCreateTime;
 	
 	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
-//	@OrderBy("memberCouponID asc")
-//	private Set<MemberCoupon> membercoupons;
+	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+	@OrderBy("memberCouponID asc")
+	private Set<MemberCoupon> membercoupons;
 //	
 //	
 //	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
@@ -126,6 +126,14 @@ public class GeneralMember {
 //	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
 //	@OrderBy("prosecuteID asc")
 //	private Set<Prosecute> prosecutes;
+
+	public Set<MemberCoupon> getMembercoupons() {
+		return membercoupons;
+	}
+
+	public void setMembercoupons(Set<MemberCoupon> membercoupons) {
+		this.membercoupons = membercoupons;
+	}
 
 	public GeneralMember() {
 		super();
