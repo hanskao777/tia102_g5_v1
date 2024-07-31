@@ -1,117 +1,43 @@
 package com.tia102g5.articleImg.model;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.hibernate.Session;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.util.HibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
-@Transactional
+@Service("articleImgService")
 public class ArticleImgService {
 
-	private ArticleImgDAO dao;
+	@Autowired
+	ArticleImgRepository repository;
 
-	public ArticleImgService() {
-		dao = new ArticleImgDAOImpl();
+	public void addArticleImg(ArticleImg articleimg) {
+		repository.save(articleimg);
 	}
 
-	public ArticleImg addArticleImg(Integer articleID, byte[] articlePic) {
-
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		try {
-			session.beginTransaction();
-			
-			ArticleImg articleImg = new ArticleImg();
-			articleImg.setArticleID(articleID);
-			articleImg.setArticlePic(articlePic);
-
-			System.out.println("Article ID: " + articleID);
-			System.out.println("Article Pic Size: " + (articlePic != null ? articlePic.length : 0));
-			
-			dao.insert(articleImg);
-
-			session.getTransaction().commit();
-			return articleImg;
-			
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			e.printStackTrace();
-			return null;
-		}
-
+	public void updateDept(ArticleImg articleimg) {
+		repository.save(articleimg);
 	}
 
-	public ArticleImg updateArticleImg(Integer articleImgID, Integer articleID,byte[] articlePic) {
-
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		try {
-			session.beginTransaction();
-			
-			ArticleImg articleImg = new ArticleImg();
-			articleImg.setArticleImgID(articleImgID);
-			articleImg.setArticleID(articleID);
-			articleImg.setArticlePic(articlePic);
-
-			dao.update(articleImg);
-			
-			session.getTransaction().commit();
-			return articleImg;
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			e.printStackTrace();
-			return null;
-		}
+	public void deleteArticleImg(Integer articleImgID) {
+		if (repository.existsById(articleImgID))
+			repository.deleteById(articleImgID);
 	}
 
-	public void deleteArticle(Integer articleImgID) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		try {
-			session.beginTransaction();
-			
-			dao.delete(articleImgID);
-			
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			e.printStackTrace();
-			return;
-		}
+
+	public ArticleImg getOneArticleImg(Integer articleImgID) {
+		Optional<ArticleImg> optional = repository.findById(articleImgID);
+//		return optional.get();
+		return optional.orElse(null);  // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
 	}
 
 	public List<ArticleImg> getAll() {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		try {
-			session.beginTransaction();
-			List<ArticleImg> list = dao.getAll();
-			session.getTransaction().commit();
-			return list;
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			e.printStackTrace();
-			return null;
-		}
+		return repository.findAll();
 	}
 
-	public ArticleImg getOneArticleImg(Integer articleImgID) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		
-		try {
-			session.beginTransaction();
-			ArticleImg articleImg = dao.getById(articleImgID);
-			session.getTransaction().commit();
-			return articleImg;
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			e.printStackTrace();
-			return null;
-		}
-	}
+
+
 	
-
-
-//	public Set<Member> getMemberByMemberID(Integer memberID) {
-//		return dao.getMemberByMemberID(memberID);
-//	}
 }

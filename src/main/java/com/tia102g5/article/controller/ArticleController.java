@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tia102g5.article.model.Article;
 import com.tia102g5.article.model.ArticleService;
 import com.tia102g5.articleImg.model.ArticleImg;
+import com.tia102g5.articleImg.model.ArticleImgService;
 import com.tia102g5.generalmember.model.GeneralMemberService;
 
 @Controller
@@ -34,6 +35,9 @@ public class ArticleController {
 
 	@Autowired
 	ArticleService articleSvc;
+	
+	@Autowired
+	ArticleImgService articleImgSvc;
 	
 
 	@Autowired
@@ -75,7 +79,7 @@ public class ArticleController {
 	                    ArticleImg articleImg = new ArticleImg();
 	                    articleImg.setArticle(article);  // 使用原始的 article 對象
 	                    articleImg.setArticlePic(pic.getBytes());
-	                    ArticleImgSvc.addArticleImg(articleImg);
+	                    articleImgSvc.addArticleImg(articleImg);
 	                } catch (IOException e) {
 	                    // 記錄錯誤並繼續處理其他圖片
 	                    model.addAttribute("warningMessage", "部分圖片上傳失敗：" + pic.getOriginalFilename());

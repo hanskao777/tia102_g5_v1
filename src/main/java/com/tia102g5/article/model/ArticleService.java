@@ -3,10 +3,13 @@ package com.tia102g5.article.model;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.tia102g5.articleImg.model.ArticleImg;
 
 import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_Article3;
 
@@ -48,6 +51,8 @@ public class ArticleService {
 		return HibernateUtil_CompositeQuery_Article3.getAllC(map,sessionFactory.openSession());
 	}
 	
-	
+	public Set<ArticleImg> getArticleImgsByArticleID(Integer articleID) {
+		return getOneArticle(articleID).getArticleImgs();
+	}
 
 }
