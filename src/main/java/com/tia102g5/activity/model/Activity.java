@@ -3,12 +3,19 @@ package com.tia102g5.activity.model;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.tia102g5.partnermember.model.PartnerMember;
+import com.tia102g5.venue.model.Venue;
+import com.tia102g5.venuerental.model.VenueRental;
 
 //活動
 @Entity
@@ -20,23 +27,23 @@ public class Activity implements Serializable {
 	@Column(name = "activityID", updatable = false)
 	private Integer activityID; // 活動ID
 	
-	@Column(name = "partnerID")
-	private Integer partnerID; // 廠商ID
+	@ManyToOne
+	@JoinColumn(name = "partnerID", referencedColumnName = "partnerID")
+	private PartnerMember partnerMember; // 廠商
 	
-	@Column(name = "venueID")
-	private Integer venueID; // 場館ID
+	@ManyToOne
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
+	private Venue venue; // 場館
 	
-	@Column(name = "venueRentalID")
-	private Integer venueRentalID; // 申請資料ID
+	@ManyToOne
+	@JoinColumn(name = "venueRentalID", referencedColumnName = "venueRentalID")
+	private VenueRental venueRental; // 場館申請資料
 	
 	@Column(name = "activityName")
 	private String activityName; // 名稱
 	
-	@Column(name = "activityContent")
+	@Column(name = "activityContent", columnDefinition = "text")
 	private String activityContent; // 內容
-	
-	@Column(name = "activityPicture")
-	private byte[] activityPicture; // 圖片
 	
 	@Column(name = "activityCreateTime")
 	private Timestamp activityCreateTime; // 建立時間
@@ -48,10 +55,10 @@ public class Activity implements Serializable {
 	private String activityTag; // 類型標籤
 	
 	@Column(name = "activityStatus")
-	private Integer activityStatus; // 設定狀態
+	private Integer activityStatus; // 設定狀態 0:未設定 1:已設定
 	
 	@Column(name = "ticketSetStatus")
-	private Integer ticketSetStatus; // 票券設定狀態
+	private Integer ticketSetStatus; // 票券設定狀態 0:未設定 1:已設定
 	
 	@Column(name = "sellTime")
 	private Date sellTime; // 起售日
@@ -61,18 +68,16 @@ public class Activity implements Serializable {
 		super();
 	}
 
-	public Activity(Integer activityID, Integer partnerID, Integer venueID, Integer venueRentalID,
-			String activityName, String activityContent, byte[] activityPicture, Timestamp activityCreateTime,
-			Date activityPostTime, String activityTag, Integer activityStatus, Integer ticketSetStatus,
-			Date sellTime) {
+	public Activity(Integer activityID, PartnerMember partnerMember, Venue venue, VenueRental venueRental,
+			String activityName, String activityContent, Timestamp activityCreateTime, Date activityPostTime,
+			String activityTag, Integer activityStatus, Integer ticketSetStatus, Date sellTime) {
 		super();
 		this.activityID = activityID;
-		this.partnerID = partnerID;
-		this.venueID = venueID;
-		this.venueRentalID = venueRentalID;
+		this.partnerMember = partnerMember;
+		this.venue = venue;
+		this.venueRental = venueRental;
 		this.activityName = activityName;
 		this.activityContent = activityContent;
-		this.activityPicture = activityPicture;
 		this.activityCreateTime = activityCreateTime;
 		this.activityPostTime = activityPostTime;
 		this.activityTag = activityTag;
@@ -90,28 +95,28 @@ public class Activity implements Serializable {
 		this.activityID = activityID;
 	}
 
-	public Integer getPartnerID() {
-		return partnerID;
+	public PartnerMember getPartnerMember() {
+		return partnerMember;
 	}
 
-	public void setPartnerID(Integer partnerID) {
-		this.partnerID = partnerID;
+	public void setPartnerMember(PartnerMember partnerMember) {
+		this.partnerMember = partnerMember;
 	}
 
-	public Integer getVenueID() {
-		return venueID;
+	public Venue getVenue() {
+		return venue;
 	}
 
-	public void setVenueID(Integer venueID) {
-		this.venueID = venueID;
+	public void setVenue(Venue venue) {
+		this.venue = venue;
 	}
 
-	public Integer getVenueRentalID() {
-		return venueRentalID;
+	public VenueRental getVenueRental() {
+		return venueRental;
 	}
 
-	public void setVenueRentalID(Integer venueRentalID) {
-		this.venueRentalID = venueRentalID;
+	public void setVenueRental(VenueRental venueRental) {
+		this.venueRental = venueRental;
 	}
 
 	public String getActivityName() {
@@ -128,14 +133,6 @@ public class Activity implements Serializable {
 
 	public void setActivityContent(String activityContent) {
 		this.activityContent = activityContent;
-	}
-
-	public byte[] getActivityPicture() {
-		return activityPicture;
-	}
-
-	public void setActivityPicture(byte[] activityPicture) {
-		this.activityPicture = activityPicture;
 	}
 
 	public Timestamp getActivityCreateTime() {
@@ -185,17 +182,5 @@ public class Activity implements Serializable {
 	public void setSellTime(Date sellTime) {
 		this.sellTime = sellTime;
 	}
-
-	@Override
-	// 顯示活動資料
-	public String toString() {
-		String activityShowInfo = "\n活動資料: \n" + "活動ID: " + activityID + "\n" + "廠商ID: " + partnerID + "\n" + "場館ID: "
-				+ venueID + "\n" + "申請資料ID:" + venueRentalID + "\n" + "名稱: " + activityName + "\n" + "內容: "
-				+ activityContent + "\n" + "圖片: " + (activityPicture != null ? "有圖片" : "沒有圖片") + "\n" + "建立時間: "
-				+ activityCreateTime + "\n" + "排程時間: " + activityPostTime + "\n" + "類型標籤: " + activityTag + "\n"
-				+ "設定狀態: " + activityStatus + "\n" + "票券設定狀態: " + ticketSetStatus + "\n" + "起售日: " + sellTime + "\n";
-
-		return activityShowInfo;
-	}
-
+	
 }
