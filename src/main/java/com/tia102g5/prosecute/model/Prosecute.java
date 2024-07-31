@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import com.tia102g5.article.model.Article;
 import com.tia102g5.generalmember.model.GeneralMember;
@@ -22,7 +24,8 @@ import com.tia102g5.message.model.Message;
 
 @Entity
 @Table(name = "prosecute")
-public class Prosecute {
+public class Prosecute implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 
 
 	@Id
@@ -43,6 +46,8 @@ public class Prosecute {
 	
 	
 	@Column(name = "prosecuteReason")
+	@NotEmpty(message="檢舉原因請勿空白")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,50}$", message = "原因只能是中、英文字母、數字和_ , 且長度必需在2到50字之間")
 	private String prosecuteReason ;	
 	
 
