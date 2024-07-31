@@ -30,7 +30,7 @@ public class GeneralMemberService {
 //			repository.deleteById(memberID);
 //	}
 	
-	public GeneralMember getoneGeneralMember(Integer memberID) {
+	public GeneralMember getOneGeneralMember(Integer memberID) {
 		Optional<GeneralMember> optional = repository.findById(memberID);
 //		return optional.get();
 		return optional.orElse(null); // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值

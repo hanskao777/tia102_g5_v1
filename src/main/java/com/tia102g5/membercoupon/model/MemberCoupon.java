@@ -12,9 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.tia102g5.bookticket.model.BookTicket;
 import com.tia102g5.generalmember.model.GeneralMember;
 
 @Entity
@@ -26,8 +28,8 @@ public class MemberCoupon {
 	@Column(name = "memberCouponID", updatable = false) // 會員優惠券ID
 	private Integer memberCouponID;
 	
-	@Column(name = "memberID") // 會員ID
-	private Integer memberID;
+//	@Column(name = "memberID") // 會員ID
+//	private Integer memberID;
 	
 	
 	@Column(name = "couponTypeID") // 優惠券類型ID
@@ -46,15 +48,29 @@ public class MemberCoupon {
 	private Date memberCouponCreateTime;
 	
 	
-//	@ManyToOne
-//	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-//	private GeneralMember generalmember;
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalmember;
 //	
 //	@ManyToOne
 //	@JoinColumn(name = "couponTypeID", referencedColumnName = "couponID")
 //	private CouponType coupontype;
 	
+//	@OneToOne(mappedBy = "membercoupon", cascade = CascadeType.ALL)
+//	private Orders orders;
 	
+//	@OneToOne(mappedBy = "membercoupon", cascade = CascadeType.ALL)
+//	private BookTicket bookTicket;
+	
+	
+
+	public GeneralMember getGeneralmember() {
+		return generalmember;
+	}
+
+	public void setGeneralmember(GeneralMember generalmember) {
+		this.generalmember = generalmember;
+	}
 
 	public MemberCoupon() {
 		super();
@@ -64,7 +80,7 @@ public class MemberCoupon {
 			Integer memberCouponStatus, Date memberCouponCreateTime) {
 		super();
 		this.memberCouponID = memberCouponID;
-		this.memberID = memberID;
+//		this.memberID = memberID;
 		this.couponTypeID = couponTypeID;
 		this.memberCouponExpirationDate = memberCouponExpirationDate;
 		this.memberCouponStatus = memberCouponStatus;
@@ -79,13 +95,13 @@ public class MemberCoupon {
 		this.memberCouponID = memberCouponID;
 	}
 
-	public Integer getMemberID() {
-		return memberID;
-	}
-
-	public void setMemberID(Integer memberID) {
-		this.memberID = memberID;
-	}
+//	public Integer getMemberID() {
+//		return memberID;
+//	}
+//
+//	public void setMemberID(Integer memberID) {
+//		this.memberID = memberID;
+//	}
 
 	public Integer getCouponTypeID() {
 		return couponTypeID;
@@ -117,6 +133,14 @@ public class MemberCoupon {
 
 	public void setMemberCouponCreateTime(Date memberCouponCreateTime) {
 		this.memberCouponCreateTime = memberCouponCreateTime;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberCoupon [memberCouponID=" + memberCouponID + ", couponTypeID=" + couponTypeID
+				+ ", memberCouponExpirationDate=" + memberCouponExpirationDate + ", memberCouponStatus="
+				+ memberCouponStatus + ", memberCouponCreateTime=" + memberCouponCreateTime + ", generalmember="
+				+ generalmember + "]";
 	}
 
 	
