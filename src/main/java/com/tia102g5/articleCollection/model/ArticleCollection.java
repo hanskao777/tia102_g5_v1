@@ -19,8 +19,9 @@ import com.tia102g5.generalmember.model.GeneralMember;
 
 
 @Entity
-@Table(name = "articleCollection")
-public class ArticleCollection {
+@Table(name = "articlecollection")
+public class ArticleCollection implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 
 
 	@Id

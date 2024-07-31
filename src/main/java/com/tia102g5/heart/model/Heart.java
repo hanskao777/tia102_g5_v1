@@ -19,7 +19,8 @@ import com.tia102g5.generalmember.model.GeneralMember;
 
 @Entity
 @Table(name = "heart")
-public class Heart {
+public class Heart implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 
 
 	@Id
