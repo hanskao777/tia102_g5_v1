@@ -15,7 +15,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Administrator")
+@Table(name = "administrator")
 public class Administrator {
 
 	

@@ -24,11 +24,11 @@ public class GeneralMemberService {
 		repository.save(generalmember);
 	}
 
-//	public void deleteGeneralMember(Integer memberID) {
-//		if (repository.existsById(memberID))
-//			repository.deleteByMemberID(memberID);
+	public void deleteGeneralMember(Integer memberID) {
+		if (repository.existsById(memberID))
+			repository.deleteByMemberID(memberID);
 //			repository.deleteById(memberID);
-//	}
+	}
 	
 	public GeneralMember getOneGeneralMember(Integer memberID) {
 		Optional<GeneralMember> optional = repository.findById(memberID);
