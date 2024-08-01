@@ -2,12 +2,18 @@ package com.tia102g5.activitycollection.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.generalmember.model.GeneralMember;
 
 @Entity
 @Table(name = "activitycollection")
@@ -19,11 +25,13 @@ public class ActivityCollection implements Serializable{
 	@Column(name = "activityCollectionID", updatable = false)
 	private Integer activityCollectionID; //活動收藏ID
 	
-	@Column(name = "memberID")
-	private Integer memberID; //會員ID
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; // 一般會員
 	
-	@Column(name = "activityID")
-	private Integer activityID; //活動ID
+	@ManyToOne
+	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
+	private Activity activity; // 活動
 	
 	@Column(name = "activityCollectionTime")
 	private Timestamp activityCollectionTime; //活動收藏時間
@@ -33,16 +41,16 @@ public class ActivityCollection implements Serializable{
 		super();
 	}
 
-	public ActivityCollection(Integer activityCollectionID, Integer memberID, Integer activityID,
+	public ActivityCollection(Integer activityCollectionID, GeneralMember generalMember, Activity activity,
 			Timestamp activityCollectionTime) {
 		super();
 		this.activityCollectionID = activityCollectionID;
-		this.memberID = memberID;
-		this.activityID = activityID;
+		this.generalMember = generalMember;
+		this.activity = activity;
 		this.activityCollectionTime = activityCollectionTime;
 	}
 
-	//Getter & Setter
+	// Getter & Setter
 	public Integer getActivityCollectionID() {
 		return activityCollectionID;
 	}
@@ -51,20 +59,20 @@ public class ActivityCollection implements Serializable{
 		this.activityCollectionID = activityCollectionID;
 	}
 
-	public Integer getMemberID() {
-		return memberID;
+	public GeneralMember getGeneralMember() {
+		return generalMember;
 	}
 
-	public void setMemberID(Integer memberID) {
-		this.memberID = memberID;
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
 	}
 
-	public Integer getActivityID() {
-		return activityID;
+	public Activity getActivity() {
+		return activity;
 	}
 
-	public void setActivityID(Integer activityID) {
-		this.activityID = activityID;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	public Timestamp getActivityCollectionTime() {
@@ -73,18 +81,6 @@ public class ActivityCollection implements Serializable{
 
 	public void setActivityCollectionTime(Timestamp activityCollectionTime) {
 		this.activityCollectionTime = activityCollectionTime;
-	}
-	
-	@Override
-	// 顯示活動收藏資料
-	public String toString() {
-		String activityCollectionVOShowInfo = "\n活動收藏資料: \n"
-				+ "活動收藏 ID: " + activityCollectionID + "\n" 
-				+ "會員 ID: " + memberID + "\n"
-				+ "活動 ID: " + activityID + "\n"
-				+ "活動收藏時間: " + activityCollectionTime + "\n";
-		
-		return activityCollectionVOShowInfo;
 	}
 	
 }

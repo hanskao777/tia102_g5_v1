@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,8 +19,10 @@ import com.tia102g5.article.model.Article;
 
 
 @Entity
-@Table(name = "articleImg")
-public class ArticleImg {
+@Table(name = "articleimg")
+public class ArticleImg implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "articleImgID", updatable = false)
@@ -60,9 +61,7 @@ public class ArticleImg {
 		this.articleImgID = articleImgID;
 	}
 
-
-
-
+	
 	public byte[] getArticlePic() {
 		return articlePic;
 	}

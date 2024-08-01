@@ -2,8 +2,10 @@ package com.tia102g5.seat.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,31 +19,37 @@ import com.tia102g5.venue.model.Venue;
 import com.tia102g5.venuearea.model.VenueArea;
 
 @Entity
-@Table(name = "Seat")
-public class Seat {
+@Table(name = "seat")
+public class Seat implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "seatID")
 	private int seatID;
 
-	@ManyToOne
-	@JoinColumn(name = "venueID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID", nullable = false)
 	private Venue venue;
 
-	@ManyToOne
-	@JoinColumn(name = "venueAreaID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID", nullable = false)
 	private VenueArea venueArea;
 
-	@Column(nullable = false, length = 255)
+	@Column(name = "seatName", nullable = false, length = 255)
 	private String seatName;
 
-	@Column(nullable = false)
+	@Column(name = "seatRow", nullable = false)
 	private int seatRow;
 
-	@Column(nullable = false)
+	@Column(name = "seatNumber", nullable = false)
 	private int seatNumber;
 
-	@OneToMany(mappedBy = "seat")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "seat")
 	private Set<SeatStatus> seatStatuses;
+
+	public Seat() {
+	}
 
 	public int getSeatID() {
 		return seatID;
@@ -97,29 +105,6 @@ public class Seat {
 
 	public void setSeatStatuses(Set<SeatStatus> seatStatuses) {
 		this.seatStatuses = seatStatuses;
-	}
-
-	public Seat() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Seat(int seatID, Venue venue, VenueArea venueArea, String seatName, int seatRow, int seatNumber,
-			Set<SeatStatus> seatStatuses) {
-		super();
-		this.seatID = seatID;
-		this.venue = venue;
-		this.venueArea = venueArea;
-		this.seatName = seatName;
-		this.seatRow = seatRow;
-		this.seatNumber = seatNumber;
-		this.seatStatuses = seatStatuses;
-	}
-
-	@Override
-	public String toString() {
-		return "Seat [seatID=" + seatID + ", venue=" + venue + ", venueArea=" + venueArea + ", seatName=" + seatName
-				+ ", seatRow=" + seatRow + ", seatNumber=" + seatNumber + ", seatStatuses=" + seatStatuses + "]";
 	}
 
 }

@@ -19,7 +19,8 @@ import com.tia102g5.article.model.Article;
 
 @Entity
 @Table(name = "board")
-public class Board {
+public class Board implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 
 
 	@Id

@@ -3,14 +3,17 @@ package com.tia102g5.venuetimeslot.model;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,28 +22,31 @@ import com.tia102g5.seatstatus.model.SeatStatus;
 import com.tia102g5.venuerental.model.VenueRental;
 
 @Entity
-@Table(name = "VenueTimeSlot")
-public class VenueTimeSlot {
+@Table(name = "venuetimeslot")
+public class VenueTimeSlot implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "venueTimeSlotID")
 	private int venueTimeSlotID;
 
-	@ManyToOne
-	@JoinColumn(name = "venueRentalID")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venueRentalID", referencedColumnName = "venueRentalID")
 	private VenueRental venueRental;
 
-	@Column(nullable = false)
+	@Column(name = "venueTimeSlotDate", nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date venueTimeSlotDate;
 
-	@Column(nullable = false)
+	@Column(name = "venueTimeSlot", nullable = false)
 	private int venueTimeSlot;
 
-	@Column(nullable = false)
+	@Column(name = "venueTimeSlotStatus", nullable = false)
 	private int venueTimeSlotStatus;
 
-	@OneToMany(mappedBy = "activityTimeSlot")
-	private Set<SeatStatus> seatStatuses;
+	public VenueTimeSlot() {
+	}
 
 	public int getVenueTimeSlotID() {
 		return venueTimeSlotID;
@@ -80,37 +86,6 @@ public class VenueTimeSlot {
 
 	public void setVenueTimeSlotStatus(int venueTimeSlotStatus) {
 		this.venueTimeSlotStatus = venueTimeSlotStatus;
-	}
-
-	public Set<SeatStatus> getSeatStatuses() {
-		return seatStatuses;
-	}
-
-	public void setSeatStatuses(Set<SeatStatus> seatStatuses) {
-		this.seatStatuses = seatStatuses;
-	}
-
-	public VenueTimeSlot() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public VenueTimeSlot(int venueTimeSlotID, VenueRental venueRental, Date venueTimeSlotDate, int venueTimeSlot,
-			int venueTimeSlotStatus, Set<SeatStatus> seatStatuses) {
-		super();
-		this.venueTimeSlotID = venueTimeSlotID;
-		this.venueRental = venueRental;
-		this.venueTimeSlotDate = venueTimeSlotDate;
-		this.venueTimeSlot = venueTimeSlot;
-		this.venueTimeSlotStatus = venueTimeSlotStatus;
-		this.seatStatuses = seatStatuses;
-	}
-
-	@Override
-	public String toString() {
-		return "VenueTimeSlot [venueTimeSlotID=" + venueTimeSlotID + ", venueRental=" + venueRental
-				+ ", venueTimeSlotDate=" + venueTimeSlotDate + ", venueTimeSlot=" + venueTimeSlot
-				+ ", venueTimeSlotStatus=" + venueTimeSlotStatus + ", seatStatuses=" + seatStatuses + "]";
 	}
 
 }

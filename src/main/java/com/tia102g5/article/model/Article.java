@@ -19,6 +19,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.articleImg.model.ArticleImg;
@@ -40,10 +42,18 @@ public class Article implements java.io.Serializable {
 	@Column(name = "articleID", updatable = false)
 	private Integer articleID;
 	
+	
+
 	@Column(name = "articleCategory")
 	private String articleCategory;
 
+	
+	
+	
+	
 	@Column(name = "articleTitle")
+	@NotEmpty(message="請填寫文章標題")
+	@Size(min=5,max=50,message="文章標題:長度必需在{min}到{max}之間")
 	private String articleTitle;
 
 
@@ -52,20 +62,19 @@ public class Article implements java.io.Serializable {
 	private GeneralMember generalMember; 
 
 	
-
 	@Column(name = "articleContent", columnDefinition = "TEXT")
+	@NotEmpty(message="文章內容請勿空白")
 	private String articleContent;
 
 	
-
 	@ManyToOne
 	@JoinColumn(name = "boardID", referencedColumnName = "boardID")
 	private Board board; 
-	
-	
+		
 
 	@Column(name = "articleStatus")
 	private Integer articleStatus;
+	
 
 	@Column(name = "articleCreateTime", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)

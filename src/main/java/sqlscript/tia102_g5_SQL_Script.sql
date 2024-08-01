@@ -347,9 +347,9 @@ CREATE TABLE Commodity(
     commodityPicture      		 MEDIUMBLOB                         COMMENT "商品照片",
     activityID            		 INT            NOT NULL            COMMENT "活動ID",
     partnerID             		 INT            NOT NULL            COMMENT "廠商ID",
-    commodityStatus       		 INT            NOT NULL            COMMENT "上下架狀態 0:下架 1:在售",
-    commodityPostTime     		 DATETIME       NOT NULL            COMMENT "上架時間",
-    commodityRemoveTime   		 DATETIME                           COMMENT "下架時間",
+    commodityStatus       		 INT            NOT NULL            COMMENT "商品狀態 0:下架 1:在售",
+    commodityPostTime     		 DATE           NOT NULL            COMMENT "上架時間",
+    commodityRemoveTime   		 DATE                               COMMENT "下架時間",
     commodityUpdateTime   		 DATETIME              
                                                 DEFAULT CURRENT_TIMESTAMP 
 					                            ON UPDATE CURRENT_TIMESTAMP 
@@ -361,6 +361,14 @@ CREATE TABLE Commodity(
     CONSTRAINT pk_Commodity PRIMARY KEY (commodityID)
 ) COMMENT "商品";
 
+CREATE TABLE CommodityPicture(
+	commodityPictureID           INT           AUTO_INCREMENT       COMMENT "商品圖片",
+    commodityID                  INT           NOT NULL             COMMENT "商品ID",
+    commodityPicture             INT                                COMMENT "商品圖片",
+    
+    CONSTRAINT pk_CommodityPicture PRIMARY KEY (commodityPictureID)
+) COMMENT "商品圖片";
+
 CREATE TABLE Orders(
     orderID               		 INT            AUTO_INCREMENT      COMMENT "訂單ID",
     memberID              		 INT            NOT NULL            COMMENT "會員ID",
@@ -368,17 +376,14 @@ CREATE TABLE Orders(
     recipientPhone      		 VARCHAR(255)   NOT NULL            COMMENT "收件人電話",
     recipientEmail      		 VARCHAR(255)   NOT NULL            COMMENT "收件人E-mail",
     recipientAddress     		 VARCHAR(255)   NOT NULL            COMMENT "收件地址",
-    memberCouponID               INT                                COMMENT "優惠券ID",
+    memberCouponID               INT                                COMMENT "會員優惠券ID",
     actualAmount        	     INT            NOT NULL            COMMENT "實付金額",
     orderStatus          	     INT            NOT NULL            COMMENT "訂單狀態 0:取消 1:未出貨 2:已出貨 3:完成訂單 4:退貨中 5:完成退貨",
     payStatus           		 INT            NOT NULL            COMMENT "支付狀態",
-    paymentTime         		 DATETIME
+    payTime         		     DATETIME
 											    DEFAULT CURRENT_TIMESTAMP 
 					                                                COMMENT "付款時間",
     shipTime             		 DATETIME                           COMMENT "出貨時間",
-    orderCreateTime       		 DATETIME
-                                                DEFAULT CURRENT_TIMESTAMP
-										                            COMMENT "訂單成立時間",
                                   
     CONSTRAINT pk_Orders PRIMARY KEY (orderID)
 ) COMMENT "訂單";
@@ -413,6 +418,16 @@ CREATE TABLE Cart(
                         
     CONSTRAINT pk_Cart PRIMARY KEY (cartID)
 ) COMMENT "購物車";
+
+CREATE TABLE CartItem(
+	cartItemID					INT				AUTO_INCREMENT		COMMENT "購物車明細ID",
+    cartID						INT				NOT NULL			COMMENT "購物車ID",
+    commodityID					INT				NOT NULL			COMMENT "商品ID",
+    checkedQuantity			    INT				NOT NULL			COMMENT "購買商品數量",
+    
+    CONSTRAINT pk_CartItem PRIMARY KEY (cartItemID)
+) COMMENT "購物車明細";
+
 -- 商城相關 ---------------------------------------------------------------
 
 -- 最新消息相關 -----------------------------------------------------------
@@ -421,7 +436,7 @@ CREATE TABLE News(
     administratorID      		 INT            NOT NULL            COMMENT "管理員ID",
     newsTitle             		 VARCHAR(255)   NOT NULL            COMMENT "標題",
     newsContent         		 TEXT           NOT NULL            COMMENT "內容",
-    newsStatus          		 INT            NOT NULL            COMMENT "狀態 0:隱藏 1:正常顯示 3:置頂",
+    newsStatus          		 INT            NOT NULL            COMMENT "狀態 0:隱藏 1:正常顯示 2:置頂",
     newsCreateTime      		 DATETIME
 		                                        DEFAULT CURRENT_TIMESTAMP 
 					                            ON UPDATE CURRENT_TIMESTAMP 
@@ -435,7 +450,7 @@ CREATE TABLE Announcement(
     administratorID       		 INT            NOT NULL            COMMENT "管理員ID",
     announcementTitle     		 VARCHAR(255)   NOT NULL            COMMENT "標題",
     announcementContent    		 TEXT           NOT NULL            COMMENT "內容",
-    announcementStatus     		 INT            NOT NULL            COMMENT "狀態 0:隱藏 1:正常顯示 3:置頂",
+    announcementStatus     		 INT            NOT NULL            COMMENT "狀態 0:隱藏 1:正常顯示 2:置頂",
     announcementCreateTime 		 DATETIME
 												DEFAULT CURRENT_TIMESTAMP 
 					                            ON UPDATE CURRENT_TIMESTAMP 
@@ -584,6 +599,10 @@ ALTER TABLE Commodity
 	FOREIGN KEY (activityID) REFERENCES Activity (activityID),
 	ADD CONSTRAINT fk_Commodity_PartnerMember_partnerID
 	FOREIGN KEY (partnerID) REFERENCES PartnerMember (partnerID);
+    
+ALTER TABLE CommodityPicture
+	ADD CONSTRAINT fk_CommodityPicture_Commodity_activityID
+	FOREIGN KEY (commodityID) REFERENCES Commodity (commodityID);
 
 ALTER TABLE Orders
 	ADD CONSTRAINT fk_Orders_GeneralMember_memberID
@@ -602,6 +621,12 @@ ALTER TABLE Cart
 	FOREIGN KEY (memberID) REFERENCES GeneralMember(memberID),
 	ADD CONSTRAINT fk_Cart_Commodity_commodityID
 	FOREIGN KEY (commodityID) REFERENCES Commodity (commodityID);
+    
+ALTER TABLE CartItem
+	ADD CONSTRAINT fk_CartItem_Cart_cartID
+    FOREIGN KEY (cartID) REFERENCES Cart (cartID),
+    ADD CONSTRAINT fk_CartItem_Commodity_commodityID
+    FOREIGN KEY (commodityID) REFERENCES Commodity (commodityID);
 -- 商城相關 ---------------------------------------------------------------
 
 -- 最新消息相關 -----------------------------------------------------------

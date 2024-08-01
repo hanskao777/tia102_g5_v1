@@ -7,7 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.tia102g5.activityareaprice.model.ActivityAreaPrice;
+import com.tia102g5.activitytimeslot.model.ActivityTimeSlot;
+import com.tia102g5.bookticket.model.BookTicket;
+import com.tia102g5.generalmember.model.GeneralMember;
+import com.tia102g5.seatstatus.model.SeatStatus;
 
 //票券
 @Entity
@@ -19,36 +27,43 @@ public class Ticket implements Serializable{
 	@Column(name = "ticketID", updatable = false)
 	private Integer ticketID; //票券ID
 	
-	@Column(name = "memberID")
-	private Integer memberID; //會員ID (擁有者)
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; // 一般會員(擁有者)
 	
-	@Column(name = "seatStatusID")
-	private Integer seatStatusID; //座位狀態ID
+	@ManyToOne
+	@JoinColumn(name = "seatStatusID", referencedColumnName = "seatStatusID")
+	private SeatStatus seatStatus; //座位狀態
 	
-	@Column(name = "activityAreaPriceID")
-	private Integer activityAreaPriceID; //票價
+	@ManyToOne
+	@JoinColumn(name = "activityAreaPriceID", referencedColumnName = "activityAreaPriceID")
+	private ActivityAreaPrice activityAreaPrice; //活動區域價格
 	
-	@Column(name = "bookTicketID")
-	private Integer bookTicketID; //票券訂單ID
+	@ManyToOne
+	@JoinColumn(name = "bookTicketID", referencedColumnName = "bookTicketID")
+	private BookTicket bookTicket; //票券訂單
 	
-	@Column(name = "activityTimeSlotID")
-	private Integer activityTimeSlotID; //時段ID
-	
+	@ManyToOne
+	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID")
+	private ActivityTimeSlot activityTimeSlot; //活動時段
+
+	// 建構子
 	public Ticket() {
 		super();
 	}
 
-	public Ticket(Integer ticketID, Integer memberID, Integer seatStatusID, Integer activityAreaPriceID,
-			Integer bookTicketID, Integer activityTimeSlotID) {
+	public Ticket(Integer ticketID, GeneralMember generalMember, SeatStatus seatStatus,
+			ActivityAreaPrice activityAreaPrice, BookTicket bookTicket, ActivityTimeSlot activityTimeSlot) {
 		super();
 		this.ticketID = ticketID;
-		this.memberID = memberID;
-		this.seatStatusID = seatStatusID;
-		this.activityAreaPriceID = activityAreaPriceID;
-		this.bookTicketID = bookTicketID;
-		this.activityTimeSlotID = activityTimeSlotID;
+		this.generalMember = generalMember;
+		this.seatStatus = seatStatus;
+		this.activityAreaPrice = activityAreaPrice;
+		this.bookTicket = bookTicket;
+		this.activityTimeSlot = activityTimeSlot;
 	}
 
+	// Getter & Setter
 	public Integer getTicketID() {
 		return ticketID;
 	}
@@ -57,44 +72,44 @@ public class Ticket implements Serializable{
 		this.ticketID = ticketID;
 	}
 
-	public Integer getMemberID() {
-		return memberID;
+	public GeneralMember getGeneralMember() {
+		return generalMember;
 	}
 
-	public void setMemberID(Integer memberID) {
-		this.memberID = memberID;
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
 	}
 
-	public Integer getSeatStatusID() {
-		return seatStatusID;
+	public SeatStatus getSeatStatus() {
+		return seatStatus;
 	}
 
-	public void setSeatStatusID(Integer seatStatusID) {
-		this.seatStatusID = seatStatusID;
+	public void setSeatStatus(SeatStatus seatStatus) {
+		this.seatStatus = seatStatus;
 	}
 
-	public Integer getActivityAreaPriceID() {
-		return activityAreaPriceID;
+	public ActivityAreaPrice getActivityAreaPrice() {
+		return activityAreaPrice;
 	}
 
-	public void setActivityAreaPriceID(Integer activityAreaPriceID) {
-		this.activityAreaPriceID = activityAreaPriceID;
+	public void setActivityAreaPrice(ActivityAreaPrice activityAreaPrice) {
+		this.activityAreaPrice = activityAreaPrice;
 	}
 
-	public Integer getBookTicketID() {
-		return bookTicketID;
+	public BookTicket getBookTicket() {
+		return bookTicket;
 	}
 
-	public void setBookTicketID(Integer bookTicketID) {
-		this.bookTicketID = bookTicketID;
+	public void setBookTicket(BookTicket bookTicket) {
+		this.bookTicket = bookTicket;
 	}
 
-	public Integer getActivityTimeSlotID() {
-		return activityTimeSlotID;
+	public ActivityTimeSlot getActivityTimeSlot() {
+		return activityTimeSlot;
 	}
 
-	public void setActivityTimeSlotID(Integer activityTimeSlotID) {
-		this.activityTimeSlotID = activityTimeSlotID;
+	public void setActivityTimeSlot(ActivityTimeSlot activityTimeSlot) {
+		this.activityTimeSlot = activityTimeSlot;
 	}
 	
 }

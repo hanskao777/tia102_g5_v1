@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import com.tia102g5.article.model.Article;
 import com.tia102g5.generalmember.model.GeneralMember;
@@ -22,7 +24,8 @@ import com.tia102g5.prosecute.model.Prosecute;
 
 @Entity
 @Table(name = "message")
-public class Message {
+public class Message implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 
 
 	@Id
@@ -42,7 +45,10 @@ public class Message {
 	
 	
 	@Column(name = "messageContent")
+	@NotEmpty(message="請輸入留言內容")
+	@Size(min=2,max=500,message="留言內容必需在{min}字到{max}字之間")
 	private String messageContent ;	
+	
 	
 	@Column(name = "messageStatus ")
 	private Integer messageStatus ;

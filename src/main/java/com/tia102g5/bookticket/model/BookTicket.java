@@ -2,61 +2,77 @@ package com.tia102g5.bookticket.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.activitytimeslot.model.ActivityTimeSlot;
+import com.tia102g5.generalmember.model.GeneralMember;
+import com.tia102g5.membercoupon.model.MemberCoupon;
 
 //票券訂單
 @Entity
 @Table(name = "bookticket")
-public class BookTicket implements Serializable{
+public class BookTicket implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "bookTicketID", updatable = false)
-	private Integer bookTicketID; //票券訂單ID
-	
-	@Column(name = "memberID")
-	private Integer memberID; //會員ID (買家)
-	
-	@Column(name = "activityID")
-	private Integer activityID; //活動ID
-	
-	@Column(name = "activityTimeSlotID")
-	private Integer activityTimeSlotID; //時段ID
-	
-	@Column(name = "couponID")
-	private Integer couponID; //優惠券類型ID
-	
-	@Column(name = "bookTime")
-	private Timestamp bookTime; //訂購日期
-	
+	private Integer bookTicketID; // 票券訂單ID
+
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	private GeneralMember generalMember; // 一般會員 (買家)
+
+	@ManyToOne
+	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
+	private Activity activity; // 活動
+
+	@ManyToOne
+	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID")
+	private ActivityTimeSlot activityTimeSlot; // 活動時段
+
+	@OneToOne
+	@JoinColumn(name = "memberCouponID")
+	private MemberCoupon memberCoupon; // 會員優惠券
+
+	@Column(name = "bookTime", updatable = false, insertable = false)
+	private Timestamp bookTime; // 訂購日期
+
 	@Column(name = "ticketQuantity")
-	private Integer ticketQuantity; //數量
-	
+	private Integer ticketQuantity; // 數量
+
 	@Column(name = "totalPrice")
-	private Integer totalPrice; //總金額
-	
+	private Integer totalPrice; // 總金額
+
+	// 建構子
 	public BookTicket() {
 		super();
 	}
 
-	public BookTicket(Integer bookTicketID, Integer memberID, Integer activityID, Integer activityTimeSlotID,
-			Integer couponID, Timestamp bookTime, Integer ticketQuantity, Integer totalPrice) {
+	public BookTicket(Integer bookTicketID, GeneralMember generalMember, Activity activity,
+			ActivityTimeSlot activityTimeSlot, MemberCoupon memberCoupon, Timestamp bookTime, Integer ticketQuantity,
+			Integer totalPrice) {
 		super();
 		this.bookTicketID = bookTicketID;
-		this.memberID = memberID;
-		this.activityID = activityID;
-		this.activityTimeSlotID = activityTimeSlotID;
-		this.couponID = couponID;
+		this.generalMember = generalMember;
+		this.activity = activity;
+		this.activityTimeSlot = activityTimeSlot;
+		this.memberCoupon = memberCoupon;
 		this.bookTime = bookTime;
 		this.ticketQuantity = ticketQuantity;
 		this.totalPrice = totalPrice;
 	}
 
+	// Getter & Setter
 	public Integer getBookTicketID() {
 		return bookTicketID;
 	}
@@ -65,36 +81,36 @@ public class BookTicket implements Serializable{
 		this.bookTicketID = bookTicketID;
 	}
 
-	public Integer getMemberID() {
-		return memberID;
+	public GeneralMember getGeneralMember() {
+		return generalMember;
 	}
 
-	public void setMemberID(Integer memberID) {
-		this.memberID = memberID;
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
 	}
 
-	public Integer getActivityID() {
-		return activityID;
+	public Activity getActivity() {
+		return activity;
 	}
 
-	public void setActivityID(Integer activityID) {
-		this.activityID = activityID;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
-	public Integer getActivityTimeSlotID() {
-		return activityTimeSlotID;
+	public ActivityTimeSlot getActivityTimeSlot() {
+		return activityTimeSlot;
 	}
 
-	public void setActivityTimeSlotID(Integer activityTimeSlotID) {
-		this.activityTimeSlotID = activityTimeSlotID;
+	public void setActivityTimeSlot(ActivityTimeSlot activityTimeSlot) {
+		this.activityTimeSlot = activityTimeSlot;
 	}
 
-	public Integer getCouponID() {
-		return couponID;
+	public MemberCoupon getMemberCoupon() {
+		return memberCoupon;
 	}
 
-	public void setCouponID(Integer couponID) {
-		this.couponID = couponID;
+	public void setMemberCoupon(MemberCoupon memberCoupon) {
+		this.memberCoupon = memberCoupon;
 	}
 
 	public Timestamp getBookTime() {

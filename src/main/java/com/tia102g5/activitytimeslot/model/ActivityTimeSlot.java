@@ -8,45 +8,51 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-//活動時段
+import com.tia102g5.activity.model.Activity;
 
+//活動時段
 @Entity
 @Table(name = "activitytimeslot")
 public class ActivityTimeSlot implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "activityTimeSlot", updatable = false)
+	@Column(name = "activityTimeSlotID", updatable = false)
 	private Integer activityTimeSlotID; //時段ID
 	
-	@Column(name = "activityID")
-	private Integer activityID; //活動ID
+	@ManyToOne
+	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
+	private Activity activity; // 活動
 	
 	@Column(name = "activityTimeSlotDate")
 	private Date activityTimeSlotDate; //日期
 	
 	@Column(name = "activityTimeSlot")
-	private Integer activityTimeSlot; //時段
+	private Integer activityTimeSlot; //時段 1:早 2:午 3:晚
 	
 	@Column(name = "activityTimeSlotSeatAmount")
 	private Integer activityTimeSlotSeatAmount; //時段剩餘座位數
 	
+	// 建構子
 	public ActivityTimeSlot() {
 		super();
 	}
 
-	public ActivityTimeSlot(Integer activityTimeSlotID, Integer activityID, Date activityTimeSlotDate,
-			Integer activityTimeSlot, Integer activitytimeSlotStatus, Integer activityTimeSlotSeatAmount) {
+	public ActivityTimeSlot(Integer activityTimeSlotID, Activity activity, Date activityTimeSlotDate,
+			Integer activityTimeSlot, Integer activityTimeSlotSeatAmount) {
 		super();
 		this.activityTimeSlotID = activityTimeSlotID;
-		this.activityID = activityID;
+		this.activity = activity;
 		this.activityTimeSlotDate = activityTimeSlotDate;
 		this.activityTimeSlot = activityTimeSlot;
 		this.activityTimeSlotSeatAmount = activityTimeSlotSeatAmount;
 	}
 
+	// Getter & Setter
 	public Integer getActivityTimeSlotID() {
 		return activityTimeSlotID;
 	}
@@ -55,12 +61,12 @@ public class ActivityTimeSlot implements Serializable{
 		this.activityTimeSlotID = activityTimeSlotID;
 	}
 
-	public Integer getActivityID() {
-		return activityID;
+	public Activity getActivity() {
+		return activity;
 	}
 
-	public void setActivityID(Integer activityID) {
-		this.activityID = activityID;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	public Date getActivityTimeSlotDate() {
