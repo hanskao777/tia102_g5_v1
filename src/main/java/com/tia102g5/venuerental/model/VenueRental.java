@@ -3,61 +3,78 @@ package com.tia102g5.venuerental.model;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.partnermember.model.PartnerMember;
 import com.tia102g5.venue.model.Venue;
 import com.tia102g5.venuetimeslot.model.VenueTimeSlot;
 
 @Entity
-@Table(name = "VenueRental")
-public class VenueRental {
+@Table(name = "venuerental")
+public class VenueRental implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "venueRentalID")
 	private int venueRentalID;
 
-	@ManyToOne
-	@JoinColumn(name = "venueID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID", nullable = false)
 	private Venue venue;
 
-	@Column(nullable = false)
-	private int partnerID;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "partnerID", referencedColumnName = "partnerID", nullable = false)
+	private PartnerMember partnerMember;
 
-	@Column(nullable = false, length = 255)
+	@Column(name = "activityName", nullable = false, length = 255)
 	private String activityName;
 
-	@Column(nullable = false, length = 255)
+	@Column(name = "proposal", nullable = false, length = 255)
 	private String proposal;
 
-	@Column(nullable = false)
+	@Column(name = "venueRentalStatus", nullable = false)
 	private int venueRentalStatus;
 
-	@Column(nullable = false)
+	@Column(name = "venueRentalStartDate", nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date venueRentalStartDate;
 
-	@Column(nullable = false)
+	@Column(name = "venueRentalEndDate", nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date venueRentalEndDate;
 
-	@Column(nullable = false)
+	@Column(name = "venueRentalCreateTime", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date venueRentalCreateTime;
 
-	@Column(nullable = false, length = 255)
+	@Column(name = "venueRentalCode", nullable = false, length = 255)
 	private String venueRentalCode;
 
-	@OneToMany(mappedBy = "venueRental")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueRental")
+	@OrderBy("venueTimeSlotID asc")
 	private Set<VenueTimeSlot> venueTimeSlots;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueRental")
+	@OrderBy("activityID asc")
+	private Set<Activity> activities;
+
+	public VenueRental() {
+	}
 
 	public int getVenueRentalID() {
 		return venueRentalID;
@@ -75,12 +92,12 @@ public class VenueRental {
 		this.venue = venue;
 	}
 
-	public int getPartnerID() {
-		return partnerID;
+	public PartnerMember getPartnerMember() {
+		return partnerMember;
 	}
 
-	public void setPartnerID(int partnerID) {
-		this.partnerID = partnerID;
+	public void setPartnerMember(PartnerMember partnerMember) {
+		this.partnerMember = partnerMember;
 	}
 
 	public String getActivityName() {
@@ -147,35 +164,12 @@ public class VenueRental {
 		this.venueTimeSlots = venueTimeSlots;
 	}
 
-	public VenueRental() {
-		super();
-		// TODO Auto-generated constructor stub
+	public Set<Activity> getActivities() {
+		return activities;
 	}
 
-	public VenueRental(int venueRentalID, Venue venue, int partnerID, String activityName, String proposal,
-			int venueRentalStatus, Date venueRentalStartDate, Date venueRentalEndDate, Date venueRentalCreateTime,
-			String venueRentalCode, Set<VenueTimeSlot> venueTimeSlots) {
-		super();
-		this.venueRentalID = venueRentalID;
-		this.venue = venue;
-		this.partnerID = partnerID;
-		this.activityName = activityName;
-		this.proposal = proposal;
-		this.venueRentalStatus = venueRentalStatus;
-		this.venueRentalStartDate = venueRentalStartDate;
-		this.venueRentalEndDate = venueRentalEndDate;
-		this.venueRentalCreateTime = venueRentalCreateTime;
-		this.venueRentalCode = venueRentalCode;
-		this.venueTimeSlots = venueTimeSlots;
-	}
-
-	@Override
-	public String toString() {
-		return "VenueRental [venueRentalID=" + venueRentalID + ", venue=" + venue + ", partnerID=" + partnerID
-				+ ", activityName=" + activityName + ", proposal=" + proposal + ", venueRentalStatus="
-				+ venueRentalStatus + ", venueRentalStartDate=" + venueRentalStartDate + ", venueRentalEndDate="
-				+ venueRentalEndDate + ", venueRentalCreateTime=" + venueRentalCreateTime + ", venueRentalCode="
-				+ venueRentalCode + ", venueTimeSlots=" + venueTimeSlots + "]";
+	public void setActivities(Set<Activity> activities) {
+		this.activities = activities;
 	}
 
 }

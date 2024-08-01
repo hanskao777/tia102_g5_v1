@@ -2,8 +2,10 @@ package com.tia102g5.venuearea.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,24 +19,30 @@ import com.tia102g5.seat.model.Seat;
 import com.tia102g5.venue.model.Venue;
 
 @Entity
-@Table(name = "VenueArea")
-public class VenueArea {
+@Table(name = "venuearea")
+public class VenueArea implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "venueAreaID", updatable = false)
 	private int venueAreaID;
 
-	@ManyToOne
-	@JoinColumn(name = "venueID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID", nullable = false)
 	private Venue venue;
 
-	@Column(nullable = false, length = 255)
+	@Column(name = "venueAreaName", nullable = false, length = 255)
 	private String venueAreaName;
 
-	@OneToMany(mappedBy = "venueArea")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueArea")
 	private Set<Seat> seats;
 
-	@OneToMany(mappedBy = "venueArea")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueArea")
 	private Set<ActivityAreaPrice> activityAreaPrices;
+
+	public VenueArea() {
+	}
 
 	public int getVenueAreaID() {
 		return venueAreaID;
@@ -75,26 +83,5 @@ public class VenueArea {
 	public void setActivityAreaPrices(Set<ActivityAreaPrice> activityAreaPrices) {
 		this.activityAreaPrices = activityAreaPrices;
 	}
-
-	public VenueArea() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public VenueArea(int venueAreaID, Venue venue, String venueAreaName, Set<Seat> seats,
-			Set<ActivityAreaPrice> activityAreaPrices) {
-		super();
-		this.venueAreaID = venueAreaID;
-		this.venue = venue;
-		this.venueAreaName = venueAreaName;
-		this.seats = seats;
-		this.activityAreaPrices = activityAreaPrices;
-	}
-
-//	@Override
-//	public String toString() {
-//		return "VenueArea [venueAreaID=" + venueAreaID + ", venue=" + venue + ", venueAreaName=" + venueAreaName
-//				+ ", seats=" + seats + ", activityAreaPrices=" + activityAreaPrices + "]";
-//	}
 
 }

@@ -2,6 +2,7 @@ package com.tia102g5.seatstatus.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,27 +11,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.tia102g5.activitytimeslot.model.ActivityTimeSlot;
 import com.tia102g5.seat.model.Seat;
-import com.tia102g5.venuetimeslot.model.VenueTimeSlot;
+import com.tia102g5.ticket.model.Ticket;
 
 @Entity
-@Table(name = "SeatStatus")
-public class SeatStatus {//31行關聯到宜倫的ticket
+@Table(name = "seatstatus")
+public class SeatStatus implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "seatStatusID")
 	private int seatStatusID;
 
-	@ManyToOne
-	@JoinColumn(name = "activityTimeSlotID", nullable = false)
-	private VenueTimeSlot activityTimeSlot;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID", nullable = false)
+	private ActivityTimeSlot activityTimeSlot;
 
-	@ManyToOne
-	@JoinColumn(name = "seatID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "seatID", referencedColumnName = "seatID", nullable = false)
 	private Seat seat;
-	
-//	@OneToOne
-	@Column(nullable = false)
+
+	@Column(name = "seatStatus", nullable = false)
 	private int seatStatus;
+
+	@OneToOne(mappedBy = "seatStatus", fetch = FetchType.LAZY)
+	private Ticket ticket;
+
+	public SeatStatus() {
+	}
 
 	public int getSeatStatusID() {
 		return seatStatusID;
@@ -40,11 +50,11 @@ public class SeatStatus {//31行關聯到宜倫的ticket
 		this.seatStatusID = seatStatusID;
 	}
 
-	public VenueTimeSlot getActivityTimeSlot() {
+	public ActivityTimeSlot getActivityTimeSlot() {
 		return activityTimeSlot;
 	}
 
-	public void setActivityTimeSlot(VenueTimeSlot activityTimeSlot) {
+	public void setActivityTimeSlot(ActivityTimeSlot activityTimeSlot) {
 		this.activityTimeSlot = activityTimeSlot;
 	}
 
@@ -64,17 +74,12 @@ public class SeatStatus {//31行關聯到宜倫的ticket
 		this.seatStatus = seatStatus;
 	}
 
-	public SeatStatus() {
-		super();
-		// TODO Auto-generated constructor stub
+	public Ticket getTicket() {
+		return ticket;
 	}
 
-	public SeatStatus(int seatStatusID, VenueTimeSlot activityTimeSlot, Seat seat, int seatStatus) {
-		super();
-		this.seatStatusID = seatStatusID;
-		this.activityTimeSlot = activityTimeSlot;
-		this.seat = seat;
-		this.seatStatus = seatStatus;
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
 	}
 
 }
