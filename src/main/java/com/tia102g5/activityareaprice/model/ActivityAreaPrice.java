@@ -1,32 +1,52 @@
 package com.tia102g5.activityareaprice.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.ticket.model.Ticket;
 import com.tia102g5.venuearea.model.VenueArea;
 
 @Entity
-@Table(name = "ActivityAreaPrice")
-public class ActivityAreaPrice {
+@Table(name = "acivityareaprice")
+public class ActivityAreaPrice implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "activityAreaPriceID")
 	private int activityAreaPriceID;
 
-	@ManyToOne
-	@JoinColumn(name = "venueAreaID", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID", nullable = false)
 	private VenueArea venueArea;
 
-	@Column(nullable = false)
-	private int activityID;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "activityID", referencedColumnName = "activityID", nullable = false)
+	private Activity activity;
 
-	@Column(nullable = false)
+	@Column(name = "activityAreaPrice", nullable = false)
 	private int activityAreaPrice;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "activityAreaPrice")
+	@OrderBy("ticketID asc")
+	private Set<Ticket> tickets = new HashSet<Ticket>();
+
+	public ActivityAreaPrice() {
+	}
 
 	public int getActivityAreaPriceID() {
 		return activityAreaPriceID;
@@ -44,12 +64,12 @@ public class ActivityAreaPrice {
 		this.venueArea = venueArea;
 	}
 
-	public int getActivityID() {
-		return activityID;
+	public Activity getActivity() {
+		return activity;
 	}
 
-	public void setActivityID(int activityID) {
-		this.activityID = activityID;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	public int getActivityAreaPrice() {
@@ -60,17 +80,12 @@ public class ActivityAreaPrice {
 		this.activityAreaPrice = activityAreaPrice;
 	}
 
-	public ActivityAreaPrice() {
-		super();
-		// TODO Auto-generated constructor stub
+	public Set<Ticket> getTickets() {
+		return this.tickets;
 	}
 
-	public ActivityAreaPrice(int activityAreaPriceID, VenueArea venueArea, int activityID, int activityAreaPrice) {
-		super();
-		this.activityAreaPriceID = activityAreaPriceID;
-		this.venueArea = venueArea;
-		this.activityID = activityID;
-		this.activityAreaPrice = activityAreaPrice;
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 
 }
