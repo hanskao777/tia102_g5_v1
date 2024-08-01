@@ -40,7 +40,8 @@ public class BookTicket implements Serializable {
 	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID")
 	private ActivityTimeSlot activityTimeSlot; // 活動時段
 
-	@OneToOne(mappedBy = "memberCouponID")
+	@OneToOne
+	@JoinColumn(name = "memberCouponID")
 	private MemberCoupon memberCoupon; // 會員優惠券
 
 	@Column(name = "bookTime", updatable = false, insertable = false)
