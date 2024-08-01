@@ -100,66 +100,66 @@ public class GeneralMember implements java.io.Serializable {
 	private Date memberCreateTime;
 	
 	
-	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 	@OrderBy("memberCouponID asc")
-	private Set<MemberCoupon> membercoupons;
+	private Set<MemberCoupon> memberCoupon;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("cartID asc")
-//	private Set<Cart> carts;
+//	private Set<Cart> cart;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("articleCollectionID asc")
-//	private Set<ArticleCollection> articleCollections;
+//	private Set<ArticleCollection> articleCollection;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("articleID asc")
-//	private Set<Article> articles;
+//	private Set<Article> article;
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("heartID asc")
-//	private Set<Heart> hearts;
+//	private Set<Heart> heart;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("messageID asc")
-//	private Set<Message> messages;
+//	private Set<Message> message;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("activityCollectionID asc")
-//	private Set<ActivityCollection> activitycollections;
+//	private Set<ActivityCollection> activityCollection;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("orderID asc")
 //	private Set<Orders> orders;
 //	
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("ticketID asc")
-//	private Set<Ticket> tickets;
+//	private Set<Ticket> ticket;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("bookTicketID asc")
-//	private Set<BookTicket> booktickets;
+//	private Set<BookTicket> bookTicket;
 //	
 //	
-//	@OneToMany(mappedBy = "generalmember", cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
 //	@OrderBy("prosecuteID asc")
-//	private Set<Prosecute> prosecutes;
+//	private Set<Prosecute> prosecute;
 
-	public Set<MemberCoupon> getMembercoupons() {
-		return membercoupons;
+	public Set<MemberCoupon> getMemberCoupon() {
+		return memberCoupon;
 	}
 
-	public void setMembercoupons(Set<MemberCoupon> membercoupons) {
-		this.membercoupons = membercoupons;
+	public void setMembercoupon(Set<MemberCoupon> memberCoupon) {
+		this.memberCoupon = memberCoupon;
 	}
 
 	public GeneralMember() {

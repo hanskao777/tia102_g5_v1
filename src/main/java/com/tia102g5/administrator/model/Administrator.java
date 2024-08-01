@@ -44,7 +44,7 @@ public class Administrator {
 	
 //	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
 //	@OrderBy(announcementID asc)
-//	private Set<Announcement> announcements;
+//	private Set<Announcement> announcement;
 
 	public Administrator() {
 		super();
