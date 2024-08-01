@@ -17,7 +17,7 @@ import com.tia102g5.activity.model.Activity;
 import com.tia102g5.venuerental.model.VenueRental;
 
 @Entity
-@Table(name = "PartnerMember")
+@Table(name = "partnermember")
 public class PartnerMember {
 
 	@Id
@@ -57,17 +57,17 @@ public class PartnerMember {
 	private Integer partnerAccountStatus;
 	
 	
-//	@OneToMany(mappedBy = partnermember, cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = partnerMember, cascade = CascadeType.ALL)
 //	@OrderBy(commodityID asc)
-//	private Set<Commodity> commodities;
+//	private Set<Commodity> commodity;
 	
-//	@OneToMany(mappedBy = partnermember, cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = partnerMember, cascade = CascadeType.ALL)
 //	@OrderBy(activityID asc)
-//	private Set<Activity> activities;
+//	private Set<Activity> activity;
 	
-//	@OneToMany(mappedBy = partnermember, cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy = partnerMember, cascade = CascadeType.ALL)
 //	@OrderBy(venueRentalID asc)
-//	private Set<VenueRental> venueRentals;
+//	private Set<VenueRental> venueRental;
 
 	public Integer getPartnerID() {
 		return partnerID;

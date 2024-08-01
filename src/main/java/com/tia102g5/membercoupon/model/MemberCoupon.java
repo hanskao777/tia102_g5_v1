@@ -50,26 +50,27 @@ public class MemberCoupon {
 	
 	@ManyToOne
 	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-	private GeneralMember generalmember;
-//	
-//	@ManyToOne
-//	@JoinColumn(name = "couponTypeID", referencedColumnName = "couponID")
-//	private CouponType coupontype;
+	private GeneralMember generalMember;
 	
-//	@OneToOne(mappedBy = "membercoupon", cascade = CascadeType.ALL)
+
+//	@ManyToOne
+//	@JoinColumn(name = "couponTypeID", referencedColumnName = "couponTypeID")
+//	private CouponType couponType;
+	
+//	@OneToOne(mappedBy = "memberCoupon")
 //	private Orders orders;
 	
-//	@OneToOne(mappedBy = "membercoupon", cascade = CascadeType.ALL)
+//	@OneToOne(mappedBy = "memberCoupon")
 //	private BookTicket bookTicket;
 	
 	
 
-	public GeneralMember getGeneralmember() {
-		return generalmember;
+	public GeneralMember getGeneralMember() {
+		return generalMember;
 	}
 
-	public void setGeneralmember(GeneralMember generalmember) {
-		this.generalmember = generalmember;
+	public void setGeneralMember(GeneralMember generalMember) {
+		this.generalMember = generalMember;
 	}
 
 	public MemberCoupon() {
@@ -139,8 +140,8 @@ public class MemberCoupon {
 	public String toString() {
 		return "MemberCoupon [memberCouponID=" + memberCouponID + ", couponTypeID=" + couponTypeID
 				+ ", memberCouponExpirationDate=" + memberCouponExpirationDate + ", memberCouponStatus="
-				+ memberCouponStatus + ", memberCouponCreateTime=" + memberCouponCreateTime + ", generalmember="
-				+ generalmember + "]";
+				+ memberCouponStatus + ", memberCouponCreateTime=" + memberCouponCreateTime + ", generalMember="
+				+ generalMember + "]";
 	}
 
 	

@@ -1,11 +1,14 @@
 package com.tia102g5.generalmember.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import HibernateUtil.HibernateUtil_CompositeQuery_GeneralMember;
 
 @Service("generalmemberService")
 public class GeneralMemberService {
@@ -16,12 +19,12 @@ public class GeneralMemberService {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	public void addGeneralMember(GeneralMember generalmember) {
-		repository.save(generalmember);
+	public void addGeneralMember(GeneralMember generalMember) {
+		repository.save(generalMember);
 	}
 
-	public void updateGeneralMember(GeneralMember generalmember) {
-		repository.save(generalmember);
+	public void updateGeneralMember(GeneralMember generalMember) {
+		repository.save(generalMember);
 	}
 
 	public void deleteGeneralMember(Integer memberID) {
@@ -38,5 +41,9 @@ public class GeneralMemberService {
 	
 	public List<GeneralMember> getAll(){
 		return repository.findAll();
+	}
+	
+	public List<GeneralMember> getAll(Map<String, String[]>map){
+		return HibernateUtil_CompositeQuery_GeneralMember.getAllC(map,sessionFactory.openSession());
 	}
 }
