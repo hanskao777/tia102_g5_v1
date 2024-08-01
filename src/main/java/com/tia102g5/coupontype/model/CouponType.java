@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 //優惠券
 @Entity
-@Table(name = "coupon")
+@Table(name = "coupontype")
 public class CouponType implements Serializable{
 	
 	@Id

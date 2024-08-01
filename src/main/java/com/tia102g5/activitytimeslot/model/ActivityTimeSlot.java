@@ -21,7 +21,7 @@ public class ActivityTimeSlot implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "activityTimeSlot", updatable = false)
+	@Column(name = "activityTimeSlotID", updatable = false)
 	private Integer activityTimeSlotID; //時段ID
 	
 	@ManyToOne
