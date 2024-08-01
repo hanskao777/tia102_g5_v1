@@ -2,7 +2,9 @@ package com.tia102g5.bookticket.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,13 +12,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.tia102g5.activity.model.Activity;
 import com.tia102g5.activitytimeslot.model.ActivityTimeSlot;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.membercoupon.model.MemberCoupon;
+import com.tia102g5.ticket.model.Ticket;
 
 //票券訂單
 @Entity
@@ -52,6 +57,10 @@ public class BookTicket implements Serializable {
 
 	@Column(name = "totalPrice")
 	private Integer totalPrice; // 總金額
+	
+	@OneToMany(mappedBy = "bookTicket", cascade = CascadeType.ALL)
+	@OrderBy("ticketID asc")
+	private Set<Ticket> ticket; // 票券
 
 	// 建構子
 	public BookTicket() {
@@ -60,7 +69,7 @@ public class BookTicket implements Serializable {
 
 	public BookTicket(Integer bookTicketID, GeneralMember generalMember, Activity activity,
 			ActivityTimeSlot activityTimeSlot, MemberCoupon memberCoupon, Timestamp bookTime, Integer ticketQuantity,
-			Integer totalPrice) {
+			Integer totalPrice, Set<Ticket> ticket) {
 		super();
 		this.bookTicketID = bookTicketID;
 		this.generalMember = generalMember;
@@ -70,9 +79,10 @@ public class BookTicket implements Serializable {
 		this.bookTime = bookTime;
 		this.ticketQuantity = ticketQuantity;
 		this.totalPrice = totalPrice;
+		this.ticket = ticket;
 	}
 
-	// Getter & Setter
+	// Getters & Setters
 	public Integer getBookTicketID() {
 		return bookTicketID;
 	}
@@ -135,6 +145,14 @@ public class BookTicket implements Serializable {
 
 	public void setTotalPrice(Integer totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Set<Ticket> getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(Set<Ticket> ticket) {
+		this.ticket = ticket;
 	}
 	
 }

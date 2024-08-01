@@ -20,32 +20,32 @@ import com.tia102g5.seatstatus.model.SeatStatus;
 //票券
 @Entity
 @Table(name = "ticket")
-public class Ticket implements Serializable{
+public class Ticket implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ticketID", updatable = false)
-	private Integer ticketID; //票券ID
-	
+	private Integer ticketID; // 票券ID
+
 	@ManyToOne
 	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
 	private GeneralMember generalMember; // 一般會員(擁有者)
-	
+
 	@ManyToOne
 	@JoinColumn(name = "seatStatusID", referencedColumnName = "seatStatusID")
-	private SeatStatus seatStatus; //座位狀態
-	
+	private SeatStatus seatStatus; // 座位狀態
+
 	@ManyToOne
 	@JoinColumn(name = "activityAreaPriceID", referencedColumnName = "activityAreaPriceID")
-	private ActivityAreaPrice activityAreaPrice; //活動區域價格
-	
+	private ActivityAreaPrice activityAreaPrice; // 活動區域價格
+
 	@ManyToOne
 	@JoinColumn(name = "bookTicketID", referencedColumnName = "bookTicketID")
-	private BookTicket bookTicket; //票券訂單
-	
+	private BookTicket bookTicket; // 票券訂單
+
 	@ManyToOne
 	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID")
-	private ActivityTimeSlot activityTimeSlot; //活動時段
+	private ActivityTimeSlot activityTimeSlot; // 活動時段
 
 	// 建構子
 	public Ticket() {
@@ -63,7 +63,7 @@ public class Ticket implements Serializable{
 		this.activityTimeSlot = activityTimeSlot;
 	}
 
-	// Getter & Setter
+	// Getters & Setters
 	public Integer getTicketID() {
 		return ticketID;
 	}
@@ -111,5 +111,5 @@ public class Ticket implements Serializable{
 	public void setActivityTimeSlot(ActivityTimeSlot activityTimeSlot) {
 		this.activityTimeSlot = activityTimeSlot;
 	}
-	
+
 }

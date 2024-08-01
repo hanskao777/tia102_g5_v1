@@ -22,14 +22,14 @@ public class ActivityPicture implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "activityPictureID", updatable = false)
 	private Integer activityPictureID; // 活動圖片ID
-	
+
 	@ManyToOne
 	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
-	private Activity activity; //活動
-	
+	private Activity activity; // 活動
+
 	@Column(name = "activityPicture", columnDefinition = "mediumblob")
 	private byte[] activityPicture; // 活動圖片
-	
+
 	// 建構子
 	public ActivityPicture() {
 		super();
@@ -42,7 +42,7 @@ public class ActivityPicture implements Serializable {
 		this.activityPicture = activityPicture;
 	}
 
-	// Getter & Setter
+	// Getters & Setters
 	public Integer getActivityPictureID() {
 		return activityPictureID;
 	}
@@ -66,5 +66,5 @@ public class ActivityPicture implements Serializable {
 	public void setActivityPicture(byte[] activityPicture) {
 		this.activityPicture = activityPicture;
 	}
-	
+
 }
