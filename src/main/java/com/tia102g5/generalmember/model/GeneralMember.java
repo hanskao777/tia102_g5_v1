@@ -17,6 +17,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import com.tia102g5.activitycollection.model.ActivityCollection;
 import com.tia102g5.article.model.Article;
@@ -28,41 +30,66 @@ import com.tia102g5.prosecute.model.Prosecute;
 
 
 @Entity
-@Table(name = "GeneralMember")
-public class GeneralMember {
+@Table(name = "generalmember")
+public class GeneralMember implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "memberID", updatable = false) // 會員ID
 	private Integer memberID;
 
+	
+	
 	@Column(name = "memberAccount") // "帳號(E-mail)"
 	private String memberAccount;
 
+	
+	
 	@Column(name = "memberPassword") // "密碼"
 	private String memberPassword;
 
+	
+	@NotEmpty(message="姓名: 請勿空白")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "姓名: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間")
 	@Column(name = "memberName") // "姓名"
 	private String memberName;
 
+	
+	@NotEmpty(message="電話: 請勿空白")
+	@Pattern(regexp = "^09\\\\d{8}$", message = "電話: 只能數字和09開頭")
 	@Column(name = "memberPhone") // "電話"
 	private String memberPhone;
 
+	
+	@NotEmpty(message="暱稱: 請勿空白")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "暱稱: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間")
 	@Column(name = "memberNickName") // "暱稱"
 	private String memberNickName;
 
+	
+	@NotEmpty(message="地址: 請勿空白")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "地址: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間")
 	@Column(name = "memberAddress") // "地址"
 	private String memberAddress;
 
+	
+	@NotEmpty(message="身分證字號: 請勿空白")
+	@Pattern(regexp = "^[A-Z][12]\\\\d{8}$", message = "身分證字號: 只能是第一位必須是大寫字母第二位必須是 1 或 2及的八位必須是數字")
 	@Column(name = "nationalID") // "身分證字號"
 	private String nationalID;
 
+	
 	@Column(name = "gender") // "性別"
 	private String gender;
+	
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "birthday") // "生日"
 	private Date birthday;
 
+	
+	
 	@Column(name = "memberPicture", columnDefinition = "mediumblob") // "大頭照"
 	private byte[] memberPicture;
 

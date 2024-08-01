@@ -20,7 +20,7 @@ import com.tia102g5.bookticket.model.BookTicket;
 import com.tia102g5.generalmember.model.GeneralMember;
 
 @Entity
-@Table(name = "MemberCoupon")
+@Table(name = "membercoupon")
 public class MemberCoupon {
 	
 	@Id
