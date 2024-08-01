@@ -33,7 +33,7 @@ public class ActivityCollection implements Serializable{
 	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
 	private Activity activity; // 活動
 	
-	@Column(name = "activityCollectionTime")
+	@Column(name = "activityCollectionTime", updatable = false, insertable = false)
 	private Timestamp activityCollectionTime; //活動收藏時間
 	
 	//建構子
@@ -82,5 +82,5 @@ public class ActivityCollection implements Serializable{
 	public void setActivityCollectionTime(Timestamp activityCollectionTime) {
 		this.activityCollectionTime = activityCollectionTime;
 	}
-	
+
 }
