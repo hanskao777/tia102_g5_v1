@@ -120,7 +120,7 @@ CREATE TABLE VenueRental(
 	venueID                      INT          NOT NULL           COMMENT "場館ID",
 	partnerID                    INT          NOT NULL           COMMENT "廠商會員ID",
 	activityName                 VARCHAR(255) NOT NULL           COMMENT "活動名稱",
-	proposal                     VARCHAR(255) NOT NULL           COMMENT "企劃書",
+	proposal                     LONGBLOB                        COMMENT "企劃書",
 	venueRentalStatus            INT          NOT NULL           COMMENT "申請狀態 0:不通過 1:通過 3:審核中 4:取消中 5:已取消",
 	venueRentalStartDate         DATE         NOT NULL           COMMENT "租用開始日期",
 	venueRentalEndDate           DATE         NOT NULL           COMMENT "租用結束日期",
@@ -155,7 +155,7 @@ CREATE TABLE ActivityAreaPrice(
 	activityAreaPriceID          INT           AUTO_INCREMENT     COMMENT "活動區域價格ID",
 	venueAreaID                  INT           NOT NULL           COMMENT "區域ID",
 	activityID                   INT           NOT NULL           COMMENT "活動ID",
-	activityAreaPrice            INT           NOT NULL           COMMENT "活動區域價格",
+	activityAreaPrice            DECIMAL(7,2)  NOT NULL           COMMENT "活動區域價格",
     
 	CONSTRAINT pk_activityAreaPriceID PRIMARY KEY (activityAreaPriceID)
 ) COMMENT "活動區域價格";
@@ -225,7 +225,7 @@ CREATE TABLE BookTicket(
 						                        ON UPDATE CURRENT_TIMESTAMP 
 									                               COMMENT "訂購日期",
     ticketQuantity               INT            NOT NULL           COMMENT "數量",
-    totalPrice                   INT            NOT NULL           COMMENT "總金額",
+    totalPrice                   DECIMAL(7,2)   NOT NULL           COMMENT "總金額",
     
     CONSTRAINT pk_BookTicket PRIMARY KEY (BookTicketID)
 ) COMMENT "票券訂單";
@@ -234,7 +234,7 @@ CREATE TABLE Ticket(
 	ticketID                     INT            AUTO_INCREMENT     COMMENT "票券ID",
     memberID                     INT            NOT NULL           COMMENT "會員(擁有者)",
     seatStatusID                 INT            NOT NULL           COMMENT "座位狀態ID",
-    activityAreaPriceID          INT            NOT NULL           COMMENT "票價",
+    activityAreaPriceID          INT            NOT NULL           COMMENT "活動區域價格ID",
     bookTicketID                 INT            NOT NULL           COMMENT "票券訂單ID",
     activityTimeSlotID           INT            NOT NULL           COMMENT "時段ID",
     
@@ -245,7 +245,7 @@ CREATE TABLE CouponType(
 	couponTypeID                 INT            AUTO_INCREMENT     COMMENT "優惠券類型ID",
     couponTypeName               VARCHAR(255)   NOT NULL           COMMENT "優惠券類型名稱",
     couponTypeRegulation         TEXT           NOT NULL           COMMENT "使用規則",
-    couponTypeDiscount           DECIMAL(3,2)   NOT NULL           COMMENT "折扣數",
+    couponTypeDiscount           DECIMAL(7,2)   NOT NULL           COMMENT "折扣數",
     
     CONSTRAINT pk_CouponType PRIMARY KEY (couponTypeID)
 ) COMMENT "優惠券";
@@ -341,10 +341,9 @@ CREATE TABLE Prosecute (
 CREATE TABLE Commodity(
     commodityID                  INT            AUTO_INCREMENT      COMMENT "商品ID",
     commodityName         		 VARCHAR(255)   NOT NULL            COMMENT "商品名稱",
-    commodityPrice        		 INT            NOT NULL            COMMENT "商品價格",
+    commodityPrice        		 DECIMAL(7,2)   NOT NULL            COMMENT "商品價格",
     commodityStock        		 INT            NOT NULL            COMMENT "商品庫存",
     commodityContent      		 TEXT           NOT NULL            COMMENT "商品內容",
-    commodityPicture      		 MEDIUMBLOB                         COMMENT "商品照片",
     activityID            		 INT            NOT NULL            COMMENT "活動ID",
     partnerID             		 INT            NOT NULL            COMMENT "廠商ID",
     commodityStatus       		 INT            NOT NULL            COMMENT "商品狀態 0:下架 1:在售",
@@ -377,7 +376,7 @@ CREATE TABLE Orders(
     recipientEmail      		 VARCHAR(255)   NOT NULL            COMMENT "收件人E-mail",
     recipientAddress     		 VARCHAR(255)   NOT NULL            COMMENT "收件地址",
     memberCouponID               INT                                COMMENT "會員優惠券ID",
-    actualAmount        	     INT            NOT NULL            COMMENT "實付金額",
+    actualAmount        	     DECIMAL(7,2)   NOT NULL            COMMENT "實付金額",
     orderStatus          	     INT            NOT NULL            COMMENT "訂單狀態 0:取消 1:未出貨 2:已出貨 3:完成訂單 4:退貨中 5:完成退貨",
     payStatus           		 INT            NOT NULL            COMMENT "支付狀態",
     payTime         		     DATETIME
@@ -392,9 +391,9 @@ CREATE TABLE OrderItem(
     orderItemID           		 INT            AUTO_INCREMENT      COMMENT "訂單明細ID",
     orderID               		 INT            NOT NULL            COMMENT "訂單ID",
     commodityID          		 INT            NOT NULL            COMMENT "商品ID",
-    commodityPrice        		 INT            NOT NULL            COMMENT "商品價格",
-    orderQuantity         		 INT            NOT NULL            COMMENT "商品數量",
-    totalPrice            		 INT            NOT NULL            COMMENT "總價",
+    commodityOrderPrice          DECIMAL(7,2)   NOT NULL            COMMENT "商品下訂價格",
+    orderItemQuantity            INT            NOT NULL            COMMENT "商品數量",
+    orderItemTotalPrice          DECIMAL(7,2)   NOT NULL            COMMENT "單一商品總價",
     orderItemCreateTime   		 DATETIME
                                                 DEFAULT CURRENT_TIMESTAMP
                                                                     COMMENT "建立時間",
@@ -406,12 +405,7 @@ CREATE TABLE OrderItem(
 CREATE TABLE Cart(
     cartID                		 INT            AUTO_INCREMENT      COMMENT "購物車ID",
     memberID              		 INT            NOT NULL            COMMENT "會員ID",
-    commodityID           		 INT            NOT NULL            COMMENT "商品ID",
-    checkedQuantity       		 INT            NOT NULL            COMMENT "數量",
-    cartUpdateTime        		 DATETIME
-												DEFAULT CURRENT_TIMESTAMP 
-					                            ON UPDATE CURRENT_TIMESTAMP 
-					                                                COMMENT "更新時間",
+    cartTotalPrice               DECIMAL(7,2)   NOT NULL            COMMENT "購物車總價",
     cartCreateTime        		 DATETIME
 											    DEFAULT CURRENT_TIMESTAMP
                                                                     COMMENT "建立時間",
