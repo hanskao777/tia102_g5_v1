@@ -78,27 +78,27 @@ public class Activity implements Serializable {
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityAreaPriceID asc")
-	private Set<ActivityAreaPrice> activityAreaPrice; // 活動區域價格
+	private Set<ActivityAreaPrice> activityAreaPrices; // 活動區域價格
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityPictureID asc")
-	private Set<ActivityPicture> activityPicture; // 活動圖片
+	private Set<ActivityPicture> activityPictures; // 活動圖片
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityCollectionID asc")
-	private Set<ActivityCollection> activityCollection; // 活動收藏
+	private Set<ActivityCollection> activityCollections; // 活動收藏
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityTimeSlotID asc")
-	private Set<ActivityTimeSlot> activityTimeSlot; // 活動時段
+	private Set<ActivityTimeSlot> activityTimeSlots; // 活動時段
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("bookTicketID asc")
-	private Set<BookTicket> bookTicket; // 票券訂單
+	private Set<BookTicket> bookTickets; // 票券訂單
 
 //	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 //	@OrderBy("commodityID asc")
-//	private Set<Commodity> commodity; // 商品
+//	private Set<Commodity> commodities; // 商品
 
 	// 建構子
 	public Activity() {
@@ -108,9 +108,9 @@ public class Activity implements Serializable {
 	public Activity(Integer activityID, PartnerMember partnerMember, Venue venue, VenueRental venueRental,
 			String activityName, String activityContent, Timestamp activityCreateTime, Date activityPostTime,
 			String activityTag, Integer activityStatus, Integer ticketSetStatus, Date sellTime,
-			Set<ActivityAreaPrice> activityAreaPrice, Set<ActivityPicture> activityPicture,
-			Set<ActivityCollection> activityCollection, Set<ActivityTimeSlot> activityTimeSlot,
-			Set<BookTicket> bookTicket/* , Set<Commodity> commodity */) {
+			Set<ActivityAreaPrice> activityAreaPrices, Set<ActivityPicture> activityPictures,
+			Set<ActivityCollection> activityCollections, Set<ActivityTimeSlot> activityTimeSlots,
+			Set<BookTicket> bookTickets/* , Set<Commodity> commodities */) {
 		super();
 		this.activityID = activityID;
 		this.partnerMember = partnerMember;
@@ -124,12 +124,12 @@ public class Activity implements Serializable {
 		this.activityStatus = activityStatus;
 		this.ticketSetStatus = ticketSetStatus;
 		this.sellTime = sellTime;
-		this.activityAreaPrice = activityAreaPrice;
-		this.activityPicture = activityPicture;
-		this.activityCollection = activityCollection;
-		this.activityTimeSlot = activityTimeSlot;
-		this.bookTicket = bookTicket;
-//		this.commodity = commodity;
+		this.activityAreaPrices = activityAreaPrices;
+		this.activityPictures = activityPictures;
+		this.activityCollections = activityCollections;
+		this.activityTimeSlots = activityTimeSlots;
+		this.bookTickets = bookTickets;
+//		this.commodities = commodities;
 	}
 
 	// Getters & Setters
@@ -229,48 +229,48 @@ public class Activity implements Serializable {
 		this.sellTime = sellTime;
 	}
 
-	public Set<ActivityAreaPrice> getActivityAreaPrice() {
-		return activityAreaPrice;
+	public Set<ActivityAreaPrice> getActivityAreaPrices() {
+		return activityAreaPrices;
 	}
 
-	public void setActivityAreaPrice(Set<ActivityAreaPrice> activityAreaPrice) {
-		this.activityAreaPrice = activityAreaPrice;
+	public void setActivityAreaPrices(Set<ActivityAreaPrice> activityAreaPrices) {
+		this.activityAreaPrices = activityAreaPrices;
 	}
 
-	public Set<ActivityPicture> getActivityPicture() {
-		return activityPicture;
+	public Set<ActivityPicture> getActivityPictures() {
+		return activityPictures;
 	}
 
-	public void setActivityPicture(Set<ActivityPicture> activityPicture) {
-		this.activityPicture = activityPicture;
+	public void setActivityPictures(Set<ActivityPicture> activityPictures) {
+		this.activityPictures = activityPictures;
 	}
 
-	public Set<ActivityCollection> getActivityCollection() {
-		return activityCollection;
+	public Set<ActivityCollection> getActivityCollections() {
+		return activityCollections;
 	}
 
-	public void setActivityCollection(Set<ActivityCollection> activityCollection) {
-		this.activityCollection = activityCollection;
+	public void setActivityCollections(Set<ActivityCollection> activityCollections) {
+		this.activityCollections = activityCollections;
 	}
 
-	public Set<ActivityTimeSlot> getActivityTimeSlot() {
-		return activityTimeSlot;
+	public Set<ActivityTimeSlot> getActivityTimeSlots() {
+		return activityTimeSlots;
 	}
 
-	public void setActivityTimeSlot(Set<ActivityTimeSlot> activityTimeSlot) {
-		this.activityTimeSlot = activityTimeSlot;
+	public void setActivityTimeSlots(Set<ActivityTimeSlot> activityTimeSlots) {
+		this.activityTimeSlots = activityTimeSlots;
 	}
 
-	public Set<BookTicket> getBookTicket() {
-		return bookTicket;
+	public Set<BookTicket> getBookTickets() {
+		return bookTickets;
 	}
 
-	public void setBookTicket(Set<BookTicket> bookTicket) {
-		this.bookTicket = bookTicket;
+	public void setBookTickets(Set<BookTicket> bookTickets) {
+		this.bookTickets = bookTickets;
 	}
 
-//	public Set<Commodity> getCommodity() {
-//		return commodity;
+//	public Set<Commodity> getCommodities() {
+//		return commodities;
 //	}
 //
 //	public void setCommodity(Set<Commodity> commodity) {
