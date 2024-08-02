@@ -46,15 +46,15 @@ public class ActivityTimeSlot implements Serializable {
 
 	@OneToMany(mappedBy = "activityTimeSlot", cascade = CascadeType.ALL)
 	@OrderBy("seatStatusID asc")
-	private Set<SeatStatus> seatStatus; // 座位狀態
+	private Set<SeatStatus> seatStatuses; // 座位狀態
 
 	@OneToMany(mappedBy = "activityTimeSlot", cascade = CascadeType.ALL)
 	@OrderBy("bookTicketID asc")
-	private Set<BookTicket> bookTicket; // 票券訂單
+	private Set<BookTicket> bookTickets; // 票券訂單
 
 	@OneToMany(mappedBy = "activityTimeSlot", cascade = CascadeType.ALL)
 	@OrderBy("ticketID asc")
-	private Set<Ticket> ticket; // 票券
+	private Set<Ticket> tickets; // 票券
 
 	// 建構子
 	public ActivityTimeSlot() {
@@ -62,17 +62,17 @@ public class ActivityTimeSlot implements Serializable {
 	}
 
 	public ActivityTimeSlot(Integer activityTimeSlotID, Activity activity, Date activityTimeSlotDate,
-			Integer activityTimeSlot, Integer activityTimeSlotSeatAmount, Set<SeatStatus> seatStatus,
-			Set<BookTicket> bookTicket, Set<Ticket> ticket) {
+			Integer activityTimeSlot, Integer activityTimeSlotSeatAmount, Set<SeatStatus> seatStatuses,
+			Set<BookTicket> bookTickets, Set<Ticket> tickets) {
 		super();
 		this.activityTimeSlotID = activityTimeSlotID;
 		this.activity = activity;
 		this.activityTimeSlotDate = activityTimeSlotDate;
 		this.activityTimeSlot = activityTimeSlot;
 		this.activityTimeSlotSeatAmount = activityTimeSlotSeatAmount;
-		this.seatStatus = seatStatus;
-		this.bookTicket = bookTicket;
-		this.ticket = ticket;
+		this.seatStatuses = seatStatuses;
+		this.bookTickets = bookTickets;
+		this.tickets = tickets;
 	}
 
 	// Getters & Setters
@@ -116,28 +116,28 @@ public class ActivityTimeSlot implements Serializable {
 		this.activityTimeSlotSeatAmount = activityTimeSlotSeatAmount;
 	}
 
-	public Set<SeatStatus> getSeatStatus() {
-		return seatStatus;
+	public Set<SeatStatus> getSeatStatuses() {
+		return seatStatuses;
 	}
 
-	public void setSeatStatus(Set<SeatStatus> seatStatus) {
-		this.seatStatus = seatStatus;
+	public void setSeatStatuses(Set<SeatStatus> seatStatuses) {
+		this.seatStatuses = seatStatuses;
 	}
 
-	public Set<BookTicket> getBookTicket() {
-		return bookTicket;
+	public Set<BookTicket> getBookTickets() {
+		return bookTickets;
 	}
 
-	public void setBookTicket(Set<BookTicket> bookTicket) {
-		this.bookTicket = bookTicket;
+	public void setBookTickets(Set<BookTicket> bookTickets) {
+		this.bookTickets = bookTickets;
 	}
 
-	public Set<Ticket> getTicket() {
-		return ticket;
+	public Set<Ticket> getTickets() {
+		return tickets;
 	}
 
-	public void setTicket(Set<Ticket> ticket) {
-		this.ticket = ticket;
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 
 }

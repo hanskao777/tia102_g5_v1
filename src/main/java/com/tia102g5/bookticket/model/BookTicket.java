@@ -60,7 +60,7 @@ public class BookTicket implements Serializable {
 	
 	@OneToMany(mappedBy = "bookTicket", cascade = CascadeType.ALL)
 	@OrderBy("ticketID asc")
-	private Set<Ticket> ticket; // 票券
+	private Set<Ticket> tickets; // 票券
 
 	// 建構子
 	public BookTicket() {
@@ -69,7 +69,7 @@ public class BookTicket implements Serializable {
 
 	public BookTicket(Integer bookTicketID, GeneralMember generalMember, Activity activity,
 			ActivityTimeSlot activityTimeSlot, MemberCoupon memberCoupon, Timestamp bookTime, Integer ticketQuantity,
-			Integer totalPrice, Set<Ticket> ticket) {
+			Integer totalPrice, Set<Ticket> tickets) {
 		super();
 		this.bookTicketID = bookTicketID;
 		this.generalMember = generalMember;
@@ -79,7 +79,7 @@ public class BookTicket implements Serializable {
 		this.bookTime = bookTime;
 		this.ticketQuantity = ticketQuantity;
 		this.totalPrice = totalPrice;
-		this.ticket = ticket;
+		this.tickets = tickets;
 	}
 
 	// Getters & Setters
@@ -147,12 +147,12 @@ public class BookTicket implements Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	public Set<Ticket> getTicket() {
-		return ticket;
+	public Set<Ticket> getTickets() {
+		return tickets;
 	}
 
-	public void setTicket(Set<Ticket> ticket) {
-		this.ticket = ticket;
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 	
 }

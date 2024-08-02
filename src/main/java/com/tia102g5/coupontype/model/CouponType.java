@@ -37,7 +37,7 @@ public class CouponType implements Serializable {
 	
 	@OneToMany(mappedBy = "coupontype", cascade = CascadeType.ALL)
 	@OrderBy("memberCouponID asc")
-	private Set<MemberCoupon> memberCoupon; // 會員優惠券
+	private Set<MemberCoupon> memberCoupons; // 會員優惠券
 
 	// 建構子
 	public CouponType() {
@@ -45,13 +45,13 @@ public class CouponType implements Serializable {
 	}
 
 	public CouponType(Integer couponTypeID, String couponTypeName, String couponTypeRegulation,
-			BigDecimal couponTypeDiscount, Set<MemberCoupon> memberCoupon) {
+			BigDecimal couponTypeDiscount, Set<MemberCoupon> memberCoupons) {
 		super();
 		this.couponTypeID = couponTypeID;
 		this.couponTypeName = couponTypeName;
 		this.couponTypeRegulation = couponTypeRegulation;
 		this.couponTypeDiscount = couponTypeDiscount;
-		this.memberCoupon = memberCoupon;
+		this.memberCoupons = memberCoupons;
 	}
 
 	// Getters & Setters
@@ -87,12 +87,12 @@ public class CouponType implements Serializable {
 		this.couponTypeDiscount = couponTypeDiscount;
 	}
 
-	public Set<MemberCoupon> getMemberCoupon() {
-		return memberCoupon;
+	public Set<MemberCoupon> getMemberCoupons() {
+		return memberCoupons;
 	}
 
-	public void setMemberCoupon(Set<MemberCoupon> memberCoupon) {
-		this.memberCoupon = memberCoupon;
+	public void setMemberCoupons(Set<MemberCoupon> memberCoupons) {
+		this.memberCoupons = memberCoupons;
 	}
 	
 }
