@@ -1,9 +1,7 @@
 package com.tia102g5.venuetimeslot.model;
 
-import java.util.Date;
-import java.util.Set;
+import java.sql.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,13 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import com.tia102g5.seatstatus.model.SeatStatus;
 import com.tia102g5.venuerental.model.VenueRental;
 
 @Entity
@@ -35,14 +28,13 @@ public class VenueTimeSlot implements java.io.Serializable {
 	@JoinColumn(name = "venueRentalID", referencedColumnName = "venueRentalID")
 	private VenueRental venueRental;
 
-	@Column(name = "venueTimeSlotDate", nullable = false)
-	@Temporal(TemporalType.DATE)
+	@Column(name = "venueTimeSlotDate")
 	private Date venueTimeSlotDate;
 
-	@Column(name = "venueTimeSlot", nullable = false)
+	@Column(name = "venueTimeSlot")
 	private int venueTimeSlot;
 
-	@Column(name = "venueTimeSlotStatus", nullable = false)
+	@Column(name = "venueTimeSlotStatus")
 	private int venueTimeSlotStatus;
 
 	public VenueTimeSlot() {
