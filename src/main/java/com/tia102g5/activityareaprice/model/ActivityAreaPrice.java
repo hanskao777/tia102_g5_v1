@@ -3,7 +3,6 @@ package com.tia102g5.activityareaprice.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,17 +30,17 @@ public class ActivityAreaPrice implements java.io.Serializable {
 	private int activityAreaPriceID;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID", nullable = false)
+	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID")
 	private VenueArea venueArea;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "activityID", referencedColumnName = "activityID", nullable = false)
+	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
 	private Activity activity;
 
-	@Column(name = "activityAreaPrice", nullable = false)
+	@Column(name = "activityAreaPrice")
 	private int activityAreaPrice;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "activityAreaPrice")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "activityAreaPrice")
 	@OrderBy("ticketID asc")
 	private Set<Ticket> tickets = new HashSet<Ticket>();
 

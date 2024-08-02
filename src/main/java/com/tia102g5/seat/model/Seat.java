@@ -29,20 +29,20 @@ public class Seat implements java.io.Serializable {
 	private int seatID;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "venueID", referencedColumnName = "venueID", nullable = false)
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
 	private Venue venue;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID", nullable = false)
+	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID")
 	private VenueArea venueArea;
 
-	@Column(name = "seatName", nullable = false, length = 255)
+	@Column(name = "seatName", length = 255)
 	private String seatName;
 
-	@Column(name = "seatRow", nullable = false)
+	@Column(name = "seatRow")
 	private int seatRow;
 
-	@Column(name = "seatNumber", nullable = false)
+	@Column(name = "seatNumber")
 	private int seatNumber;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "seat")
