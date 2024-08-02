@@ -26,14 +26,14 @@ public class SeatStatus implements java.io.Serializable {
 	private int seatStatusID;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID", nullable = false)
+	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID")
 	private ActivityTimeSlot activityTimeSlot;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "seatID", referencedColumnName = "seatID", nullable = false)
+	@JoinColumn(name = "seatID", referencedColumnName = "seatID")
 	private Seat seat;
 
-	@Column(name = "seatStatus", nullable = false)
+	@Column(name = "seatStatus")
 	private int seatStatus;
 
 	@OneToOne(mappedBy = "seatStatus", fetch = FetchType.LAZY)

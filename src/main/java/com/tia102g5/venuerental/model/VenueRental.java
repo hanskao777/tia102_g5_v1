@@ -1,6 +1,7 @@
 package com.tia102g5.venuerental.model;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,12 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.tia102g5.activity.model.Activity;
 import com.tia102g5.partnermember.model.PartnerMember;
@@ -34,35 +34,33 @@ public class VenueRental implements java.io.Serializable {
 	private int venueRentalID;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "venueID", referencedColumnName = "venueID", nullable = false)
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
 	private Venue venue;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "partnerID", referencedColumnName = "partnerID", nullable = false)
+	@JoinColumn(name = "partnerID", referencedColumnName = "partnerID")
 	private PartnerMember partnerMember;
 
-	@Column(name = "activityName", nullable = false, length = 255)
+	@Column(name = "activityName", length = 255)
 	private String activityName;
 
-	@Column(name = "proposal", nullable = false, length = 255)
-	private String proposal;
+	@Lob
+	@Column(name = "proposal")
+	private byte[] proposal;
 
-	@Column(name = "venueRentalStatus", nullable = false)
+	@Column(name = "venueRentalStatus")
 	private int venueRentalStatus;
 
-	@Column(name = "venueRentalStartDate", nullable = false)
-	@Temporal(TemporalType.DATE)
+	@Column(name = "venueRentalStartDate")
 	private Date venueRentalStartDate;
 
-	@Column(name = "venueRentalEndDate", nullable = false)
-	@Temporal(TemporalType.DATE)
+	@Column(name = "venueRentalEndDate")
 	private Date venueRentalEndDate;
 
 	@Column(name = "venueRentalCreateTime", updatable = false, insertable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date venueRentalCreateTime;
+	private Timestamp venueRentalCreateTime;
 
-	@Column(name = "venueRentalCode", nullable = false, length = 255)
+	@Column(name = "venueRentalCode", length = 255)
 	private String venueRentalCode;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueRental")
@@ -108,11 +106,11 @@ public class VenueRental implements java.io.Serializable {
 		this.activityName = activityName;
 	}
 
-	public String getProposal() {
+	public byte[] getProposal() {
 		return proposal;
 	}
 
-	public void setProposal(String proposal) {
+	public void setProposal(byte[] proposal) {
 		this.proposal = proposal;
 	}
 
@@ -140,11 +138,11 @@ public class VenueRental implements java.io.Serializable {
 		this.venueRentalEndDate = venueRentalEndDate;
 	}
 
-	public Date getVenueRentalCreateTime() {
+	public Timestamp getVenueRentalCreateTime() {
 		return venueRentalCreateTime;
 	}
 
-	public void setVenueRentalCreateTime(Date venueRentalCreateTime) {
+	public void setVenueRentalCreateTime(Timestamp venueRentalCreateTime) {
 		this.venueRentalCreateTime = venueRentalCreateTime;
 	}
 
