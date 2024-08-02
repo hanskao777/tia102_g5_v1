@@ -35,7 +35,7 @@ public class CouponType implements Serializable {
 	@Column(name = "couponTypeDiscount")
 	private BigDecimal couponTypeDiscount; // 折扣數
 	
-	@OneToMany(mappedBy = "coupontype", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "couponType", cascade = CascadeType.ALL)
 	@OrderBy("memberCouponID asc")
 	private Set<MemberCoupon> memberCoupons; // 會員優惠券
 
