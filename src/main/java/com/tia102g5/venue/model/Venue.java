@@ -27,19 +27,19 @@ public class Venue implements java.io.Serializable {
 	@Column(name = "venueID", updatable = false)
 	int venueID;
 
-	@Column(name = "venueName", nullable = false, length = 255)
+	@Column(name = "venueName", length = 255)
 	String venueName;
 
-	@Column(name = "venuePhone", nullable = false, length = 255)
+	@Column(name = "venuePhone", length = 255)
 	String venuePhone;
 
-	@Column(name = "venueContactPerson", nullable = false, length = 255)
+	@Column(name = "venueContactPerson", length = 255)
 	String venueContactPerson;
 
-	@Column(name = "venueAddress", nullable = false, length = 255)
+	@Column(name = "venueAddress", length = 255)
 	String venueAddress;
 
-	@Column(name = "venueLocation", nullable = false, length = 255)
+	@Column(name = "venueLocation", length = 255)
 	String venueLocation;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venue")
@@ -48,10 +48,10 @@ public class Venue implements java.io.Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venue")
 	private Set<Seat> seats;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venue")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "venue")
 	private Set<VenueRental> venueRentals;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venue")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "venue")
 	private Set<Activity> activities;
 
 	public Venue() {

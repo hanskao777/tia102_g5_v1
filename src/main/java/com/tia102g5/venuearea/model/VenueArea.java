@@ -29,10 +29,10 @@ public class VenueArea implements java.io.Serializable {
 	private int venueAreaID;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "venueID", referencedColumnName = "venueID", nullable = false)
+	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
 	private Venue venue;
 
-	@Column(name = "venueAreaName", nullable = false, length = 255)
+	@Column(name = "venueAreaName", length = 255)
 	private String venueAreaName;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueArea")
