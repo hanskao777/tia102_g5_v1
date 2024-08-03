@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.tia102g5.announcement.model.Announcement;
+import com.tia102g5.news.model.News;
+
 @Entity
 @Table(name = "administrator")
 public class Administrator {
@@ -37,75 +40,96 @@ public class Administrator {
 	private Integer administratorStatus;
 	
 	
-//	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
-//	@OrderBy(newsID asc)
-//	private Set<News> news;
+	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
+	@OrderBy("newsID asc")
+	private Set<News> news;
 	
 	
-//	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
-//	@OrderBy(announcementID asc)
-//	private Set<Announcement> announcement;
+	@OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL)
+	@OrderBy("announcementID asc")
+	private Set<Announcement> announcements;
+
 
 	public Administrator() {
 		super();
-	}
-
-	public Administrator(Integer administratorID, String administratorAccount, String administratorPassword,
-			Date administratorCreateTime, Integer administratorStatus) {
-		super();
-		this.administratorID = administratorID;
-		this.administratorAccount = administratorAccount;
-		this.administratorPassword = administratorPassword;
-		this.administratorCreateTime = administratorCreateTime;
-		this.administratorStatus = administratorStatus;
 	}
 
 	public Integer getAdministratorID() {
 		return administratorID;
 	}
 
+
 	public void setAdministratorID(Integer administratorID) {
 		this.administratorID = administratorID;
 	}
+
 
 	public String getAdministratorAccount() {
 		return administratorAccount;
 	}
 
+
 	public void setAdministratorAccount(String administratorAccount) {
 		this.administratorAccount = administratorAccount;
 	}
+
 
 	public String getAdministratorPassword() {
 		return administratorPassword;
 	}
 
+
 	public void setAdministratorPassword(String administratorPassword) {
 		this.administratorPassword = administratorPassword;
 	}
+
 
 	public Date getAdministratorCreateTime() {
 		return administratorCreateTime;
 	}
 
+
 	public void setAdministratorCreateTime(Date administratorCreateTime) {
 		this.administratorCreateTime = administratorCreateTime;
 	}
+
 
 	public Integer getAdministratorStatus() {
 		return administratorStatus;
 	}
 
+
 	public void setAdministratorStatus(Integer administratorStatus) {
 		this.administratorStatus = administratorStatus;
 	}
 
-	@Override
-	public String toString() {
-		return "Administrator [administratorID=" + administratorID + ", administratorAccount=" + administratorAccount
-				+ ", administratorPassword=" + administratorPassword + ", administratorCreateTime="
-				+ administratorCreateTime + ", administratorStatus=" + administratorStatus + "]";
+
+	public Set<News> getNews() {
+		return news;
 	}
-	
-	
+
+
+	public void setNews(Set<News> news) {
+		this.news = news;
+	}
+
+
+	public Set<Announcement> getAnnouncements() {
+		return announcements;
+	}
+
+
+	public void setAnnouncements(Set<Announcement> announcements) {
+		this.announcements = announcements;
+	}
+
+
+//	@Override
+//	public String toString() {
+//		return "Administrator [administratorID=" + administratorID + ", administratorAccount=" + administratorAccount
+//				+ ", administratorPassword=" + administratorPassword + ", administratorCreateTime="
+//				+ administratorCreateTime + ", administratorStatus=" + administratorStatus + ", news=" + news
+//				+ ", announcements=" + announcements + "]";
+//	}
+
 }

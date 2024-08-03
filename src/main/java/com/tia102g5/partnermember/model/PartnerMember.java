@@ -14,37 +14,47 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.tia102g5.activity.model.Activity;
+import com.tia102g5.commodity.model.Commodity;
 import com.tia102g5.venuerental.model.VenueRental;
 
 @Entity
 @Table(name = "partnermember")
 public class PartnerMember {
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "partnerID", updatable = false) // "廠商ID"
 	private Integer partnerID;
 	
+	
 	@Column(name = "taxID") // "統一編號(登入帳號)"
 	private String taxID;
+	
 	
 	@Column(name = "partnerName") // "公司名稱"
 	private String partnerName;
 	
+	
 	@Column(name = "partnerHeading") // "抬頭"
 	private String partnerHeading;
+	
 	
 	@Column(name = "partnerAddress") // "地址"
 	private String partnerAddress;
 	
+	
 	@Column(name = "partnerPhone") // "連絡電話"
 	private String partnerPhone;
+	
 	
 	@Column(name = "partnerContactPerson") // "聯絡人"
 	private String partnerContactPerson;
 	
+	
 	@Column(name = "partnerPassword") // "密碼"
 	private String partnerPassword;
+	
 	
 	@Column(name = "partnerEmail") // "電子信箱"
 	private String partnerEmail;
@@ -57,17 +67,21 @@ public class PartnerMember {
 	private Integer partnerAccountStatus;
 	
 	
-//	@OneToMany(mappedBy = partnerMember, cascade = CascadeType.ALL)
-//	@OrderBy(commodityID asc)
-//	private Set<Commodity> commodity;
+	@OneToMany(mappedBy = "partnerMember", cascade = CascadeType.ALL)
+	@OrderBy("commodityID asc")
+	private Set<Commodity> commodities;
 	
-//	@OneToMany(mappedBy = partnerMember, cascade = CascadeType.ALL)
-//	@OrderBy(activityID asc)
-//	private Set<Activity> activity;
+	@OneToMany(mappedBy = "partnerMember", cascade = CascadeType.ALL)
+	@OrderBy("activityID asc")
+	private Set<Activity> activities;
 	
-//	@OneToMany(mappedBy = partnerMember, cascade = CascadeType.ALL)
-//	@OrderBy(venueRentalID asc)
-//	private Set<VenueRental> venueRental;
+	@OneToMany(mappedBy = "partnerMember", cascade = CascadeType.ALL)
+	@OrderBy("venueRentalID asc")
+	private Set<VenueRental> venueRentals;
+
+	public PartnerMember() {
+		super();
+	}
 
 	public Integer getPartnerID() {
 		return partnerID;
@@ -144,7 +158,6 @@ public class PartnerMember {
 	public Date getPartnerCreateTime() {
 		return partnerCreateTime;
 	}
-	
 
 	public void setPartnerCreateTime(Date partnerCreateTime) {
 		this.partnerCreateTime = partnerCreateTime;
@@ -157,17 +170,42 @@ public class PartnerMember {
 	public void setPartnerAccountStatus(Integer partnerAccountStatus) {
 		this.partnerAccountStatus = partnerAccountStatus;
 	}
-	
-	
 
-	@Override
-	public String toString() {
-		return "Partner [partnerID=" + partnerID + ", taxID=" + taxID + ", partnerName=" + partnerName
-				+ ", partnerHeading=" + partnerHeading + ", partnerAddress=" + partnerAddress + ", partnerPhone="
-				+ partnerPhone + ", partnerContactPerson=" + partnerContactPerson + ", partnerPassword="
-				+ partnerPassword + ", partnerEmail=" + partnerEmail + ", partnerCreateTime=" + partnerCreateTime
-				+ ", partnerAccountStatus=" + partnerAccountStatus + "]";
+	public Set<Commodity> getCommodities() {
+		return commodities;
 	}
+
+	public void setCommodities(Set<Commodity> commodities) {
+		this.commodities = commodities;
+	}
+
+	public Set<Activity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(Set<Activity> activities) {
+		this.activities = activities;
+	}
+
+	public Set<VenueRental> getVenueRentals() {
+		return venueRentals;
+	}
+
+	public void setVenueRentals(Set<VenueRental> venueRentals) {
+		this.venueRentals = venueRentals;
+	}
+
+//	@Override
+//	public String toString() {
+//		return "PartnerMember [partnerID=" + partnerID + ", taxID=" + taxID + ", partnerName=" + partnerName
+//				+ ", partnerHeading=" + partnerHeading + ", partnerAddress=" + partnerAddress + ", partnerPhone="
+//				+ partnerPhone + ", partnerContactPerson=" + partnerContactPerson + ", partnerPassword="
+//				+ partnerPassword + ", partnerEmail=" + partnerEmail + ", partnerCreateTime=" + partnerCreateTime
+//				+ ", partnerAccountStatus=" + partnerAccountStatus + ", commodities=" + commodities + ", activities="
+//				+ activities + ", venueRentals=" + venueRentals + "]";
+//	}
+
+	
 	
 	
 }
