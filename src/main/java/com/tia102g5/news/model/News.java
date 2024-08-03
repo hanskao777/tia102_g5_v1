@@ -2,78 +2,120 @@ package com.tia102g5.news.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.tia102g5.administrator.model.Administrator;
+
+@Entity
+@Table(name = "news")
 public class News implements java.io.Serializable {
-    private Integer newsID; //消息ID
-    private Integer administratorID; //管理員ID
-    private String newsTitle; //標題
-    private String newsContent; //內容
-    private Integer newsStatus; //狀態 0:隱藏;1:正常
-    private Timestamp newsCreateTime; //發布時間
+	private static final long serialVersionUID = 1L;
 
-    public News() {
-        super();
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "newsID", updatable = false)
+	private Integer newsID; // 消息ID
 
-    public News(Integer newsID, Integer administratorID, String newsTitle, String newsContent, Integer newsStatus, Timestamp newsCreateTime) {
-        this.newsID = newsID;
-        this.administratorID = administratorID;
-        this.newsTitle = newsTitle;
-        this.newsContent = newsContent;
-        this.newsStatus = newsStatus;
-        this.newsCreateTime = newsCreateTime;
-    }
+	@ManyToOne
+	@JoinColumn(name = "administratorID", referencedColumnName = "administratorID")
+	private Administrator administrator; // 管理員ID
 
-    public Integer getNewsID() {
-        return newsID;
-    }
-    public void setNewsID(Integer newsID) {
-        this.newsID = newsID;
-    }
+	@NotEmpty(message = "消息標題不能空白")
+	@Column(name = "newsTitle", length = 255)
+	private String newsTitle; // 標題
 
-    public Integer getAdministratorID() {
-        return administratorID;
-    }
-    public void setAdministratorID(Integer administratorID) {
-        this.administratorID = administratorID;
-    }
+	@NotEmpty(message = "消息內容不能空白")
+	@Column(name = "newsContent", columnDefinition = "text")
+	private String newsContent; // 內容
 
-    public String getNewsTitle() {
-        return newsTitle;
-    }
-    public void setNewsTitle(String newsTitle) {
-        this.newsTitle = newsTitle;
-    }
+	@NotNull(message = "消息狀態不能為空")
+	@Column(name = "newsStatus")
+	private Integer newsStatus; // 狀態 0:隱藏 1:正常顯示 2:置頂
 
-    public String getNewsContent() {
-        return newsContent;
-    }
-    public void setNewsContent(String newsContent) {
-        this.newsContent = newsContent;
-    }
+	@Column(name = "newsCreateTime")
+	private Timestamp newsCreateTime; // 發布時間
 
-    public Integer getNewsStatus() {
-        return newsStatus;
-    }
-    public void setNewsStatus(Integer newsStatus) {
-        this.newsStatus = newsStatus;
-    }
+	// 構造函數、getter 和 setter 方法
+	public News() {
+		super();
+	}
 
-    public Timestamp getNewsCreateTime() {
-        return newsCreateTime;
-    }
-    public void setNewsCreateTime(Timestamp newsCreateTime) {
-        this.newsCreateTime = newsCreateTime;
-    }
+	public News(Integer newsID, Administrator administrator, String newsTitle, String newsContent, Integer newsStatus,
+			Timestamp newsCreateTime) {
+		super();
+		this.newsID = newsID;
+		this.administrator = administrator;
+		this.newsTitle = newsTitle;
+		this.newsContent = newsContent;
+		this.newsStatus = newsStatus;
+		this.newsCreateTime = newsCreateTime;
+	}
 
-    @Override
-    public String toString() {
-        return "News{" +
-                "newsID=" + newsID +
-                ", administratorID=" + administratorID +
-                ", newsTitle='" + newsTitle + '\'' +
-                ", newsContent='" + newsContent + '\'' +
-                ", newsStatus=" + newsStatus +
-                ", newsCreateTime=" + newsCreateTime +
-                '}';
-    }
+	public Integer getNewsID() {
+		return newsID;
+	}
+
+	public void setNewsID(Integer newsID) {
+		this.newsID = newsID;
+	}
+
+	public Administrator getAdministrator() {
+		return administrator;
+	}
+
+	public void setAdministrator(Administrator administrator) {
+		this.administrator = administrator;
+	}
+
+	public String getNewsTitle() {
+		return newsTitle;
+	}
+
+	public void setNewsTitle(String newsTitle) {
+		this.newsTitle = newsTitle;
+	}
+
+	public String getNewsContent() {
+		return newsContent;
+	}
+
+	public void setNewsContent(String newsContent) {
+		this.newsContent = newsContent;
+	}
+
+	public Integer getNewsStatus() {
+		return newsStatus;
+	}
+
+	public void setNewsStatus(Integer newsStatus) {
+		this.newsStatus = newsStatus;
+	}
+
+	public Timestamp getNewsCreateTime() {
+		return newsCreateTime;
+	}
+
+	public void setNewsCreateTime(Timestamp newsCreateTime) {
+		this.newsCreateTime = newsCreateTime;
+	}
+
+	@PrePersist
+	@PreUpdate
+	protected void onUpdate() {
+		newsCreateTime = new Timestamp(System.currentTimeMillis());
+	}
+
+//    @Override
+//    public String toString() {
+//        return "News{" +
+//                "newsID=" + newsID +
+//                ", administratorID=" + administratorID +
+//                ", newsTitle='" + newsTitle + '\'' +
+//                ", newsContent='" + newsContent + '\'' +
+//                ", newsStatus=" + newsStatus +
+//                ", newsCreateTime=" + newsCreateTime +
+//                '}';
+//    }
 }
