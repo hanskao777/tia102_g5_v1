@@ -2,6 +2,7 @@ package com.tia102g5.message.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,51 +18,54 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.tia102g5.article.model.Article;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.prosecute.model.Prosecute;
 
 
 @Entity
-@Table(name = "message")
+@Table(name = "message") //留言
 public class Message implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "messageID", updatable = false)
+	@Column(name = "messageID", updatable = false) //留言ID
 	private Integer messageID;
 	
 	
 	@ManyToOne
-	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID") //會員ID
 	private GeneralMember generalMember; 
 
 
 	@ManyToOne
-	@JoinColumn(name = "articleID", referencedColumnName = "articleID")
+	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
 	private Article article; 
 	
 	
-	@Column(name = "messageContent")
+	@Column(name = "messageContent") //留言內容
 	@NotEmpty(message="請輸入留言內容")
 	@Size(min=2,max=500,message="留言內容必需在{min}字到{max}字之間")
 	private String messageContent ;	
 	
 	
-	@Column(name = "messageStatus ")
+	@Column(name = "messageStatus ") //留言狀態
+	@ColumnDefault("1") //1:顯示 2:不顯示
 	private Integer messageStatus ;
 	
 
-	@Column(name = "messageCreateTime", updatable = false, insertable = false)
+	@Column(name = "messageCreateTime", updatable = false, insertable = false) //留言時間
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  messageCreateTime;
 
 	
 	
 
-	@OneToOne(mappedBy = "message", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "message",cascade = CascadeType.ALL, fetch = FetchType.LAZY) //檢舉
 	private Prosecute prosecute; 
 	
 	

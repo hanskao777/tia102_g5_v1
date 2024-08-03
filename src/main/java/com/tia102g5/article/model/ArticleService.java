@@ -51,6 +51,11 @@ public class ArticleService {
 		return HibernateUtil_CompositeQuery_Article3.getAllC(map,sessionFactory.openSession());
 	}
 	
+	
+    public List<String> getAllCategories() {
+        return repository.findAllDistinctCategories();
+    }
+	
 	public Set<ArticleImg> getArticleImgsByArticleID(Integer articleID) {
 		return getOneArticle(articleID).getArticleImgs();
 	}

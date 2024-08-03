@@ -19,26 +19,26 @@ import com.tia102g5.article.model.Article;
 
 
 @Entity
-@Table(name = "articleimg")
+@Table(name = "articleimg") //文章圖片
 public class ArticleImg implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "articleImgID", updatable = false)
+	@Column(name = "articleImgID", updatable = false) //文章圖片ID
 	private Integer articleImgID;
 
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "articleID", referencedColumnName = "articleID")
+	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
 	private Article article; 
 
 
 	
-	@Column(name = "articlePic", columnDefinition = "mediumblob")
+	@Column(name = "articlePic", columnDefinition = "mediumblob") //文章圖片
 	private byte[] articlePic;
 
-	@Column(name = "articleImgCreateTime", updatable = false, insertable = false)
+	@Column(name = "articleImgCreateTime", updatable = false, insertable = false) //文章圖片時間
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  articleImgCreateTime;
 	

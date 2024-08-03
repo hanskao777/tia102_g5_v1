@@ -33,47 +33,44 @@ import com.tia102g5.prosecute.model.Prosecute;
 
 
 @Entity
-@Table(name = "article")
+@Table(name = "article") //文章
 public class Article implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "articleID", updatable = false)
+	@Column(name = "articleID", updatable = false) //文章ID
 	private Integer articleID;
 	
 	
-
-	@Column(name = "articleCategory")
+	@Column(name = "articleCategory") //文章類別
 	private String articleCategory;
 
+
 	
-	
-	
-	
-	@Column(name = "articleTitle")
+	@Column(name = "articleTitle") //文章標題
 	@NotEmpty(message="請填寫文章標題")
 	@Size(min=5,max=50,message="文章標題:長度必需在{min}到{max}之間")
 	private String articleTitle;
 
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	@ManyToOne
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID") //會員ID
 	private GeneralMember generalMember; 
 
 	
-	@Column(name = "articleContent", columnDefinition = "TEXT")
+	@Column(name = "articleContent", columnDefinition = "TEXT") //文章內容
 	@NotEmpty(message="文章內容請勿空白")
 	private String articleContent;
 
 	
 	@ManyToOne
-	@JoinColumn(name = "boardID", referencedColumnName = "boardID")
+	@JoinColumn(name = "boardID", referencedColumnName = "boardID") //各版ID
 	private Board board; 
 		
 
 	@Column(name = "articleStatus")
-	private Integer articleStatus;
+	private Integer articleStatus = 1;
 	
 
 	@Column(name = "articleCreateTime", updatable = false, insertable = false)
