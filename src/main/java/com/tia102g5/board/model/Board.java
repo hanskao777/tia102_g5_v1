@@ -33,7 +33,7 @@ public class Board implements java.io.Serializable {
 	
 	
 
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "board", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER)
 	@OrderBy("articleID asc")
 	private Set<Article> articles = new HashSet<Article>();
 	

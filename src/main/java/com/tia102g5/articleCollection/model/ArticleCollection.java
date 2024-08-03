@@ -19,30 +19,30 @@ import com.tia102g5.generalmember.model.GeneralMember;
 
 
 @Entity
-@Table(name = "articlecollection")
+@Table(name = "articlecollection") //文章收藏
 public class ArticleCollection implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "articleCollectionID", updatable = false)
+	@Column(name = "articleCollectionID", updatable = false) //文章收藏ID
 	private Integer articleCollectionID;
 	
 	
 	@ManyToOne
-	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
+	@JoinColumn(name = "memberID", referencedColumnName = "memberID") //會員ID
 	private GeneralMember generalMember; 
 	
 
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "articleID", referencedColumnName = "articleID")
+	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
 	private Article article; 
 	
 
 
-	@Column(name = "collectionCreateTime", updatable = false, insertable = false)
+	@Column(name = "collectionCreateTime", updatable = false, insertable = false) //收藏時間
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date  collectionCreateTime;
 		

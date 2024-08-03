@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tia102g5.article.model.Article;
@@ -16,10 +17,16 @@ public interface ArticleImgRepository extends JpaRepository<ArticleImg, Integer>
 
 	@Transactional
 	@Modifying
-	@Query(value = "delete from articleImg where articleImgID =?1", nativeQuery = true)
-	void deleteByaArticleImgID(int articleImgID);
+	@Query("DELETE FROM ArticleImg ai WHERE ai.article.articleID = :articleID")
+    void deleteByArticle_ArticleID(@Param("articleID") int articleID);
 
 	//● (自訂)條件查詢
 	@Query(value = "from ArticleImg where articleImgID=?1 and article like ?2 and articlePic like ?3 and articleImgCreateTime like ?4 order by articleImgID")
 	List<ArticleImg> findByOthers(Integer articleImgID, Article article, byte[] articlePic, Date articleImgCreateTime);
+
+
+	// 根據文章 ID 查詢所有圖片
+	List<ArticleImg> findByArticle_ArticleID(Integer articleID);
+	
+
 }

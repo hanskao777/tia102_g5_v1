@@ -13,12 +13,12 @@ public class ArticleImgService {
 	@Autowired
 	ArticleImgRepository repository;
 
-	public void addArticleImg(ArticleImg articleimg) {
-		repository.save(articleimg);
+	public void addArticleImg(ArticleImg articleImg) {
+		repository.save(articleImg);
 	}
 
-	public void updateDept(ArticleImg articleimg) {
-		repository.save(articleimg);
+	public void updateDept(ArticleImg articleImg) {
+		repository.save(articleImg);
 	}
 
 	public void deleteArticleImg(Integer articleImgID) {
@@ -32,6 +32,10 @@ public class ArticleImgService {
 //		return optional.get();
 		return optional.orElse(null);  // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
 	}
+	
+	public List<ArticleImg> getArticleImgsByArticleID(Integer articleID) {
+        return repository.findByArticle_ArticleID(articleID);
+    }
 
 	public List<ArticleImg> getAll() {
 		return repository.findAll();
