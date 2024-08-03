@@ -550,9 +550,7 @@ ALTER TABLE Ticket
 -- 社群相關 ---------------------------------------------------------------
 ALTER TABLE Article 
 	ADD CONSTRAINT fk_Article_GeneralMember_memberID 
-	FOREIGN KEY (memberID) REFERENCES GeneralMember (memberID);
-
-ALTER TABLE Article
+	FOREIGN KEY (memberID) REFERENCES GeneralMember (memberID),
 	ADD CONSTRAINT  fk_Article_Board_boardID
 	FOREIGN KEY (boardID) REFERENCES Board (boardID);
 
@@ -576,7 +574,8 @@ ALTER TABLE Heart
 
 ALTER TABLE ArticleImg
 	ADD CONSTRAINT fk_ArticleImg_Article_articleID
-	FOREIGN KEY (articleID) REFERENCES Article (articleID);
+	FOREIGN KEY (articleID) REFERENCES Article (articleID)
+    ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Prosecute
 	ADD CONSTRAINT fk_Prosecute_GeneralMember_memberID
@@ -612,9 +611,7 @@ ALTER TABLE OrderItem
 
 ALTER TABLE Cart
 	ADD CONSTRAINT fk_Cart_GeneralMember_memberID
-	FOREIGN KEY (memberID) REFERENCES GeneralMember(memberID),
-	ADD CONSTRAINT fk_Cart_Commodity_commodityID
-	FOREIGN KEY (commodityID) REFERENCES Commodity (commodityID);
+	FOREIGN KEY (memberID) REFERENCES GeneralMember(memberID);
     
 ALTER TABLE CartItem
 	ADD CONSTRAINT fk_CartItem_Cart_cartID
