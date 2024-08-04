@@ -109,9 +109,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<MemberCoupon> memberCoupons;
 	
 	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("cartID asc")
-	private Set<Cart> carts;
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("cartID asc")
+//	private Set<Cart> carts;
 	
 	
 	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
@@ -138,9 +138,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<ActivityCollection> activityCollections;
 	
 	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("orderID asc")
-	private Set<Orders> orders;
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("orderID asc")
+//	private Set<Orders> orders;
 	
 	
 	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
@@ -303,14 +303,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-	public Set<Cart> getCarts() {
-		return carts;
-	}
-
-
-	public void setCarts(Set<Cart> carts) {
-		this.carts = carts;
-	}
+//	public Set<Cart> getCarts() {
+//		return carts;
+//	}
+//
+//
+//	public void setCarts(Set<Cart> carts) {
+//		this.carts = carts;
+//	}
 
 
 	public Set<ArticleCollection> getArticleCollections() {
@@ -363,14 +363,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-	public Set<Orders> getOrders() {
-		return orders;
-	}
-
-
-	public void setOrders(Set<Orders> orders) {
-		this.orders = orders;
-	}
+//	public Set<Orders> getOrders() {
+//		return orders;
+//	}
+//
+//
+//	public void setOrders(Set<Orders> orders) {
+//		this.orders = orders;
+//	}
 
 
 	public Set<Ticket> getTickets() {

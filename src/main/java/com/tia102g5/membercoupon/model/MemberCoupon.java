@@ -54,8 +54,8 @@ public class MemberCoupon {
 	
 	
 	
-	@OneToOne(mappedBy = "memberCoupon")
-	private Orders orders;
+//	@OneToOne(mappedBy = "memberCoupon")
+//	private Orders orders;
 	
 	
 	@OneToOne(mappedBy = "memberCoupon")
@@ -115,13 +115,13 @@ public class MemberCoupon {
 		this.memberCouponCreateTime = memberCouponCreateTime;
 	}
 
-	public Orders getOrders() {
-		return orders;
-	}
-
-	public void setOrders(Orders orders) {
-		this.orders = orders;
-	}
+//	public Orders getOrders() {
+//		return orders;
+//	}
+//
+//	public void setOrders(Orders orders) {
+//		this.orders = orders;
+//	}
 
 	public BookTicket getBookTicket() {
 		return bookTicket;

@@ -247,6 +247,13 @@
             <artifactId>gson</artifactId>
             <!-- <version>2.9.0</version> -->
         </dependency>
+        
+        					<!-- 額外添加依賴注入 -->
+        					
+		<dependency><!-- ＠用途說明: 身份驗證和授權自動配置安全性設置 -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 
 	</dependencies>
 
