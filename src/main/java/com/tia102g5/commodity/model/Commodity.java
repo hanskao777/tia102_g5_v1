@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,6 +26,9 @@ import javax.validation.constraints.NotNull;
 
 import com.tia102g5.activity.model.Activity;
 import com.tia102g5.partnermember.model.PartnerMember;
+import com.tia102g5.commoditypicture.model.CommodityPicture;
+import com.tia102g5.orderitem.model.OrderItem;
+import com.tia102g5.cartitem.model.CartItem;
 
 //商品
 @Entity
@@ -79,17 +83,18 @@ public class Commodity implements java.io.Serializable{
     @Column(name = "commodityCreateTime", updatable = false, insertable = false) 
     private Timestamp commodityCreateTime; //建立時間
     
-//    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL)
-//    @OrderBy("commodityPictureID asc")
-//    private Set<CommodityPicture> commodityPictures;
-//    
-//    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL)
-//    @OrderBy("orderItemID asc")
-//    private Set<OrderItem> orderItems;
-//    
-//    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL)
-//    @OrderBy("cartID asc")
-//    private Set<CartItem> cartItems;
+    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL)
+    @OrderBy("commodityPictureID asc")
+    private Set<CommodityPicture> commodityPictures;
+    
+//    是不是不用連動
+    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL)
+    @OrderBy("orderItemID asc")
+    private Set<OrderItem> orderItems;
+    
+    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL)
+    @OrderBy("cartItemID asc")
+    private Set<CartItem> cartItems;
 
     
     
@@ -102,7 +107,7 @@ public class Commodity implements java.io.Serializable{
 	public Commodity(Integer commodityID, String commodityName, BigDecimal commodityPrice, Integer commodityStock,
 			String commodityContent, Integer activityID, Integer partnerID, Integer commodityStatus,
 			Date commodityPostTime, Date commodityRemoveTime, Timestamp commodityCreateTime,
-			Timestamp commodityUpdateTime ) { //這邊還少了 Set<CommodityPicture> commodityPictures三個
+			Timestamp commodityUpdateTime, Set<CommodityPicture> commodityPictures, Set<OrderItem> orderItems, Set<CartItem> cartItems) {
 		super();
 		this.commodityID = commodityID;
 		this.commodityName = commodityName;
@@ -116,9 +121,9 @@ public class Commodity implements java.io.Serializable{
 		this.commodityRemoveTime = commodityRemoveTime;
 		this.commodityCreateTime = commodityCreateTime;
 		this.commodityUpdateTime = commodityUpdateTime;
-//		this.commodityPictures = commodityPictures;
-//		this.orderItems = orderItems;
-//		this.cartItems = cartItems;
+		this.commodityPictures = commodityPictures;
+		this.orderItems = orderItems;
+		this.cartItems = cartItems;
 	}
 
 	public Integer getCommodityID() {
@@ -217,29 +222,29 @@ public class Commodity implements java.io.Serializable{
 		this.commodityUpdateTime = commodityUpdateTime;
 	}
 	
-//	public Set<CommodityPicture> getCommodityPictures() {
-//		return commodityPictures;
-//	}
-//
-//	public void setCommodityPictures(Set<CommodityPicture> commodityPictures) {
-//		this.commodityPictures = commodityPictures;
-//	}
-//
-//	public Set<OrderItem> getOrderItems() {
-//		return orderItems;
-//	}
-//
-//	public void setOrderItems(Set<OrderItem> orderItems) {
-//		this.orderItems = orderItems;
-//	}
-//
-//	public Set<CartItem> getCartItems() {
-//		return cartItems;
-//	}
-//
-//	public void setCartItems(Set<CartItem> cartItems) {
-//		this.cartItems = cartItems;
-//	}
+	public Set<CommodityPicture> getCommodityPictures() {
+		return commodityPictures;
+	}
+
+	public void setCommodityPictures(Set<CommodityPicture> commodityPictures) {
+		this.commodityPictures = commodityPictures;
+	}
+
+	public Set<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(Set<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	public Set<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(Set<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
 
     @PrePersist
     protected void onCreate() {
