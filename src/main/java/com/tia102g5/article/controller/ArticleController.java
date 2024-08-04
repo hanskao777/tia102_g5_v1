@@ -61,11 +61,35 @@ public class ArticleController {
 	BoardService boardSvc;
 
 
+    //=========== 以下第63~75行是提供給 /src/main/resources/templates/front-end/forum/select_page.html 與 listAllEmp.html 要使用的資料 ===================   
+    @GetMapping("/select_page")
+	public String select_page(Model model) {
+		return "front-end/forum/select_page";
+	}
+    
+    @GetMapping("/listAllArticle")
+	public String listAllArticle(Model model) {
+		return "front-end/forum/listAllArticle";
+	}
+    
+    @ModelAttribute("articleListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+	protected List<Article> referenceListData(Model model) {
+		
+    	List<Article> list = articleSvc.getAll();
+		return list;
+	}
+    
+	@ModelAttribute("boardListData") // for select_page.html 第135行用
+	protected List<Board> referenceListData_Board(Model model) {
+		model.addAttribute("board", new Board()); // for select_page.html 第133行用
+		List<Board> list = boardSvc.getAll();
+		return list;
+	}
+	
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
 	
-
 	
 	@GetMapping("addArticle")
 	public String addArticle(ModelMap model) {
@@ -82,7 +106,7 @@ public class ArticleController {
 	    model.addAttribute("generalMemberListData", generalMemberList);
 	    
 	    
-		return "back-end/forum/addArticle";
+		return "front-end/forum/addArticle";
 	}
 
 	/*
@@ -97,14 +121,14 @@ public class ArticleController {
 		 result = removeFieldError(article, result, "articlePic");
 
 		    if (result.hasErrors()) {
-		        return "back-end/forum/addArticle";
+		        return "front-end/forum/addArticle";
 		    }
 		    
 		 // 檢查圖片數量
 		    final int MAX_IMAGES = 5; // 最多允許5張圖片
 		    if (parts != null && parts.length > MAX_IMAGES) {
 		        result.rejectValue("articlePic", "error.articlePic", "最多只能上傳 " + MAX_IMAGES + " 張圖片");
-		        return "back-end/forum/addArticle";
+		        return "front-end/forum/addArticle";
 		    }
 
 		    // 檢查圖片大小和格式
@@ -114,7 +138,7 @@ public class ArticleController {
 		            if (!pic.isEmpty()) {
 		                if (pic.getSize() > MAX_FILE_SIZE) {
 		                    result.rejectValue("articlePic", "error.articlePic", "圖片大小不能超過 8MB");
-		                    return "back-end/forum/addArticle";
+		                    return "front-end/forum/addArticle";
 		                }
 
 		            }
@@ -186,7 +210,7 @@ public class ArticleController {
 
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("article", article);
-		return "back-end/forum/update_article_input"; // 查詢完成後轉交update_emp_input.html
+		return "front-end/forum/update_article_input"; // 查詢完成後轉交update_emp_input.html
 	}
 
 	
@@ -205,14 +229,14 @@ public class ArticleController {
 		
 
 		if (result.hasErrors()) {
-			return "back-end/forum/update_emp_input";
+			return "front-end/forum/update_article_input";
 		}
 		
 		 // 檢查圖片數量
 	    final int MAX_IMAGES = 5; // 最多允許5張圖片
 	    if (parts != null && parts.length > MAX_IMAGES) {
 	        result.rejectValue("articlePic", "error.articlePic", "最多只能上傳 " + MAX_IMAGES + " 張圖片");
-	        return "back-end/forum/addArticle";
+	        return "front-end/forum/addArticle";
 	    }
 
 	    // 檢查圖片大小
@@ -222,7 +246,7 @@ public class ArticleController {
 	            if (!pic.isEmpty()) {
 	                if (pic.getSize() > MAX_FILE_SIZE) {
 	                    result.rejectValue("articlePic", "error.articlePic", "圖片大小不能超過 8MB");
-	                    return "back-end/forum/addArticle";
+	                    return "front-end/forum/addArticle";
 	                }
 	            }
 	        }
@@ -259,7 +283,7 @@ public class ArticleController {
 		model.addAttribute("success", "- (修改成功)");
 		article = articleSvc.getOneArticle(Integer.valueOf(article.getArticleID()));
 		model.addAttribute("article", article);
-		return "back-end/forum/listOneArticle"; // 修改成功後轉交listOneArticle.html
+		return "front-end/forum/listOneArticle"; // 修改成功後轉交listOneArticle.html
 	}
 
 	/*
@@ -275,7 +299,7 @@ public class ArticleController {
 		List<Article> list = articleSvc.getAll();
 		model.addAttribute("articleListData", list);
 		model.addAttribute("success", "- (刪除成功)");
-		return "back-end/forum/listAllArticle"; // 刪除完成後轉交listAllEmp.html
+		return "front-end/forum/listAllArticle"; // 刪除完成後轉交listAllEmp.html
 	}
 	
 	
@@ -287,7 +311,7 @@ public class ArticleController {
 		Map<String, String[]> map = req.getParameterMap();
 		List<Article> list = articleSvc.getAll(map);
 		model.addAttribute("articleListData", list); // for listAllEmp.html 第85行用
-		return "back-end/forum/listAllArticle";
+		return "front-end/forum/listAllArticle";
 	}
 	
 	
@@ -318,15 +342,15 @@ public class ArticleController {
 		
 		if (article == null) {
 			model.addAttribute("errorMessage", "查無資料");
-			return "back-end/forum/select_page";
+			return "front-end/forum/select_page";
 		}
 		
 		/***************************3.查詢完成,準備轉交(Send the Success view)*****************/
 		model.addAttribute("article", article);
 		model.addAttribute("getOne_For_Display", "true"); // 旗標getOne_For_Display見select_page.html的第156行 -->
 		
-//		return "back-end/forum/listOneArticle";  // 查詢完成後轉交listOneArticle.html
-		return "back-end/forum/select_page"; // 查詢完成後轉交select_page.html由其第158行insert listOneEmp.html內的th:fragment="listOneEmp-div
+//		return "front-end/forum/listOneArticle";  // 查詢完成後轉交listOneArticle.html
+		return "front-end/forum/select_page"; // 查詢完成後轉交select_page.html由其第158行insert listOneEmp.html內的th:fragment="listOneEmp-div
 	}
 	
 
@@ -378,7 +402,7 @@ public class ArticleController {
 	    for (ConstraintViolation<?> violation : violations ) {
 	          strBuilder.append(violation.getMessage() + "<br>");
 	    }
-	    //==== 以下第267~271行是當前面第252行返回 /src/main/resources/templates/back-end/forum/select_page.html用的 ====   
+	    //==== 以下第267~271行是當前面第252行返回 /src/main/resources/templates/front-end/forum/select_page.html用的 ====   
 //	    model.addAttribute("article", new Article());
 //    	ArticleService ArticleSvc = new ArticleService();
 	    // 加載所有文章
@@ -392,7 +416,7 @@ public class ArticleController {
 		
     	
     	String message = strBuilder.toString();
-	    return new ModelAndView("back-end/forum/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
+	    return new ModelAndView("front-end/forum/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
 	}
 	
 

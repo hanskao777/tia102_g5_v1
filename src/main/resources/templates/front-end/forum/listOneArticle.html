@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>文章資料 - listOneArticle.html</title>
+
+<head th:insert="~{/front-end/forum/included-fragment}"></head>
+<style type="text/css">
+	
+    span {
+		display: inline-block;
+		width: 150px;
+		text-align: left;
+		font-weight: bold;
+	}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-success fixed-top justify-content-center">
+		 <div align="center"> <h2>文章資料 - listOneArticle.html</h2>
+		 <h3><a class="navbar-brand" th:href="@{/article/select_page}"><img th:src="@{/images/back1.gif}">回查詢頁<label th:text="${success}"></label></a></h3></div>
+</nav>
+
+	<div align="center" th:fragment="listOneArticle-div"> <!-- 此div被select_page.html第158行insert用 -->
+		<h3><span>查詢結果 :</span></h3>
+		<span>文章分類:</span><span th:text="${article.articleCategory}"></span><br/>
+		<span>發文者:</span><span th:text="${article.generalMember.memberAccount}"></span><br/>
+		<span>文章內容:</span><span th:text="${article.articleContent}"></span><br/>
+		<span>各版名稱:</span><span th:text="${article.board.boardName}"></span><br/>
+		<span>文章狀態:</span><span th:text="${article.articleStatus}"></span><br/>
+		<span>文章時間:</span><span th:text="${#dates.format(article.articleCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
+		<span>照片:</span>
+		<span>
+		    <th:block th:if="${not #lists.isEmpty(article.articleImgs)}">
+		        <th:block th:each="img : ${article.articleImgs}">
+		            <img th:src="@{/article/ArticleDBGifReader(articleImgID=${img.articleImgID})}" width="100px">
+		        </th:block>
+		    </th:block>
+		</span>
+
+	</div>
+
+
+</body>
+</html>
