@@ -1,5 +1,6 @@
 package com.tia102g5.activityareaprice.model;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ import com.tia102g5.ticket.model.Ticket;
 import com.tia102g5.venuearea.model.VenueArea;
 
 @Entity
-@Table(name = "acivityareaprice")
+@Table(name = "activityareaprice")
 public class ActivityAreaPrice implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -36,9 +37,10 @@ public class ActivityAreaPrice implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "activityID", referencedColumnName = "activityID")
 	private Activity activity;
-
-	@Column(name = "activityAreaPrice")
-	private int activityAreaPrice;
+	
+	
+	@Column(name = "activityAreaPrice", precision = 7, scale = 2)
+	private BigDecimal activityAreaPrice;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "activityAreaPrice")
 	@OrderBy("ticketID asc")
@@ -71,11 +73,11 @@ public class ActivityAreaPrice implements java.io.Serializable {
 		this.activity = activity;
 	}
 
-	public int getActivityAreaPrice() {
+	public BigDecimal getActivityAreaPrice() {
 		return activityAreaPrice;
 	}
 
-	public void setActivityAreaPrice(int activityAreaPrice) {
+	public void setActivityAreaPrice(BigDecimal activityAreaPrice) {
 		this.activityAreaPrice = activityAreaPrice;
 	}
 
