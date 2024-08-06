@@ -1,0 +1,57 @@
+
+    /* 整個文章容器的樣式 */
+    .article-container {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 添加陰影效果 */
+        border-radius: 8px; /* 圓角效果 */
+        padding: 20px; /* 內部填充 */
+        background-color: #fff; /* 白色背景 */
+    }
+
+    /* 文章標題區域的樣式 */
+    .article-header {
+        border-bottom: 1px solid #e0e0e0; /* 底部邊框 */
+        padding-bottom: 15px; /* 底部內邊距 */
+        margin-bottom: 20px; /* 底部外邊距 */
+    }
+
+    /* 文章內容區域的樣式 */
+    .article-content {
+        padding: 20px; /* 內部填充 */
+        background-color: #f9f9f9; /* 淺灰色背景 */
+        border-radius: 8px; /* 圓角效果 */
+    }
+
+    /* 按讚和收藏按鈕的基本樣式 */
+    .action-btn {
+        font-size: 1.5rem; /* 圖標大小 */
+        color: #6c757d; /* 按鈕顏色 */
+        background: none; /* 無背景 */
+        border: none; /* 無邊框 */
+        cursor: pointer; /* 鼠標指針樣式 */
+        transition: color 0.3s ease; /* 顏色變化過渡效果 */
+        display: inline-flex; /* 內聯彈性布局 */
+        align-items: center; /* 垂直居中對齊 */
+        margin-left: 15px; /* 左側外邊距 */
+    }
+
+    /* 按鈕懸停效果 */
+    .action-btn:hover {
+        color: #0056b3; /* 懸停時的顏色 */
+    }
+
+    /* 按讚和收藏數量的樣式 */
+    .action-btn .count {
+        font-size: 1rem; /* 字體大小 */
+        margin-left: 5px; /* 左側外邊距 */
+    }
+
+    /* 分類版名稱的樣式 */
+    .category-badge {
+        background-color: #e9ecef; /* 背景顏色 */
+        color: #495057; /* 文字顏色 */
+        padding: 0.25em 0.6em; /* 內部填充 */
+        border-radius: 0.25rem; /* 圓角效果 */
+        font-size: 0.875em; /* 字體大小 */
+        font-weight: 600; /* 字體粗細 */
+        margin-right: 10px; /* 右側外邊距 */
+    }
