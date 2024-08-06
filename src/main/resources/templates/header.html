@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/header_footer.css" rel="stylesheet">
+    <link th:href="@{/css/header_footer.css}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
         <div class="top-bar">
             <div class="logo">
                 <a href="./">
-                    <img src="images/logo.png" alt="Logo">
+                    <img th:src="@{/images/logo.png}" alt="Logo">
                 </a>
             </div>
             <div class="search-container">
@@ -44,7 +44,7 @@
                         <a class="nav-link" href="#">場館介紹</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/article/select_page">社群空間</a>
+                        <a class="nav-link" href="/article/forum">社群空間</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -14,6 +14,14 @@ body {
 
 /* 側邊欄 */
 
+
+
+.sidebar-title span {
+    font-weight: bold;
+
+}
+
+
 /* 基本樣式：透明背景，無邊框 */
 .list-group-item {
     background-color: transparent !important;
@@ -49,7 +57,7 @@ body {
 
 /* 懸停效果 */
 .list-group-item:hover {
-    background-color: rgba(253, 188, 180, 0.1) !important;
+    background-color: FEFEFA(253, 188, 180, 0.1) !important;
 }
 
 /* 懸停效果：灰色陰影（只應用於非活動項） */
@@ -86,6 +94,11 @@ header, footer {
     text-align: center; 
 } */
 
+/* 麵包屑 */
+#mainContent > div:first-child {
+  width: 100%;
+  margin-bottom: 20px; /* 可根據需要調整 */
+}
 
 /* 導覽列 */
 .nav-link {

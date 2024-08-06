@@ -62,6 +62,9 @@ public class HibernateUtil_CompositeQuery_Article3 {
 		Transaction tx = session.beginTransaction();
 		List<Article> list = null;
 		try {
+			
+			System.out.println("Received map in getAllC: " + map);
+			
 			// 【●創建 CriteriaBuilder】
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			// 【●創建 CriteriaQuery】
@@ -87,6 +90,15 @@ public class HibernateUtil_CompositeQuery_Article3 {
 			// 【●最後完成創建 javax.persistence.Query●】
 			Query query = session.createQuery(criteriaQuery); //javax.persistence.Query; //Hibernate 5 開始 取代原 org.hibernate.Query 介面
 			list = query.getResultList();
+			
+			
+	        // 檢查查詢結果的代碼
+	        System.out.println("Query result size: " + (list != null ? list.size() : "null"));
+	        if (list != null) {
+	            for (Article article : list) {
+	                System.out.println("Found article: " + article.getArticleTitle());
+	            }
+	        }
 
 			tx.commit();
 		} catch (RuntimeException ex) {
