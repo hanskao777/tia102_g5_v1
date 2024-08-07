@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -67,9 +68,8 @@ public class VenueRental implements java.io.Serializable {
 	@OrderBy("venueTimeSlotID asc")
 	private Set<VenueTimeSlot> venueTimeSlots;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venueRental")
-	@OrderBy("activityID asc")
-	private Set<Activity> activities;
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "venueRental")
+	private Activity activity;
 
 	public VenueRental() {
 	}
@@ -162,12 +162,12 @@ public class VenueRental implements java.io.Serializable {
 		this.venueTimeSlots = venueTimeSlots;
 	}
 
-	public Set<Activity> getActivities() {
-		return activities;
+	public Activity getActivity() {
+		return activity;
 	}
 
-	public void setActivities(Set<Activity> activities) {
-		this.activities = activities;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 }
