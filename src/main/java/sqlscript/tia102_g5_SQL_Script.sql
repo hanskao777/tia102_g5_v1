@@ -480,7 +480,7 @@ ALTER TABLE VenueRental
 	ADD CONSTRAINT fk_VenueRental_Venue_venueID
 	FOREIGN KEY (venueID) REFERENCES Venue (venueID),
 	ADD CONSTRAINT fk_VenueRental_PartnerMember_partnerID
-	FOREIGN KEY (venueID) REFERENCES PartnerMember (partnerID);
+	FOREIGN KEY (partnerID) REFERENCES PartnerMember (partnerID);
 
 ALTER TABLE VenueTimeSlot
 	ADD CONSTRAINT fk_VenueTimeSlot_VenueRental_venueRentalID
