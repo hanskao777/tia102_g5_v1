@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理頁面</title>
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+
+<body>
+	<div class="sidebar">
+		<div class="menu-content">
+			<h2 class="text-center text-white py-4">管理員後臺系統</h2>
+			<a href="#" class="nav-link" data-toggle="submenu"
+				data-target="member-management-submenu">會員管理</a>
+			<div id="member-management-submenu" class="submenu">
+				<a href="#general-members" class="nav-link"
+					data-section="general-members">會員列表</a> <a href="#vendor-members"
+					class="nav-link" data-section="vendor-members">廠商列表</a> <a
+					href="#vendor-approval" class="nav-link"
+					data-section="vendor-approval">廠商審核</a> <a href="#blacklist"
+					class="nav-link" data-section="blacklist">黑名單</a>
+			</div>
+			<a href="#" class="nav-link" data-toggle="submenu"
+				data-target="venue-management-submenu">場地管理</a>
+			<div id="venue-management-submenu" class="submenu">
+				<a href="#venue-management1" class="nav-link"
+					data-section="venue-management1">場地管理1</a> <a
+					href="#venue-management2" class="nav-link"
+					data-section="venue-management2">場地管理2</a> <a
+					href="#venue-management3" class="nav-link"
+					data-section="venue-management3">場地管理3</a>
+			</div>
+			<a href="#" class="nav-link" data-toggle="submenu"
+				data-target="product-management-submenu">商品管理</a>
+			<div id="product-management-submenu" class="submenu">
+				<a href="#product-management1" class="nav-link"
+					data-section="product-management1">商品管理1</a> <a
+					href="#product-management2" class="nav-link"
+					data-section="product-management2">商品管理2</a> <a
+					href="#product-management3" class="nav-link"
+					data-section="product-management3">商品管理3</a>
+			</div>
+			<a href="#" class="nav-link" data-toggle="submenu"
+				data-target="report-approval-submenu">檢舉審核</a>
+			<div id="report-approval-submenu" class="submenu">
+				<a href="#report-approval1" class="nav-link"
+					data-section="report-approval1">檢舉審核1</a>
+			</div>
+
+			<a href="#" class="nav-link" data-toggle="submenu"
+				data-target="news-submenu">消息公告</a>
+			<div id="news-submenu" class="submenu">
+				<a href="#news-approval1" class="nav-link"
+					data-section="news-approval1">消息公告1</a>
+			</div>
+		</div>
+		<a href="#logout" class="text-center text-danger py-4">登出</a>
+	</div>
+	<div class="content">
+		<section id="general-members" class="section">
+			<h1>會員列表</h1>
+			<hr>
+			<div class="table-responsive">
+				<ul>
+					<form method="post" th:action="@{getOne_For_Display}">
+						輸入會員編號: <input type="text" name="memberID"
+							th:value="${param.memberID}"> <input type="submit"
+							value="送出"> (輸入如1)
+					</form>
+					<br>
+				</ul>
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr style="background-color: lightslategray">
+							<th>編號</th>
+							<th>帳號</th>
+							<th>姓名</th>
+							<th>電話</th>
+							<th>地址</th>
+							<th>暱稱</th>
+							<th>身分證字號</th>
+							<th>性別</th>
+							<th>生日</th>
+							<th>大頭照</th>
+							<th>帳號狀態</th>
+							<th>建立時間</th>
+							<th>修改</th>
+						</tr>
+					</thead>
+					<tbody id="member-table-body">
+						<!-- 會員資料將被動態添加到這裡 -->
+						<th:block th:each="generalmember : ${generalMemeberListData}">
+							<tr>
+								<td th:text="${generalmember.memberID}"></td>
+								<td th:text="${generalmember.memberAccount}"></td>
+								<td th:text="${generalmember.memberName}"></td>
+								<td th:text="${generalmember.memberPhone}"></td>
+								<td th:text="${generalmember.memberAddress}"></td>
+								<td th:text="${generalmember.memberNickName}"></td>
+								<td th:text="${generalmember.nationalID}"></td>
+								<td th:text="${generalmember.gender}"></td>
+								<td th:text="${generalmember.birthday}"></td>
+								<td><img
+									th:src="@{/generalmember/DBGifReader} + '?memberID=' + ${generalmember.memberID}"
+									width="100px"></td>
+								<td th:text="${generalmember.memberStatus}"></td>
+								<td th:text="${generalmember.memberCreateTime}"></td>
+								<td>
+									<form method="post"
+										th:action="@{/generalmember/getOne_For_Update}"
+										style="margin-bottom: 0px;">
+										<input type="submit" value="修改"> <input type="hidden"
+											name="memberID" th:value="${generalmember.memberID}">
+									</form>
+
+								</td>
+								<!-- 			<td> -->
+								<!-- 			  <form method="post" th:action="@{/emp/delete}" style="margin-bottom: 0px;"> -->
+								<!-- 			     <input type="submit" value="刪除"> -->
+								<!-- 			     <input type="hidden" name="empno" th:value="${empVO.empno}"></form> -->
+
+								<!-- 			</td> -->
+							</tr>
+						</th:block>
+					</tbody>
+					</tbody>
+				</table>
+			</div>
+		</section>
+		<section id="vendor-members" class="section">
+			<h1>廠商列表</h1>
+			<hr>
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped">
+					<thead style="background-color: lightslategray">
+						<tr>
+							<th>廠商編號</th>
+							<th>統一編號</th>
+							<th>公司名稱</th>
+							<th>抬頭</th>
+							<th>地址</th>
+							<th>連絡電話</th>
+							<th>聯絡人</th>
+							<th>電子信箱</th>
+							<th>建立時間</th>
+							<th>修改</th>
+						</tr>
+					</thead>
+					<tbody id="vendor-members-table-body">
+						<!-- 會員資料將被動態添加到這裡 -->
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		</section>
+		<section id="vendor-approval" class="section">
+			<h1>廠商審核</h1>
+			<hr>
+		</section>
+		<section id="blacklist" class="section">
+			<h1>黑名單</h1>
+			<hr>
+		</section>
+
+		<section id="venue-management1" class="section">
+			<h2>場地管理1</h2>
+		</section>
+		<section id="venue-management2" class="section">
+			<h2>場地管理2</h2>
+		</section>
+		<section id="venue-management3" class="section">
+			<h2>場地管理3</h2>
+		</section>
+
+		<section id="product-management1" class="section">
+			<h2>商品管理1</h2>
+		</section>
+		<section id="product-management2" class="section">
+			<h2>商品管理2</h2>
+		</section>
+		<section id="product-management3" class="section">
+			<h2>商品管理3</h2>
+		</section>
+
+		<section id="report-approval1" class="section">
+			<h2>檢舉審核1</h2>
+		</section>
+
+		<section id="news-approval1" class="section">
+			<h2>消息公告1</h2>
+		</section>
+	</div>
+	<script src="/js/admin.js"></script>
+
+</body>
+
+</html>

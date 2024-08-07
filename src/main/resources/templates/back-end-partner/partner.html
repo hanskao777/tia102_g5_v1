@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>廠商後台</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/partner.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="menu-content">
+            <h2 class="text-center text-white py-4">廠商後臺管理</h2>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="news-submenu">最新消息</a>
+            <div id="news-submenu" class="submenu">
+                <a href="#news1" class="nav-link" data-section="news1">最新消息1</a>
+            </div>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="vendor-submenu">廠商資料</a>
+            <div id="vendor-submenu" class="submenu">
+                <a href="#vendor1" class="nav-link" data-section="vendor1">廠商資料1</a>
+            </div>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="venue-submenu">場館申請</a>
+            <div id="venue-submenu" class="submenu">
+                <a href="#venue1" class="nav-link" data-section="venue1">場館申請1</a>
+                <a href="#venue2" class="nav-link" data-section="venue2">場館申請2</a>
+                <a href="#venue3" class="nav-link" data-section="venue3">場館申請3</a>
+            </div>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="event-management-submenu">活動管理</a>
+            <div id="event-management-submenu" class="submenu">
+                <a href="#event-management1" class="nav-link" data-section="event-management1">活動管理1</a>
+                <a href="#event-management2" class="nav-link" data-section="event-management2">活動管理2</a>
+                <a href="#event-management3" class="nav-link" data-section="event-management3">活動管理3</a>
+            </div>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="ticket-management-submenu">活動售票管理</a>
+            <div id="ticket-management-submenu" class="submenu">
+                <a href="#ticket-management1" class="nav-link" data-section="ticket-management1">活動售票管理1</a>
+                <a href="#ticket-management2" class="nav-link" data-section="ticket-management2">活動售票管理2</a>
+                <a href="#ticket-management3" class="nav-link" data-section="ticket-management3">活動售票管理3</a>
+            </div>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="product-management-submenu">商品管理</a>
+            <div id="product-management-submenu" class="submenu">
+                <a href="#product-management1" class="nav-link" data-section="product-management1">商品管理1</a>
+                <a href="#product-management2" class="nav-link" data-section="product-management2">商品管理2</a>
+                <a href="#product-management3" class="nav-link" data-section="product-management3">商品管理3</a>
+            </div>
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="order-management-submenu">商品訂單</a>
+            <div id="order-management-submenu" class="submenu">
+                <a href="#order-management1" class="nav-link" data-section="order-management1">商品訂單1</a>
+                <a href="#order-management2" class="nav-link" data-section="order-management2">商品訂單2</a>
+                <a href="#order-management3" class="nav-link" data-section="order-management3">商品訂單3</a>
+            </div>
+
+            <a href="#" class="nav-link" data-toggle="submenu" data-target="orderTicket-management-submenu">票券訂單</a>
+            <div id="orderTicket-management-submenu" class="submenu">
+                <a href="#orderTicket-management1" class="nav-link" data-section="orderTicket-management1">票券訂單1</a>
+            </div>
+
+        </div>
+        <a href="#logout" class="text-center text-danger py-20">登出</a>
+    </div>
+    <div class="content">
+
+        
+        <section id="news1" class="section">
+            <h2>最新消息</h2>
+        </section>
+        <section id="vendor1" class="section">
+            <h2>廠商資料1</h2>
+            <p>這裡顯示廠商資料1內容。</p>
+        </section>
+        
+        <section id="venue1" class="section">
+            <h2>場館申請1</h2>
+            <p>這裡顯示場館申請1內容。</p>
+        </section>
+        <section id="venue2" class="section">
+            <h2>場館申請2</h2>
+            <p>這裡顯示場館申請2內容。</p>
+        </section>
+        <section id="venue3" class="section">
+            <h2>場館申請3</h2>
+            <p>這裡顯示場館申請3內容。</p>
+        </section>
+        
+        <section id="event-management1" class="section">
+            <h2>活動管理1</h2>
+            <p>這裡顯示活動管理1內容。</p>
+        </section>
+        <section id="event-management2" class="section">
+            <h2>活動管理2</h2>
+            <p>這裡顯示活動管理2內容。</p>
+        </section>
+        <section id="event-management3" class="section">
+            <h2>活動管理3</h2>
+            <p>這裡顯示活動管理3內容。</p>
+        </section>
+        
+        <section id="ticket-management1" class="section">
+            <h2>活動售票管理1</h2>
+            <p>這裡顯示活動售票管理1內容。</p>
+        </section>
+        <section id="ticket-management2" class="section">
+            <h2>活動售票管理2</h2>
+            <p>這裡顯示活動售票管理2內容。</p>
+        </section>
+        <section id="ticket-management3" class="section">
+            <h2>活動售票管理3</h2>
+            <p>這裡顯示活動售票管理3內容。</p>
+        </section>
+        
+        <section id="product-management1" class="section">
+            <h2>商品管理1</h2>
+            <p>這裡顯示商品管理1內容。</p>
+        </section>
+        <section id="product-management2" class="section">
+            <h2>商品管理2</h2>
+            <p>這裡顯示商品管理2內容。</p>
+        </section>
+        <section id="product-management3" class="section">
+            <h2>商品管理3</h2>
+            <p>這裡顯示商品管理3內容。</p>
+        </section>
+        
+        <section id="order-management1" class="section">
+            <h2>商品訂單1</h2>
+            <p>這裡顯示訂單管理1內容。</p>
+        </section>
+        <section id="order-management2" class="section">
+            <h2>商品訂單2</h2>
+            <p>這裡顯示訂單管理2內容。</p>
+        </section>
+        <section id="order-management3" class="section">
+            <h2>商品訂單3</h2>
+            <p>這裡顯示訂單管理3內容。</p>
+        </section>
+
+        <section id="orderTicket-management1" class="section">
+            <h2>票券訂單1</h2>
+            <p>這裡顯示訂單管理1內容。</p>
+        </section>
+
+    </div>
+    <script src="/js/partner.js"></script>
+</body>
+</html>
