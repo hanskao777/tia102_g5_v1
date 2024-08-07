@@ -1,9 +1,6 @@
 package com;
 
 public class Buddha {  
-	public static void main(String[] args ) {
-		blessing();
-	}
 	
 /*
 	                              ooOoo
