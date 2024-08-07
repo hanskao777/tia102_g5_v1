@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>公告資料修改 - update_announcement_input.html</title>
+
+<head th:insert="~{/front-end/announcement-news/included-fragment}"></head>
+<style type="text/css">
+	
+	button {
+		padding: 5px;
+	}
+	form {
+		display: table;
+	}
+	form div {
+		display: table-row;
+	}
+	label, input, span, select {
+		display: table-cell;
+		margin: 5px;
+		text-align: left;		
+	}
+	input[type=text], input[type=password], select, textarea {
+		width: 200px;
+		margin: 5px;
+	}
+	form div div {
+		display: table-cell;
+	}
+	.center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+</head>
+<body>
+<!--  
+<nav class="navbar navbar-expand-md navbar-dark bg-success fixed-top justify-content-center">
+		 </nav>
+-->
+		 <div align="center"> <h2>公告資料修改 - update_announcement_input.html</h2>
+		 <h3><a class="navbar-brand" th:href="@{/announcement/select_page}"><img th:src="@{/images/back.gif}"  width="44" height="44">回查詢頁</a></h3></div>
+		 
+
+	<div align="center">
+		<h3><b>所有欄位皆為必填欄位</b></h3>
+		<form th:action="@{update}" method="post" th:object="${announcement}" enctype="multipart/form-data">
+		<!--  -->
+			<div>
+			<label>公告編號:</label>
+			<input type="text" th:field="*{announcementID}" style="border:0px ; font-weight: bold;" readonly /><br/>
+			</div>
+			
+			<div>
+			<label>公告標題:</label>
+			<input type="text" th:field="*{announcementTitle}" onclick="hideContent('announcementTitle.errors');" /><br/>
+			<span  th:if="${#fields.hasErrors('announcementTitle')}" th:errors="*{announcementTitle}" class="error" id="announcementTitle.errors"></span>
+			</div>
+			
+			<div>
+			<label>公告內容:</label>
+			<input type="text" th:field="*{announcementContent}" onclick="hideContent('announcementContent.errors');" /><br/>
+			<span  th:if="${#fields.hasErrors('announcementContent')}" th:errors="*{announcementContent}" class="error" id="announcementContent.errors"></span>
+			</div>
+  
+			<div>
+			<label>狀態:</label>
+			<input type="text" th:field="*{announcementStatus}" onclick="hideContent('announcementStatus.errors');" /><br/>
+			<span  th:if="${#fields.hasErrors('announcementStatus')}" th:errors="*{announcementStatus}" class="error" id="announcementStatus.errors"></span>
+			</div>
+			
+			
+			<div>
+			<label>管理員ID:</label>
+			<input type="text" th:field="*{administrator}" onclick="hideContent('administrator.errors');" /><br/>
+			<span  th:if="${#fields.hasErrors('administrator')}" th:errors="*{administrator}" class="error" id="administrator.errors"></span>
+			</div>
+<!--			
+			<div>
+			<label>狀態:</label>
+			<select th:field="*{announcementStatus}">
+			    <option th:each="announcementStatus : ${announcementStatus}" th:value="${announcementStatus}" th:text="${announcementStatus}" />
+			</select>
+			<span th:if="${#fields.hasErrors('announcementStatus')}" th:errors="*{announcementStatus}" class="error" id="announcementStatus.errors"></span>
+			</div>
+			
+			<div>
+			<label>管理員ID:</label>
+			<select th:field="*{administrator.administratorID}">
+				<option th:each="administrator : ${administratorListData}" th:value="${administrator.administratorID}" th:text="${administrator.administratorAccount}" />
+			</select>
+			<span th:if="${#fields.hasErrors('administrator.administratorID')}" th:errors="*{administrator.administratorID}" class="error" id="administrator.administratorID.errors"></span>
+			</div>
+-->		
+			
+			<div>
+				<div></div>
+				<div><button type="submit" id="submit"> 送出修改 </button></div>
+				<div></div>
+			</div>		
+		</form>
+	
+	</div>
+
+
+<!-- JavaScript part -->
+<script type="text/javascript">
+//清除提示信息
+function hideContent(d) {
+     document.getElementById(d).style.display = "none";
+}
+
+
+</script>
+
+</body>
+</html>

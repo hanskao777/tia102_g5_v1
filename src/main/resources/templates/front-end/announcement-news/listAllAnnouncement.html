@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html><!DOCTYPE html>-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>所有公告資料 - listAllAnnouncement.html</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <head th:insert="~{/front-end/announcement-news/included-fragment}"></head>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>                                    <!-- ●●js  for jquery datatables 用 -->
+    <script	src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>              <!-- ●●js  for jquery datatables 用 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css" /> <!-- ●●css for jquery datatables 用 -->
+
+    <!-- ●● jquery datatables 設定 -->
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable({
+                "lengthMenu": [3 ,5, 10, 20, 50, 100],
+                "searching": true,  //搜尋功能, 預設是開啟
+                "paging": true,     //分頁功能, 預設是開啟
+                "ordering": true,   //排序功能, 預設是開啟
+                "language": {
+                    "processing": "處理中...",
+                    "loadingRecords": "載入中...",
+                    "lengthMenu": "顯示 _MENU_ 筆結果",
+                    "zeroRecords": "沒有符合的結果",
+                    "info": "顯示第 _START_ 至 _END_ 筆結果，共<font color=red> _TOTAL_ </font>筆",
+                    "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                    "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
+                    "infoPostFix": "",
+                    "search": "搜尋:",
+                    "paginate": {
+                        "first": "第一頁",
+                        "previous": "上一頁",
+                        "next": "下一頁",
+                        "last": "最後一頁"
+                    },
+                    "aria": {
+                        "sortAscending":  ": 升冪排列",
+                        "sortDescending": ": 降冪排列"
+                    }
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+        body {
+            margin: 1rem 12rem 2rem 12rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<!--  
+<nav class="navbar navbar-expand-md navbar-dark bg-success fixed-top justify-content-center">
+			 
+</nav>	 
+	-->	 
+		 <div align="center"> <h2>所有公告資料 - listAllAnnouncement.html</h2>
+		 <h3><a class="navbar-brand" th:href="@{/announcement/select_page}"><img th:src="@{/images/back.gif}" width="44" height="44">回查詢頁<label th:text="${success}"></label></a></h3></div>
+
+<table id="example" class="display" style="width: 100%">
+  <thead >
+	<tr style="background-color:#CCCCFF">
+		<th>計數</th>
+		<th>公告編號</th>
+		<th>公告標題</th>
+		<th>公告內容</th>
+		<th>狀態</th>
+		<th>管理員ID</th>
+		<th>公告時間</th>
+		<th>修改</th>
+		<th>刪除</th>
+	</tr>
+  </thead>
+	
+  <tbody>
+		<th:block th:each="announcement : ${announcementListData}">
+			<tr>
+				<td th:text="${announcementStat.count}"></td>
+				<td th:text="${announcement.announcementID}"></td>
+				<td th:text="${announcement.announcementTitle}"></td>
+				<td th:text="${announcement.announcementContent}"></td>
+				<td th:text="${announcement.announcementStatus}"></td>
+				<td th:text="${announcement.administrator.administratorID}"></td>
+				<td th:text="${#dates.format(announcement.announcementCreateTime, 'yyyy-MM--dd HH:mm:ss')}"></td>
+			<td>
+			  <form method="post" th:action="@{/announcement/getOne_For_Update}" style="margin-bottom: 0px;">
+			     <input type="submit" value="修改">
+			     <input type="hidden" name="announcementID" th:value="${announcement.announcementID}"></form>
+			
+			</td>
+			<td>
+			  <form method="post" th:action="@{/announcement/delete}" style="margin-bottom: 0px;">
+			     <input type="submit" value="刪除">
+			     <input type="hidden" name="announcementID" th:value="${announcement.announcementID}"></form>
+			
+			</td>
+			</tr>
+		</th:block>
+  </tbody>
+</table>
+
+
+<!--  
+<div class="container">
+    <div th:replace="fragment/sidebar_admin :: sidebar"></div>
+
+    <div class="content">
+        <h2 align="center">所有公告資料 - listAllAnnouncement.html</h2>
+
+        <div align="center">
+            <a th:href="@{/announcement/select_page}">回查詢頁</a>
+        </div>
+
+        <table border="1">
+            <tr>
+                <th>計數</th>
+                <th>公告編號</th>
+                <th>公告標題</th>
+                <th>公告內容</th>
+                <th>公告狀態</th>
+                <th>發布時間</th>
+                <th>管理員</th>
+                <th>修改</th>
+                <th>刪除</th>
+            </tr>
+            <tr th:each="announcement, status : ${announcementListData}">
+                <td th:text="${status.count}"></td>
+                <td th:text="${announcement.announcementID}"></td>
+                <td th:text="${announcement.announcementTitle}"></td>
+                <td th:text="${announcement.announcementContent}"></td>
+                <td th:text="${announcement.announcementStatus == 0 ? '隱藏' : (announcement.announcementStatus == 1 ? '顯示' : '置頂')}"></td>
+                <td th:text="${#dates.format(announcement.announcementCreateTime, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${announcement.administrator.administratorName}"></td>
+                <td>
+                    <form method="POST" th:action="@{/announcement/getOne_For_Update}">
+                        <input type="hidden" name="announcementID" th:value="${announcement.announcementID}">
+                        <input type="submit" value="修改">
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" th:action="@{/announcement/delete}">
+                        <input type="hidden" name="announcementID" th:value="${announcement.announcementID}">
+                        <input type="submit" value="刪除" onclick="return confirm('確定要刪除嗎？');">
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+-->
+</body>
+</html>
+
+<!--這個 HTML 檔案包含以下主要部分：-->
+
+<!--頁面標題和返回查詢頁的連結。-->
+<!--一個表格，顯示所有公告的詳細資訊。-->
+<!--每行公告資料都包含修改和刪除的按鈕。-->
+<!--使用 Thymeleaf 的 th:each 來迭代顯示所有公告。-->
+<!--使用 th:text 來顯示每個公告的詳細資訊。-->
+<!--狀態顯示使用了三元運算符來轉換數字狀態為文字描述。-->
+<!--日期格式化使用 #dates.format。-->
+
+<!--您可能需要根據實際情況調整一些細節，比如：-->
+
+<!--確保 administrator 對象在 Announcement 實體中存在，並且有 administratorName 屬性。-->
+<!--根據您的樣式表調整 CSS 類名。-->
+<!--可能需要添加分頁功能，如果公告數量很多的話。-->
+<!--考慮添加搜索或篩選功能。-->
