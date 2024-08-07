@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,6 +62,11 @@ public class ActivityController {
 		
 		return "back-end/activity/select_page";
 	}
+	
+//	@GetMapping("addActivity")
+//	public String addActivity(ModelMap model) {
+//		
+//	}
 	
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	public ModelAndView handlerError(HttpServletRequest req, ConstraintViolationException e, Model model) {
