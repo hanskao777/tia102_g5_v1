@@ -19,12 +19,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.tia102g5.activityPicture.model.ActivityPicture;
 import com.tia102g5.activityareaprice.model.ActivityAreaPrice;
 import com.tia102g5.activitycollection.model.ActivityCollection;
 import com.tia102g5.activitytimeslot.model.ActivityTimeSlot;
 import com.tia102g5.bookticket.model.BookTicket;
+import com.tia102g5.commodity.model.Commodity;
 import com.tia102g5.partnermember.model.PartnerMember;
 import com.tia102g5.venue.model.Venue;
 import com.tia102g5.venuerental.model.VenueRental;
@@ -45,6 +48,7 @@ public class Activity implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
+	@NotNull(message = "請選擇場館")
 	private Venue venue; // 場館
 
 	@OneToOne(fetch = FetchType.LAZY)
@@ -52,6 +56,7 @@ public class Activity implements Serializable {
 	private VenueRental venueRental; // 場館申請資料
 
 	@Column(name = "activityName")
+	@NotEmpty(message = "請輸入活動名稱")
 	private String activityName; // 名稱
 
 	@Column(name = "activityContent", columnDefinition = "text")
@@ -62,19 +67,22 @@ public class Activity implements Serializable {
 
 	@Column(name = "activityPostTime")
 	@Future(message="日期必須是在今日(不含)之後")
+	@NotNull(message = "請選擇排程時間")
 	private Date activityPostTime; // 排程時間
 
 	@Column(name = "activityTag")
+	@NotNull(message = "請選擇類型標籤")
 	private String activityTag; // 類型標籤
 
 	@Column(name = "activityStatus")
-	private Integer activityStatus; // 設定狀態 0:未設定 1:已設定
+	private Integer activityStatus = 0; // 設定狀態 0:未設定 1:已設定
 
 	@Column(name = "ticketSetStatus")
-	private Integer ticketSetStatus; // 票券設定狀態 0:未設定 1:已設定
+	private Integer ticketSetStatus = 0; // 票券設定狀態 0:未設定 1:已設定
 
 	@Column(name = "sellTime")
 	@Future(message="日期必須是在今日(不含)之後")
+	@NotNull(message = "請選擇起售日")
 	private Date sellTime; // 起售日
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
@@ -83,6 +91,7 @@ public class Activity implements Serializable {
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityPictureID asc")
+	@NotNull(message = "請上傳活動圖片")
 	private Set<ActivityPicture> activityPictures; // 活動圖片
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
@@ -91,15 +100,16 @@ public class Activity implements Serializable {
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityTimeSlotID asc")
+	@NotNull(message = "請選擇活動時段")
 	private Set<ActivityTimeSlot> activityTimeSlots; // 活動時段
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("bookTicketID asc")
 	private Set<BookTicket> bookTickets; // 票券訂單
 
-//	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
-//	@OrderBy("commodityID asc")
-//	private Set<Commodity> commodities; // 商品
+	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
+	@OrderBy("commodityID asc")
+	private Set<Commodity> commodities; // 商品
 
 	// 建構子
 	public Activity() {
@@ -111,7 +121,7 @@ public class Activity implements Serializable {
 			String activityTag, Integer activityStatus, Integer ticketSetStatus, Date sellTime,
 			Set<ActivityAreaPrice> activityAreaPrices, Set<ActivityPicture> activityPictures,
 			Set<ActivityCollection> activityCollections, Set<ActivityTimeSlot> activityTimeSlots,
-			Set<BookTicket> bookTickets/* , Set<Commodity> commodities */) {
+			Set<BookTicket> bookTickets, Set<Commodity> commodities) {
 		super();
 		this.activityID = activityID;
 		this.partnerMember = partnerMember;
@@ -130,7 +140,7 @@ public class Activity implements Serializable {
 		this.activityCollections = activityCollections;
 		this.activityTimeSlots = activityTimeSlots;
 		this.bookTickets = bookTickets;
-//		this.commodities = commodities;
+		this.commodities = commodities;
 	}
 
 	// Getters & Setters
@@ -270,11 +280,12 @@ public class Activity implements Serializable {
 		this.bookTickets = bookTickets;
 	}
 
-//	public Set<Commodity> getCommodities() {
-//		return commodities;
-//	}
-//
-//	public void setCommodity(Set<Commodity> commodity) {
-//		this.commodity = commodity;
-//	}
+	public Set<Commodity> getCommodities() {
+		return commodities;
+	}
+
+	public void setCommodities(Set<Commodity> commodities) {
+		this.commodities = commodities;
+	}
+	
 }
