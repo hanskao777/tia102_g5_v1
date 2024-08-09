@@ -38,16 +38,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 		<!-- 用途說明5: Starter for using Spring Data JPA with Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -254,6 +244,15 @@
 <!--			<groupId>org.springframework.boot</groupId>-->
 <!--			<artifactId>spring-boot-starter-security</artifactId>-->
 <!--		</dependency>-->
+
+
+		<!-- Redis使用 -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+
 
 	</dependencies>
 
