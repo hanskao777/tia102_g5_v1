@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/partner_sidebar.html')
+    fetch('/b')
         .then(response => response.text())
         .then(data => {
             document.getElementById('sidebar-placeholder').innerHTML = data;

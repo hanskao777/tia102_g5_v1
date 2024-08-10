@@ -58,7 +58,15 @@ public class IndexController_inSpringBoot {
     }
     
     
-  
+    @GetMapping("/a")
+    public String getPartner() {
+        return "/back-end-partner/partner";
+    }
+    
+    @GetMapping("/b")
+    public String getPartnerSidebar() {
+        return "/back-end-partner/partner_sidebar";
+    }
 
 
 }
