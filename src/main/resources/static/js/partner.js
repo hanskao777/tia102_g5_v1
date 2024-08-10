@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
   if (sidebarPlaceholder) {
-    fetch('/back-end-partner/partner_sidebar')  
+    fetch('/b')  
       .then(response => response.text())
       .then(data => {
         sidebarPlaceholder.innerHTML = data;
