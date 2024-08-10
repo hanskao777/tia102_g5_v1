@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/sidebar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('sidebar-placeholder').innerHTML = data;
-        });
+  const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
+  if (sidebarPlaceholder) {
+    fetch('/back-end-partner/partner_sidebar')  
+      .then(response => response.text())
+      .then(data => {
+        sidebarPlaceholder.innerHTML = data;
+      })
+      .catch(error => console.error('Error loading sidebar:', error));
+  }
 });
