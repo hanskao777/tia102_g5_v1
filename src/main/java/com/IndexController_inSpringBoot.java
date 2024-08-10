@@ -66,7 +66,7 @@ public class IndexController_inSpringBoot {
     //後臺主頁側邊欄，用於 partner.js 第二行
     @GetMapping("/partnerSidebar")
     public String getPartnerSidebar() {
-        return "/back-end-partner/partner_sidebar";
+        return "back-end-partner/partner_sidebar"; 
     }
 
 }
