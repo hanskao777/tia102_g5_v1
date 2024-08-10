@@ -57,16 +57,16 @@ public class IndexController_inSpringBoot {
         return "footer";
     }
     
-    
-    @GetMapping("/a")
+    //導向後台主頁
+    @GetMapping("/backEndPartner")
     public String getPartner() {
         return "/back-end-partner/partner";
     }
     
-    @GetMapping("/b")
+    //後臺主頁側邊欄，用於 partner.js 第二行
+    @GetMapping("/partnerSidebar")
     public String getPartnerSidebar() {
         return "/back-end-partner/partner_sidebar";
     }
-
 
 }
