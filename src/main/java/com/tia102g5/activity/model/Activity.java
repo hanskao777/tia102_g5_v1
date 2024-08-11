@@ -3,6 +3,7 @@ package com.tia102g5.activity.model;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -48,7 +49,6 @@ public class Activity implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
-	@NotNull(message = "請選擇場館")
 	private Venue venue; // 場館
 
 	@OneToOne(fetch = FetchType.LAZY)
@@ -67,7 +67,6 @@ public class Activity implements Serializable {
 
 	@Column(name = "activityPostTime")
 	@Future(message="日期必須是在今日(不含)之後")
-	@NotNull(message = "請選擇排程時間")
 	private Date activityPostTime; // 排程時間
 
 	@Column(name = "activityTag")
@@ -82,7 +81,7 @@ public class Activity implements Serializable {
 
 	@Column(name = "sellTime")
 	@Future(message="日期必須是在今日(不含)之後")
-	@NotNull(message = "請選擇起售日")
+//	@NotNull(message = "請選擇起售日")
 	private Date sellTime; // 起售日
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
@@ -91,8 +90,7 @@ public class Activity implements Serializable {
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityPictureID asc")
-	@NotNull(message = "請上傳活動圖片")
-	private Set<ActivityPicture> activityPictures; // 活動圖片
+	private Set<ActivityPicture> activityPictures = new HashSet<ActivityPicture>(); // 活動圖片
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityCollectionID asc")
@@ -100,7 +98,7 @@ public class Activity implements Serializable {
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
 	@OrderBy("activityTimeSlotID asc")
-	@NotNull(message = "請選擇活動時段")
+//	@NotNull(message = "請選擇活動時段")
 	private Set<ActivityTimeSlot> activityTimeSlots; // 活動時段
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
