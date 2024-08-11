@@ -1,126 +1,141 @@
-const { useState, useRef, useEffect } = React;
+$(document).ready(function() {
+	
+	// 載入 header
+	fetch('/header')
+	    .then(response => {
+	        if (!response.ok) {
+	            throw new Error(`HTTP error! status: ${response.status}`);
+	        }
+	        return response.text();
+	    })
+	    .then(data => {
+	        document.getElementById('header').innerHTML = data;
+	    })
+	    .catch(error => {
+	        console.error('Error loading header:', error);
+	        document.getElementById('header').innerHTML = '<p>Error loading header</p>';
+	    });
 
-const ArticleEditor = () => {
-    const [title, setTitle] = useState('');
-    const [errors, setErrors] = useState({});
-    const [images, setImages] = useState(null);
-    const summernoteRef = useRef(null);
-    const fileInputRef = useRef(null);
+	// 載入 footer
+	fetch('/footer')
+	    .then(response => {
+	        if (!response.ok) {
+	            throw new Error(`HTTP error! status: ${response.status}`);
+	        }
+	        return response.text();
+	    })
+	    .then(data => {
+	        document.getElementById('footer').innerHTML = data;
+	    })
+	    .catch(error => {
+	        console.error('Error loading footer:', error);
+	        document.getElementById('footer').innerHTML = '<p>Error loading footer</p>';
+	    });
+    var isFirstChange = true;
 
-    useEffect(() => {
-        // Initialize Summernote
-        $(summernoteRef.current).summernote({
-            height: 300, // Set editor height
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['view', ['fullscreen', 'codeview']]
-            ]
-        });
-
-        // Cleanup function to destroy Summernote instance
-        return () => {
-            $(summernoteRef.current).summernote('destroy');
-        };
-    }, []);
-
-    const handleColorChange = (e) => {
-        const color = e.target.value;
-        $(summernoteRef.current).summernote('editor.insertText', `<span style="color: ${color};">`);
-    };
-
-    const onImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length > 5) {
-            setErrors({ images: '最多只能上傳5張圖片' });
-            return;
+    $('#summernote').summernote({
+        height: 300,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+			['insert', ['picture']], 
+        ],
+        styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+        placeholder: '在這裡輸入內容...',
+        callbacks: {
+            onInit: function() {
+                // 移除初始的空 p 標籤
+                var content = $(this).summernote('code');
+                if (content === '<p><br></p>') {
+                    $(this).summernote('code', '');
+                }
+            },
+            onChange: function(contents, $editable) {
+                // 清空並儲存輸入內容
+                var cleanedContent = cleanContent(contents);
+                $('#articleContent').val(cleanedContent);
+                
+                // 只有在用戶開始輸入後才執行驗證
+                if (!isFirstChange) {
+                    validateContent(cleanedContent);
+                } else {
+                    isFirstChange = false;
+                }
+                // 處理 placeholder
+                handlePlaceholder($editable);
+            }
         }
-        const oversizedFiles = files.filter(file => file.size > 8 * 1024 * 1024);
-        if (oversizedFiles.length > 0) {
-            setErrors({ images: '圖片大小不能超過8MB' });
-            return;
+    });
+
+    function handlePlaceholder($editable) {
+        var content = $editable.text().trim();
+        if (content.length > 0) {
+            $editable.removeClass('placeholder').attr('data-placeholder', '');
+        } else {
+            $editable.addClass('placeholder').attr('data-placeholder', '在這裡輸入內容...');
         }
-        setImages(files);
-    };
+    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const content = $(summernoteRef.current).summernote('code');
-        const formData = new FormData();
-        formData.append('articleTitle', title.trim());
-        formData.append('articleContent', content);
+    function cleanContent(content) {
+        return content
+            .replace(/<p><br><\/p>/g, '')
+            .replace(/<p>&nbsp;<\/p>/g, '')
+            .replace(/(<p>)\s*(<\/p>)/g, '')
+            .replace(/^\s*(<p>[\s\S]*?<\/p>)\s*$/, '$1')
+            .replace(/<p>/g, '<p style="margin-bottom: 0.5em;">')
+            .trim();
+    }
 
-        if (images) {
-            images.forEach((image, index) => {
-                formData.append(`articlePic${index}`, image);
-            });
+    function validateContent(content) {
+        var textContent = $('<div>').html(content).text().trim();
+        var errorElement = $('#articleContent-error');
+        if (errorElement.length === 0) {
+            errorElement = $('<div id="articleContent-error" style="color: red; margin-top: 10px;"></div>');
+            $('#summernote').after(errorElement);
         }
 
-        // Perform the fetch request or any other submission logic here
-        // Example:
-        // fetch('/article/insert', {
-        //     method: 'POST',
-        //     body: formData
-        // })
-        // .then(response => response.json())
-        // .then(data => console.log(data))
-        // .catch(error => console.error('Error:', error));
-    };
+        if (textContent.length < 1) {
+            errorElement.text('文章內容請勿空白').show();
+        } else if (textContent.length > 1000) {
+            errorElement.text('文章內容長度不能超過1000字').show();
+        } else {
+            errorElement.hide();
+        }
+    }
 
-    return (
-        <div className='container'>
-            <div className='form-container'>
-                <form onSubmit={handleSubmit} encType='multipart/form-data'>
-                    <div>
-                        <label htmlFor='board'>文章版塊:</label>
-                        <select id='board' name='boardID'>
-                            {/* Add options dynamically */}
-                        </select>
-                        {/* Handle errors for board */}
-                    </div>
-                    
-                    <div>
-                        <label htmlFor='articleCategory'>文章類型:</label>
-                        <select id='articleCategory' name='articleCategory'>
-                            {/* Add options dynamically */}
-                        </select>
-                        {/* Handle errors for category */}
-                    </div>
-                    
-                    <div>
-                        <label htmlFor='articleTitle'>文章標題:</label>
-                        <input
-                            type='text'
-                            id='articleTitle'
-                            name='articleTitle'
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                        {/* Handle errors for title */}
-                    </div>
+    $('form').on('submit', function(e) {
+        var cleanedContent = $('#articleContent').val();
+        var textContent = $('<div>').html(cleanedContent).text().trim();
+        
+        if (textContent.length < 1 || textContent.length > 1000) {
+            e.preventDefault();
+            validateContent(cleanedContent); // 顯示錯誤訊息
+            return false;
+        }
 
-                    <div className='editor-container'>
-                        <textarea ref={summernoteRef} name='articleContent'></textarea>
-                    </div>
-                    
-                    <input
-                        type='file'
-                        ref={fileInputRef}
-                        accept='image/*'
-                        onChange={onImageUpload}
-                        multiple
-                    />
-                    {/* Handle errors for images */}
+        console.log('Submitted content:', cleanedContent);
+    });
+	
+	//取消發文按鈕的事件監聽器
+	$('#cancelButton').on('click', function(e) {
+	    e.preventDefault();
+	    if (confirm('確定要取消發文嗎？未保存的內容將會丟失。')) {
+	        window.history.back();
+	    }
+	});
 
-                    <button type='submit'>送出文章</button>
-                </form>
-            </div>
-        </div>
-    );
-};
+	// 修改表單提交邏輯，添加取消按鈕的處理
+	$('form').on('submit', function(e) {
+	    var cleanedContent = $('#articleContent').val();
+	    var textContent = $('<div>').html(cleanedContent).text().trim();
+	    
+	    if (textContent.length < 1 || textContent.length > 1000) {
+	        e.preventDefault();
+	        validateContent(cleanedContent); // 顯示錯誤訊息
+	        return false;
+	    }
 
-ReactDOM.render(
-    <ArticleEditor />,
-    document.getElementById('root')
-);
+	    console.log('Submitted content:', cleanedContent);
+	});
+});

@@ -17,14 +17,14 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "delete from article where articleID =?1", nativeQuery = true)
+	@Query(value = "delete from article where articleID =?1", nativeQuery = true) //原生SQL
 	void deleteByArticleID(int articleID);
 
-	//● (自訂)條件查詢
+	//● (自訂)條件查詢 自定義的JPQL
 	@Query(value = "FROM Article WHERE articleID=?1 AND articleCategory LIKE ?2 AND articleTitle LIKE ?3 AND memberID = ?4 AND articleContent LIKE ?5 AND boardID = ?6 AND articleStatus = ?7 AND articleCreateTime = ?8 ORDER BY articleID")
 	List<Article> findByOthers(Integer articleID, String articleCategory, String articleTitle, GeneralMember memberID, String articleContent, Board boardID, Integer articleStatus, Date articleCreateTime);
 
-	 // 獲取所有不同的 articleCategory
+	 // JPA 簡易查詢,獲取所有不同的文章分類
     @Query("SELECT DISTINCT a.articleCategory FROM Article a WHERE a.articleCategory IS NOT NULL")
     List<String> findAllDistinctCategories();
 

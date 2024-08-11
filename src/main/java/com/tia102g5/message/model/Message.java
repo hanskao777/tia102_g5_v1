@@ -18,8 +18,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.ColumnDefault;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.tia102g5.article.model.Article;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.prosecute.model.Prosecute;
@@ -42,6 +41,7 @@ public class Message implements java.io.Serializable {
 	private GeneralMember generalMember; 
 
 
+	@JsonBackReference //解決循環引用問題,不序列化父端
 	@ManyToOne
 	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
 	private Article article; 
@@ -54,8 +54,7 @@ public class Message implements java.io.Serializable {
 	
 	
 	@Column(name = "messageStatus ") //留言狀態
-	@ColumnDefault("1") //1:顯示 2:不顯示
-	private Integer messageStatus ;
+	private Integer messageStatus = 1 ;
 	
 
 	@Column(name = "messageCreateTime", updatable = false, insertable = false) //留言時間
