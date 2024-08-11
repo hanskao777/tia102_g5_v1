@@ -25,22 +25,22 @@ public class Venue implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "venueID", updatable = false)
-	int venueID;
+	private Integer venueID; // 修改為 Integer
 
 	@Column(name = "venueName", length = 255)
-	String venueName;
+	private String venueName;
 
 	@Column(name = "venuePhone", length = 255)
-	String venuePhone;
+	private String venuePhone;
 
 	@Column(name = "venueContactPerson", length = 255)
-	String venueContactPerson;
+	private String venueContactPerson;
 
 	@Column(name = "venueAddress", length = 255)
-	String venueAddress;
+	private String venueAddress;
 
 	@Column(name = "venueLocation", length = 255)
-	String venueLocation;
+	private String venueLocation;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "venue")
 	private Set<VenueArea> venueAreas;
@@ -57,11 +57,11 @@ public class Venue implements java.io.Serializable {
 	public Venue() {
 	}
 
-	public int getVenueID() {
+	public Integer getVenueID() { // 修改為 Integer
 		return venueID;
 	}
 
-	public void setVenueID(int venueID) {
+	public void setVenueID(Integer venueID) { // 修改為 Integer
 		this.venueID = venueID;
 	}
 

@@ -26,7 +26,7 @@ public class Seat implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "seatID")
-	private int seatID;
+	private Integer seatID;  // 修改為 Integer
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
@@ -40,10 +40,10 @@ public class Seat implements java.io.Serializable {
 	private String seatName;
 
 	@Column(name = "seatRow")
-	private int seatRow;
+	private Integer seatRow;  // 修改為 Integer
 
 	@Column(name = "seatNumber")
-	private int seatNumber;
+	private Integer seatNumber;  // 修改為 Integer
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "seat")
 	private Set<SeatStatus> seatStatuses;
@@ -51,11 +51,11 @@ public class Seat implements java.io.Serializable {
 	public Seat() {
 	}
 
-	public int getSeatID() {
+	public Integer getSeatID() {  // 修改為 Integer
 		return seatID;
 	}
 
-	public void setSeatID(int seatID) {
+	public void setSeatID(Integer seatID) {  // 修改為 Integer
 		this.seatID = seatID;
 	}
 
@@ -83,19 +83,19 @@ public class Seat implements java.io.Serializable {
 		this.seatName = seatName;
 	}
 
-	public int getSeatRow() {
+	public Integer getSeatRow() {  // 修改為 Integer
 		return seatRow;
 	}
 
-	public void setSeatRow(int seatRow) {
+	public void setSeatRow(Integer seatRow) {  // 修改為 Integer
 		this.seatRow = seatRow;
 	}
 
-	public int getSeatNumber() {
+	public Integer getSeatNumber() {  // 修改為 Integer
 		return seatNumber;
 	}
 
-	public void setSeatNumber(int seatNumber) {
+	public void setSeatNumber(Integer seatNumber) {  // 修改為 Integer
 		this.seatNumber = seatNumber;
 	}
 
@@ -106,5 +106,4 @@ public class Seat implements java.io.Serializable {
 	public void setSeatStatuses(Set<SeatStatus> seatStatuses) {
 		this.seatStatuses = seatStatuses;
 	}
-
 }

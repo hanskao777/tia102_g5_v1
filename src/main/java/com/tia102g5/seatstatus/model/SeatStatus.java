@@ -23,7 +23,7 @@ public class SeatStatus implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "seatStatusID")
-	private int seatStatusID;
+	private Integer seatStatusID;  // 修改為 Integer
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "activityTimeSlotID", referencedColumnName = "activityTimeSlotID")
@@ -34,7 +34,7 @@ public class SeatStatus implements java.io.Serializable {
 	private Seat seat;
 
 	@Column(name = "seatStatus")
-	private int seatStatus;
+	private Integer seatStatus;  // 修改為 Integer
 
 	@OneToOne(mappedBy = "seatStatus", fetch = FetchType.LAZY)
 	private Ticket ticket;
@@ -42,11 +42,11 @@ public class SeatStatus implements java.io.Serializable {
 	public SeatStatus() {
 	}
 
-	public int getSeatStatusID() {
+	public Integer getSeatStatusID() {  // 修改為 Integer
 		return seatStatusID;
 	}
 
-	public void setSeatStatusID(int seatStatusID) {
+	public void setSeatStatusID(Integer seatStatusID) {  // 修改為 Integer
 		this.seatStatusID = seatStatusID;
 	}
 
@@ -66,11 +66,11 @@ public class SeatStatus implements java.io.Serializable {
 		this.seat = seat;
 	}
 
-	public int getSeatStatus() {
+	public Integer getSeatStatus() {  // 修改為 Integer
 		return seatStatus;
 	}
 
-	public void setSeatStatus(int seatStatus) {
+	public void setSeatStatus(Integer seatStatus) {  // 修改為 Integer
 		this.seatStatus = seatStatus;
 	}
 

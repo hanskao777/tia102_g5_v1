@@ -32,7 +32,7 @@ public class VenueRental implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "venueRentalID")
-	private int venueRentalID;
+	private Integer venueRentalID;  // 修改為 Integer
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
@@ -50,7 +50,7 @@ public class VenueRental implements java.io.Serializable {
 	private byte[] proposal;
 
 	@Column(name = "venueRentalStatus")
-	private int venueRentalStatus;
+	private Integer venueRentalStatus;  // 修改為 Integer
 
 	@Column(name = "venueRentalStartDate")
 	private Date venueRentalStartDate;
@@ -74,11 +74,11 @@ public class VenueRental implements java.io.Serializable {
 	public VenueRental() {
 	}
 
-	public int getVenueRentalID() {
+	public Integer getVenueRentalID() {  // 修改為 Integer
 		return venueRentalID;
 	}
 
-	public void setVenueRentalID(int venueRentalID) {
+	public void setVenueRentalID(Integer venueRentalID) {  // 修改為 Integer
 		this.venueRentalID = venueRentalID;
 	}
 
@@ -114,11 +114,11 @@ public class VenueRental implements java.io.Serializable {
 		this.proposal = proposal;
 	}
 
-	public int getVenueRentalStatus() {
+	public Integer getVenueRentalStatus() {  // 修改為 Integer
 		return venueRentalStatus;
 	}
 
-	public void setVenueRentalStatus(int venueRentalStatus) {
+	public void setVenueRentalStatus(Integer venueRentalStatus) {  // 修改為 Integer
 		this.venueRentalStatus = venueRentalStatus;
 	}
 

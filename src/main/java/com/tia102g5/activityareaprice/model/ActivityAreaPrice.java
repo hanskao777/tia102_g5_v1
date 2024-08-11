@@ -28,7 +28,7 @@ public class ActivityAreaPrice implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "activityAreaPriceID")
-	private int activityAreaPriceID;
+	private Integer activityAreaPriceID;  // 修改為 Integer
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "venueAreaID", referencedColumnName = "venueAreaID")
@@ -49,11 +49,11 @@ public class ActivityAreaPrice implements java.io.Serializable {
 	public ActivityAreaPrice() {
 	}
 
-	public int getActivityAreaPriceID() {
+	public Integer getActivityAreaPriceID() {  // 修改為 Integer
 		return activityAreaPriceID;
 	}
 
-	public void setActivityAreaPriceID(int activityAreaPriceID) {
+	public void setActivityAreaPriceID(Integer activityAreaPriceID) {  // 修改為 Integer
 		this.activityAreaPriceID = activityAreaPriceID;
 	}
 
