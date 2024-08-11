@@ -26,7 +26,7 @@ public class VenueArea implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "venueAreaID", updatable = false)
-	private int venueAreaID;
+	private Integer venueAreaID;  // 修改為 Integer
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
@@ -44,11 +44,11 @@ public class VenueArea implements java.io.Serializable {
 	public VenueArea() {
 	}
 
-	public int getVenueAreaID() {
+	public Integer getVenueAreaID() {  // 修改為 Integer
 		return venueAreaID;
 	}
 
-	public void setVenueAreaID(int venueAreaID) {
+	public void setVenueAreaID(Integer venueAreaID) {  // 修改為 Integer
 		this.venueAreaID = venueAreaID;
 	}
 

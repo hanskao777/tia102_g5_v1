@@ -22,7 +22,7 @@ public class VenueTimeSlot implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "venueTimeSlotID")
-	private int venueTimeSlotID;
+	private Integer venueTimeSlotID;  // 修改為 Integer
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "venueRentalID", referencedColumnName = "venueRentalID")
@@ -32,19 +32,19 @@ public class VenueTimeSlot implements java.io.Serializable {
 	private Date venueTimeSlotDate;
 
 	@Column(name = "venueTimeSlot")
-	private int venueTimeSlot;
+	private Integer venueTimeSlot;  // 修改為 Integer
 
 	@Column(name = "venueTimeSlotStatus")
-	private int venueTimeSlotStatus;
+	private Integer venueTimeSlotStatus;  // 修改為 Integer
 
 	public VenueTimeSlot() {
 	}
 
-	public int getVenueTimeSlotID() {
+	public Integer getVenueTimeSlotID() {  // 修改為 Integer
 		return venueTimeSlotID;
 	}
 
-	public void setVenueTimeSlotID(int venueTimeSlotID) {
+	public void setVenueTimeSlotID(Integer venueTimeSlotID) {  // 修改為 Integer
 		this.venueTimeSlotID = venueTimeSlotID;
 	}
 
@@ -64,19 +64,19 @@ public class VenueTimeSlot implements java.io.Serializable {
 		this.venueTimeSlotDate = venueTimeSlotDate;
 	}
 
-	public int getVenueTimeSlot() {
+	public Integer getVenueTimeSlot() {  // 修改為 Integer
 		return venueTimeSlot;
 	}
 
-	public void setVenueTimeSlot(int venueTimeSlot) {
+	public void setVenueTimeSlot(Integer venueTimeSlot) {  // 修改為 Integer
 		this.venueTimeSlot = venueTimeSlot;
 	}
 
-	public int getVenueTimeSlotStatus() {
+	public Integer getVenueTimeSlotStatus() {  // 修改為 Integer
 		return venueTimeSlotStatus;
 	}
 
-	public void setVenueTimeSlotStatus(int venueTimeSlotStatus) {
+	public void setVenueTimeSlotStatus(Integer venueTimeSlotStatus) {  // 修改為 Integer
 		this.venueTimeSlotStatus = venueTimeSlotStatus;
 	}
 
