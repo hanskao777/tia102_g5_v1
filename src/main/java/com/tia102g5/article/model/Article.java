@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.articleImg.model.ArticleImg;
 import com.tia102g5.board.model.Board;
@@ -61,6 +62,7 @@ public class Article implements java.io.Serializable {
 	
 	@Column(name = "articleContent", columnDefinition = "TEXT") //文章內容
 	@NotEmpty(message="文章內容請勿空白")
+	@Size(min = 1, max = 1000, message = "文章內容長度必須在1到1000字之間")
 	private String articleContent;
 
 	
@@ -94,6 +96,7 @@ public class Article implements java.io.Serializable {
 	private Set<ArticleCollection> articleCollections = new HashSet<ArticleCollection>();
 	
 	
+	@JsonManagedReference //解決循環引用問題,序列化其子端
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@OrderBy("messageID asc")
 	private Set<Message> messages = new HashSet<Message>();

@@ -1,6 +1,7 @@
 package com.tia102g5.article.controller;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +25,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,7 +46,6 @@ import com.tia102g5.generalmember.model.GeneralMemberService;
 
 @Controller
 @RequestMapping("/article")
-@Validated
 public class ArticleController {
 
 	@Autowired
@@ -75,7 +74,7 @@ public class ArticleController {
 	            .filter(article -> article.getBoard().getBoardID().equals(boardID))
 	            .collect(Collectors.toList());
 	    }
-
+	    allArticles.sort(Comparator.comparing(Article::getArticleCreateTime).reversed()); //按文章時間排序
 	    model.addAttribute("articleList", allArticles);
 	    model.addAttribute("boardList", boardList);
 	    model.addAttribute("selectedBoardID", boardID); 
@@ -137,17 +136,17 @@ public class ArticleController {
 
     
 
-
-    //=========== 以下第63~75行是提供給 /src/main/resources/templates/front-end/forum/select_page.html 與 listAllEmp.html 要使用的資料 ===================   
-    @GetMapping("/select_page")
-	public String select_page(Model model) {
-		return "front-end/forum/select_page";
-	}
+//    @GetMapping("/select_page")
+//	public String select_page(Model model) {
+//		return "front-end/forum/select_page";
+//	}
+//    
+//    @GetMapping("/listAllArticle")
+//	public String listAllArticle(Model model) {
+//		return "front-end/forum/listAllArticle";
+//	}
     
-    @GetMapping("/listAllArticle")
-	public String listAllArticle(Model model) {
-		return "front-end/forum/listAllArticle";
-	}
+    
     
     @ModelAttribute("articleListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
 	protected List<Article> referenceListData(Model model) {
@@ -188,27 +187,20 @@ public class ArticleController {
 	
 	
 
-	/*
-	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
-	 */
 	@PostMapping("insert")
 	public String insert(@Valid Article article, BindingResult result, ModelMap model,
 			@RequestParam(value = "articlePic", required = false) MultipartFile[] parts) throws IOException {
 
-		
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中articlePic欄位的FieldError紀錄 --> 見第172行
-		 result = removeFieldError(article, result, "articlePic");
-
 		    if (result.hasErrors()) {
+		    	setCommonModelAttributes(model);
 		        return "front-end/forum/post";
 		    }
-		    
-		    
+		    		    
 		 // 檢查圖片數量
 		    final int MAX_IMAGES = 5; // 最多允許5張圖片
 		    if (parts != null && parts.length > MAX_IMAGES) {
 		    	result.rejectValue("articlePic", "error.articlePic", "最多只能上傳 " + MAX_IMAGES + " 張圖片");
+		    	setCommonModelAttributes(model);
 		        return "front-end/forum/post";
 		    }
 
@@ -219,6 +211,7 @@ public class ArticleController {
 		            if (!pic.isEmpty()) {
 		            	if (!pic.isEmpty() && pic.getSize() > MAX_FILE_SIZE) {
 		                    result.rejectValue("articlePic", "error.articlePic", "圖片大小不能超過 8MB");
+		                    setCommonModelAttributes(model);
 		                    return "front-end/forum/post";
 		                }
 
@@ -229,7 +222,6 @@ public class ArticleController {
 		/*************************** 2.開始新增資料 *****************************************/
 		// ArticleService articleSvc = new ArticleService();
 		articleSvc.addArticle(article);
-
 		
 		if (parts != null && parts.length > 0) {
 	        for (MultipartFile pic : parts) {
@@ -245,13 +237,9 @@ public class ArticleController {
 	                }
 	            }
 	        }
-	        
-	        System.out.println("Redirecting to list page");  // 添加日誌
-	        return "redirect:/article/listAllArticle";
+
 	    }
-		
-		
-		
+			
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<Article> list = articleSvc.getAll();
 		model.addAttribute("articleListData", list);
@@ -313,10 +301,11 @@ public class ArticleController {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
-		result = removeFieldError(article, result, "articlePic");
+//		result = removeFieldError(article, result, "articlePic");
 		
 
 		if (result.hasErrors()) {
+			setCommonModelAttributes(model);
 			return "front-end/forum/update_article_input";
 		}
 		
@@ -371,7 +360,7 @@ public class ArticleController {
 		model.addAttribute("success", "- (修改成功)");
 		article = articleSvc.getOneArticle(Integer.valueOf(article.getArticleID()));
 		model.addAttribute("article", article);
-		return "front-end/forum/listOneArticle"; // 修改成功後轉交listOneArticle.html
+		return "front-end/forum/OneArticle"; // 修改成功後轉交listOneArticle.html
 	}
 
 	/*
@@ -387,7 +376,7 @@ public class ArticleController {
 		List<Article> list = articleSvc.getAll();
 		model.addAttribute("articleListData", list);
 		model.addAttribute("success", "- (刪除成功)");
-		return "front-end/forum/listAllArticle"; // 刪除完成後轉交listAllEmp.html
+		return "front-end/forum/forum"; // 刪除完成後轉交listAllEmp.html
 	}
 	
 	
@@ -408,10 +397,10 @@ public class ArticleController {
 	    
 	    List<Article> articleList = articleSvc.getAll(map);
 	    
-	    System.out.println("Search results count: " + articleList.size());
-	    for (Article article : articleList) {
-	        System.out.println("Article found: " + article.getArticleTitle());
-	    }
+//	    System.out.println("Search results count: " + articleList.size());
+//	    for (Article article : articleList) {
+//	        System.out.println("Article found: " + article.getArticleTitle());
+//	    }
 
 	    model.addAttribute("articleList", articleList);
 	    
@@ -434,10 +423,10 @@ public class ArticleController {
 	    List<Article> articleList = articleSvc.getAll(map);
 	    model.addAttribute("articleList", articleList);  // 改為 articleList
 
-	    System.out.println("Search results count: " + articleList.size());
-	    for (Article article : articleList) {
-	        System.out.println("Article found: " + article.getArticleTitle());
-	    }
+//	    System.out.println("Search results count: " + articleList.size());
+//	    for (Article article : articleList) {
+//	        System.out.println("Article found: " + article.getArticleTitle());
+//	    }
 
 	    List<Board> boardList = boardSvc.getAll();
 	    model.addAttribute("boardList", boardList);  // 改為 boardList
@@ -543,7 +532,7 @@ public class ArticleController {
 	
 
 
-	
+	//錯誤訊息處理顯示
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	//@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ModelAndView handleError(HttpServletRequest req,ConstraintViolationException e,Model model) {
@@ -553,8 +542,9 @@ public class ArticleController {
 	          strBuilder.append(violation.getMessage() + "<br>");
 	    }
 	    //==== 以下第267~271行是當前面第252行返回 /src/main/resources/templates/front-end/forum/select_page.html用的 ====   
-//	    model.addAttribute("article", new Article());
-//    	ArticleService ArticleSvc = new ArticleService();
+    	ArticleService articleSvc = new ArticleService();
+    	model.addAttribute("article", new ArticleService());
+    	
 	    // 加載所有文章
 		List<Article> list = articleSvc.getAll();
 		model.addAttribute("articleListData", list);     // for select_page.html 第97 109行用
@@ -566,8 +556,17 @@ public class ArticleController {
 		
     	
     	String message = strBuilder.toString();
-	    return new ModelAndView("front-end/forum/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
+	    return new ModelAndView("front-end/forum/post", "errorMessage", "請修正以下錯誤:<br>"+message);
 	}
+	
+	
+	   //設置通用的model
+	   private void setCommonModelAttributes(ModelMap model) {
+	        model.addAttribute("articleListData", articleSvc.getAll());
+	        model.addAttribute("boardListData", boardSvc.getAll());
+	        model.addAttribute("articleCategories", articleSvc.getAllCategories());
+	        model.addAttribute("generalMemberListData", generalMemberSvc.getAll());
+	    }
 	
 
 }

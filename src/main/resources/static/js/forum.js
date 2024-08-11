@@ -88,63 +88,157 @@ document.addEventListener('DOMContentLoaded', function() {
 		    });
 		});
 		
+			
+		
+		// 獲取所有按讚數和收藏數的元素
+		const likeCounts = document.querySelectorAll('.like-count');
+		const favoriteCounts = document.querySelectorAll('.favorite-count');
 
-		// 文章類別點擊切換
-		const btnGroup = document.querySelector('.btn-group');
-		const buttons = btnGroup.querySelectorAll('.btn');
-
-		buttons.forEach(button => {
-		    button.addEventListener('click', function(event) {
-		        event.preventDefault();
-		        buttons.forEach(btn => btn.classList.remove('active'));
-		        this.classList.add('active');
-		        console.log('Selected category:', this.textContent);
-		    });
+		// 獲取按讚數
+		likeCounts.forEach(element => {
+		    const articleID = element.getAttribute('data-article-id');
+		    fetch(`/heart/count/${articleID}`)
+		        .then(response => response.json())
+		        .then(count => {
+		            element.textContent = count;
+		        })
+		        .catch(error => {
+		            console.error('Error fetching like count:', error);
+		            element.textContent = 'N/A';
+		        });
 		});
-});
+
+		// 獲取收藏數
+		favoriteCounts.forEach(element => {
+		    const articleID = element.getAttribute('data-article-id');
+		    fetch(`/articleCollection/count/${articleID}`)
+		        .then(response => response.json())
+		        .then(count => {
+		            element.textContent = count;
+		        })
+		        .catch(error => {
+		            console.error('Error fetching favorite count:', error);
+		            element.textContent = 'N/A';
+		        });
+		});
+		
+		
+		
 		// 更新麵包屑導航
-		function updateBreadcrumb(boardName) {
-		    const currentBoard = document.getElementById('currentBoard');
-			if (currentBoard) {
-			       currentBoard.textContent = boardName || 'Home';
-			   }
-		}
+				function updateBreadcrumb(boardName) {
+				    const currentBoard = document.getElementById('currentBoard');
+					if (currentBoard) {
+					       currentBoard.textContent = boardName || 'Home';
+					   }
+				}
+				
+
+
+				
+				// 分頁
+				var $articlesList = $('.list');
+				var $paginationContainer = $('#paginationContainer');
+				var itemsPerPage = 10;
+				var currentPage = 1;
+				var allArticles = [];
+				var filteredArticles = [];
+
+				// 初始化分頁
+				function initializePagination() {
+				    allArticles = $articlesList.find('tr').toArray();
+				    filteredArticles = allArticles;
+				    renderPagination();
+				    goToPage(1);
+				}
+
+				// 渲染分頁控件
+				function renderPagination() {
+				      var pageCount = Math.ceil(filteredArticles.length / itemsPerPage);
+				      var html = '';
+				      for (var i = 1; i <= pageCount; i++) {
+				          html += '<li class="page-item' + (currentPage === i ? ' active' : '') + '">' +
+				                  '<a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+				      }
+				      $paginationContainer.html(html);
+				  }
+
+				// 切換到指定頁面
+				function goToPage(page) {
+				        currentPage = page;
+				        var startIndex = (page - 1) * itemsPerPage;
+				        var endIndex = startIndex + itemsPerPage;
+				        
+				        $articlesList.find('tr').addClass('d-none');
+				        $(filteredArticles.slice(startIndex, endIndex)).removeClass('d-none');
+				        
+				        $paginationContainer.find('.page-item').removeClass('active');
+				        $paginationContainer.find('.page-item:eq(' + (page - 1) + ')').addClass('active');
+				        
+				        updateArticleNumbers(startIndex);
+				    }
+
+				// 更新文章編號
+				function updateArticleNumbers(startIndex) {
+				    $articlesList.find('tr:not(.d-none)').each(function(index) {
+				        $(this).find('th.index').text(startIndex + index + 1);
+				    });
+				}
+
+				// 綁定分頁點擊事件
+				$paginationContainer.on('click', '.page-link', function(e) {
+				    e.preventDefault();
+				    var page = parseInt($(this).data('page'));
+				    goToPage(page);
+				});
+				
+				// 文章類別頁籤切換
+				const categoryButtons = document.querySelectorAll('.btn-group .btn');
+
+
+				categoryButtons.forEach(button => {
+				    button.addEventListener('click', function(event) {
+				        event.preventDefault();
+
+
+				        categoryButtons.forEach(btn => btn.classList.remove('active'));
+				        this.classList.add('active');
+				        const category = this.getAttribute('data-category');
+				        filterArticles(category);
+				    });
+				});
+
+				function filterArticles(category) {
+				    filteredArticles = allArticles.filter(article => {
+				        const articleCategory = $(article).attr('data-category');
+
+				        return category === '全部' || articleCategory === category;
+				    });
+
+	
+
+				    $articlesList.find('tr').addClass('d-none');
+				    filteredArticles.forEach(article => {
+				        $(article).removeClass('d-none');
+				    });
+
+				    renderPagination();
+				    goToPage(1);
+
+
+				}
+
+					
+					// 初始化分頁
+					 initializePagination();
+					 
+				    // 初始化時顯示所有文章
+				    filterArticles('全部');
+				});
 		
-		// 點擊發文按鈕跳轉發文頁面
-		function goToAddArticle() {
-		  window.location.href = 'post';
-		}
-		
-		// 文章類別頁籤切換
-		document.addEventListener('DOMContentLoaded', function() {
-		    const categoryButtons = document.querySelectorAll('.btn-group .btn');
-		    const articles = document.querySelectorAll('table tbody tr');
+				// 點擊發文按鈕跳轉發文頁面
+				function goToAddArticle() {
+				  window.location.href = 'post';
+				}
 
-		    categoryButtons.forEach(button => {
-		        button.addEventListener('click', function() {
-		            // 移除所有按鈕的 active 類
-		            categoryButtons.forEach(btn => btn.classList.remove('active'));
-		            // 為當前點擊的按鈕添加 active 類
-		            this.classList.add('active');
-
-		            const category = this.getAttribute('data-category');
-		            filterArticles(category);
-		        });
-		    });
-
-		    function filterArticles(category) {
-		        articles.forEach(article => {
-		            if (category === '全部' || article.getAttribute('data-category') === category) {
-		                article.style.display = '';
-		            } else {
-		                article.style.display = 'none';
-		            }
-		        });
-		    }
-
-		    // 初始化時顯示所有文章
-		    filterArticles('全部');
-		});
-		
 		
 		

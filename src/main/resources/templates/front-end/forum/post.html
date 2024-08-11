@@ -14,10 +14,12 @@
     </style>
 </head>
 <body>
+		<div id="header"></div>
 
+		<main class="main-content">
 	    <div class="form-container">
 	      <!--   <form action="#" th:action="@{/post}" th:object="${article}" method="post"> -->	
-	        		<form th:action="@{insert}" method="post" th:object="${article}" enctype="multipart/form-data">
+	     <form th:action="@{insert}" method="post" th:object="${article}" enctype="multipart/form-data">
 			        
 			<div>
 			    <label for="board">文章版塊:</label>
@@ -46,24 +48,34 @@
 			
 			<div>
 			    <label for="articleTitle">文章標題:</label>
-			    <input type="text" id="articleTitle" th:field="*{articleTitle}" onclick="hideContent('articleTitle.errors');" />
+			    <input type="text" id="articleTitle" th:field="*{articleTitle}" />
 			    <span th:if="${#fields.hasErrors('articleTitle')}" th:errors="*{articleTitle}" class="error" id="articleTitle.errors"></span>
 			</div>
 
             
            <div class="editor-container">
-                <textarea id="summernote" name="articleContent"></textarea>
+                <textarea id="summernote" name="summernoteContent"></textarea>
             </div>
             
             <!-- 隱藏字段 -->
-            <input type="hidden" id="articleContent" name="articleContent" />
+            <input type="hidden" id="articleContent" name="articleContent" th:field="*{articleContent}" />
             
             <input type="file" id="imageUpload" name="articlePic" multiple />
-            
-            <button type="submit">送出文章</button>
+			            
+			<button type="submit" class="btn btn-secondary ">
+			  送出文章
+			</button>
+			
+			<button type="button" class="btn btn-secondary" id="cancelButton">
+		      取消發文
+		    </button>
+			
         </form>
     </div>	
-
+    </main>
+    
+	<div id="footer"></div>
+	
     <script src="/js/post.js"></script>
 </body>
 </html>

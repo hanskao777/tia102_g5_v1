@@ -10,15 +10,12 @@ body {
     min-height: 100vh; /* 確保背景顏色覆蓋整個視窗 */
     padding: 0;
     margin: 0;
+}
 
 
 /* 側邊欄 */
-
-
-
 .sidebar-title span {
     font-weight: bold;
-
 }
 
 
@@ -26,7 +23,7 @@ body {
 .list-group-item {
     background-color: transparent !important;
     border: none !important;
-    color: #000; /* 或者您想要的其他顏色 */
+    color: #000; 
     transition: all 0.3s ease;
 }
 
@@ -35,8 +32,8 @@ body {
     background-color: #FDBCB4 !important;
     color: #FEFEFA !important;
     font-weight: bold;
-    border-radius: 15px !important; /* 添加圓角效果，可以根據需要調整數值 */
-    padding: 10px 15px; /* 可選：調整內邊距以配合圓角效果 */
+    border-radius: 15px !important; /* 添加圓角效果 */
+    padding: 10px 15px; /* 調整內邊距以配合圓角效果 */
 }
 
 /* 移除所有針對 .active 元素的懸停效果 */
@@ -49,7 +46,7 @@ body {
     cursor: default;
 }
 
-/* 移除 Bootstrap 的默認聚焦效果 */
+/* 移除默認聚焦效果 */
 .list-group-item:focus {
     outline: none !important;
     box-shadow: none !important;
@@ -97,7 +94,7 @@ header, footer {
 /* 麵包屑 */
 #mainContent > div:first-child {
   width: 100%;
-  margin-bottom: 20px; /* 可根據需要調整 */
+  margin-bottom: 20px; 
 }
 
 /* 導覽列 */
@@ -106,6 +103,7 @@ header, footer {
 }
 
 .button-container {
+	width: 100%;
     border: none; 
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -176,19 +174,65 @@ header, footer {
 
 /* 文章列表 */
 .table {
+	table-layout: fixed;
+    width: 100%;
     color: #333333;
+    background-color: #F8F9FA; 
 }
 
 .table-hover tbody tr:hover {
-    background-color: #e9ecef; /* 表格懸停顏色 */
+    background-color: #e9ecef;
 }
-.table {
-    background-color: #F8F9FA; /* 表格背景顏色 */
-}
+
+
 .table th, .table td {
-    background-color: #F8F9FA; /* 表格單元格背景顏色 */
+    background-color: #F8F9FA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
 }
+
+/* 文章列表表頭 */
+.col-index {
+    width: 5%;
 }
+
+.col-board {
+    width: 10%;
+}
+
+.col-title {
+    width: 35%;
+}
+
+.col-author {
+    width: 10%;
+}
+
+.col-like, .col-favorite {
+    width: 5%;
+    text-align: center;
+}
+
+/* 按讚和收藏圖標置中 */
+   .col-like i, .col-favorite i {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+
+/* 按讚和收藏數字置中 */
+ td.like-count, td.favorite-count,td.time {
+     text-align: center;
+ }
+
+
+.col-time {
+    width: 10%;
+    text-align: center
+}
+
 
 
 /* 響應式設計 */
@@ -227,6 +271,21 @@ header, footer {
     .table {
         font-size: 14px;
     }
+    .col-board, .col-author, .col-like, .col-favorite {
+        display: none;
+    }
+
+    .col-index {
+        width: 10%;
+    }
+
+    .col-title {
+        width: 60%;
+    }
+
+    .col-time {
+        width: 30%;
+    }
 }
 
 @media (max-width: 576px) {
@@ -255,4 +314,20 @@ header, footer {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
+    
+    .col-board, .col-author, .col-like, .col-favorite {
+         display: none;
+     }
+
+     .col-index {
+         width: 10%;
+     }
+
+     .col-title {
+         width: 60%;
+     }
+
+     .col-time {
+         width: 30%;
+     }
 }
