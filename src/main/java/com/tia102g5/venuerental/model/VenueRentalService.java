@@ -39,6 +39,11 @@ public class VenueRentalService {
 	public List<VenueRental> getAll() {
 		return venueRentalRepository.findAll();
 	}
+	
+	public List<VenueRental> findByPartnerMemberPartnerID(Integer partnerID) {
+        return venueRentalRepository.findByPartnerMemberPartnerID(partnerID);
+    }
+
 
 //	public List<VenueRental> getAll(Map<String,String[]> map){//複合查詢，暫時先不做
 //		return HibernateUtil_CompositeQuery_VenueRental.getAllC(map,sessionFactory.openSession());

@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import com.tia102g5.activity.model.Activity;
 import com.tia102g5.partnermember.model.PartnerMember;
@@ -42,6 +44,8 @@ public class VenueRental implements java.io.Serializable {
 	@JoinColumn(name = "partnerID", referencedColumnName = "partnerID")
 	private PartnerMember partnerMember;
 
+	@NotEmpty(message = "活動名稱不能為空")
+	@Size(max = 255, message = "活動名稱不能超過 255 個字符")
 	@Column(name = "activityName", length = 255)
 	private String activityName;
 
@@ -170,4 +174,21 @@ public class VenueRental implements java.io.Serializable {
 		this.activity = activity;
 	}
 
+	// 將場地租借狀態轉換為中文描述
+    public String getStatusInChinese() {
+        switch (this.venueRentalStatus) {
+            case 0:
+                return "不通過";
+            case 1:
+                return "通過";
+            case 2:
+                return "審核中";
+            case 3:
+                return "取消中";
+            case 4:
+                return "已取消";
+            default:
+                return "未知狀態";
+        }
+    }
 }

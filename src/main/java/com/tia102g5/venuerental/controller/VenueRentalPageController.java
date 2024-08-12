@@ -1,0 +1,122 @@
+package com.tia102g5.venuerental.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.tia102g5.partnermember.model.PartnerMember;
+import com.tia102g5.venue.model.Venue;
+import com.tia102g5.venue.model.VenueService;
+import com.tia102g5.venuerental.model.VenueRental;
+import com.tia102g5.venuerental.model.VenueRentalService;
+
+@Controller
+@RequestMapping("/venueRentalPage")
+public class VenueRentalPageController {
+    @Autowired
+    VenueRentalService venueRentalService;
+    @Autowired
+    VenueService venueService;
+
+    @GetMapping
+    public String addVenueRental(ModelMap model) {
+        VenueRental venueRental = new VenueRental();
+        Venue venue = new Venue();
+        venue.setVenueID(1);
+        PartnerMember partnerMember = new PartnerMember();
+        partnerMember.setPartnerID(1);
+        venueRental.setPartnerMember(partnerMember);
+        venueRental.setVenue(venue);
+        venueRental.setActivityName("IVE演唱會");
+        venueRental.setVenueRentalStatus(2);
+        venueRental.setVenueRentalStartDate(java.sql.Date.valueOf("2024-08-30"));
+        venueRental.setVenueRentalEndDate(java.sql.Date.valueOf("2024-09-05"));
+
+        model.addAttribute("venueRental", venueRental);
+        return "/back-end-partner/venue/venueRentalPage";
+    }
+
+    
+//  根據 partnerID 顯示場地租借資料，這是給廠商查看已申請的場地用的
+    @GetMapping("/partnerVenueRentalList")
+    public String getVenueRentalsByPartnerID(ModelMap model) {
+    	Integer partnerID = 3;
+        List<VenueRental> list = venueRentalService.findByPartnerMemberPartnerID(partnerID);
+        model.addAttribute("venueRentalListData", list);
+        return "/back-end-partner/venue/listAllPartnerVenueRental";
+    }
+
+//    這是給場館申請的下拉式選單用的
+    @ModelAttribute("venueList")
+    public List<Venue> showVenueList() {
+        return venueService.getAll(); // 從服務層獲取所有場館資料並返回
+    }
+
+    @PostMapping("insert")
+    public String insert(@Valid VenueRental venueRental, BindingResult result,
+            @RequestParam("proposalFile") MultipartFile proposalFile, ModelMap model) {
+
+        /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+        if (venueRental.getVenue().getVenueID() < 1 || venueRental.getVenue().getVenueID() > 3) {
+            result.rejectValue("venue.venueID", "error.venueRental", "Venue ID 必須在 1 和 3 之間");
+        }
+
+        if (venueRental.getPartnerMember().getPartnerID() < 1 || venueRental.getPartnerMember().getPartnerID() > 5) {
+            result.rejectValue("partnerMember.partnerID", "error.venueRental", "Partner ID 查無資料");
+        }
+
+        // 處理文件上傳
+        try {
+            if (!proposalFile.isEmpty()) {
+                venueRental.setProposal(proposalFile.getBytes());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.rejectValue("proposal", "error.venueRental", "PDF 上傳失敗");
+        }
+
+        if (result.hasErrors()) {
+            System.out.println(result);
+            return "/back-end-partner/venue/venueRentalPage";
+        }
+
+        // 先設定一個臨時的代碼
+        venueRental.setVenueRentalCode("temp_code");
+
+        /***************************
+         * 2.先保存資料，生成主鍵
+         *****************************************/
+        venueRentalService.addVenueRental(venueRental);
+
+        /***************************
+         * 3.根據主鍵生成 venueRentalCode，並更新
+         *****************************************/
+        String generatedCode = generateVenueRentalCode(venueRental.getVenueRentalID());
+        venueRental.setVenueRentalCode(generatedCode);
+
+        // 更新 venueRental
+        venueRentalService.updateVenueRental(venueRental);
+
+        /*************************** 4.新增完成,準備轉交(Send the Success view) **************/
+        return "redirect:/venueRentalPage/partnerVenueRentalList"; // 新增成功後重導至VenueRentalPageController
+    }
+
+    // 生成 venueRentalCode 的方法
+    private String generateVenueRentalCode(Integer venueRentalID) {
+        int baseNumber = 3001000;
+        int generatedNumber = baseNumber + venueRentalID;
+        return "G" + generatedNumber;
+    }
+}

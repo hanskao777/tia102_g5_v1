@@ -12,7 +12,7 @@ function initializeSidebar() {
     const navLinks = document.querySelectorAll('.nav-link[data-section]');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
+//            e.preventDefault();//傳智拿掉的，我也不知道為什麼要拿掉，反正不拿掉就會導致點了側邊欄也不會跳轉到自己要的網址
             const targetSection = this.getAttribute('data-section');
             showSection(targetSection);
         });
