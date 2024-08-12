@@ -21,8 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tia102g5.activity.model.Activity;
 import com.tia102g5.activity.model.ActivityService;
 import com.tia102g5.activityPicture.model.ActivityPicture;
-import com.tia102g5.partnermember.model.PartnerMember;
 import com.tia102g5.partnermember.model.PartnerMemberService;
+import com.tia102g5.venue.model.VenueService;
+import com.tia102g5.venuerental.model.VenueRentalService;
 
 @Controller
 @RequestMapping("/activity")
@@ -33,6 +34,12 @@ public class ActivityController {
 	
 	@Autowired
 	PartnerMemberService partnerSvc;
+	
+	@Autowired
+	VenueService venueSvc;
+	
+	@Autowired
+	VenueRentalService venueRentalSvc;
 	
 /********************* 跳轉 **********************/	
 	//活動資訊
@@ -93,10 +100,14 @@ public class ActivityController {
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 //		result = removeFieldError(activity, result, "activityPictures");
 
-		////////////////////
-//		activity.setPartnerMember(partnerSvc.getOnePartnerMember(activity.getActivityID()));
-		///////////////////
-		System.out.println(activity.getPartnerMember().getPartnerID());
+		//////// 設置未在表單中的資訊 ////////////
+		
+		activity.setPartnerMember(activitySvc.getOneActivity(activity.getActivityID()).getPartnerMember());
+		activity.setVenue(activitySvc.getOneActivity(activity.getActivityID()).getVenue());
+		activity.setVenueRental(activitySvc.getOneActivity(activity.getActivityID()).getVenueRental());
+		
+		////////設置未在表單中的資訊 ////////////
+		
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
 				Set<ActivityPicture> activityPictures = activitySvc.getOneActivity(activity.getActivityID()).getActivityPictures();
 				

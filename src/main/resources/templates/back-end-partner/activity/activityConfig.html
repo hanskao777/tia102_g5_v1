@@ -73,6 +73,8 @@
             <!-- <h6 font-color="red"><b>所有欄位皆為必填欄位</b></h6> -->
             
             <form th:action="@{update}" method="post" th:object="${activity}" enctype="multipart/form-data">
+                <input type="hidden" th:field="*{activityID}">
+                
                 <div>
                     <strong>名稱:</strong>
                     <input type="text" th:field="*{activityName}" style="border:1px" /><br/>
@@ -138,9 +140,7 @@
 
                 <div>
                     <button type="submit" id="submit"> 送出修改 </button>
-                </div>		
-                
-                <input type="hidden" th:field="*{activityID}">
+                </div>	
             </form>
             
             <a href="activityDisplay">
