@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
+    if (sidebarPlaceholder) {
+        fetch('/adminSidebar')
+            .then(response => response.text())
+            .then(data => {
+                console.log('Received data:', data);
+                sidebarPlaceholder.innerHTML = data;
+            })
+            .catch(error => console.error('Error loading sidebar:', error));
+    } else {
+        console.error('Sidebar placeholder element not found');
+    }
+})
+  .catch(error => console.error('Error loading sidebar:', error));
     var navLinks = document.querySelectorAll('.nav-link[data-section]');
     var sections = document.querySelectorAll('.section');
     var submenuLinks = document.querySelectorAll('.nav-link[data-toggle="submenu"]');
@@ -40,4 +54,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sections.length > 0) {
         sections[0].classList.add('active');
     }
-});
+
+    

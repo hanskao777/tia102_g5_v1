@@ -2,8 +2,9 @@ package com.tia102g5.generalmember.model;
 
 
 
+import java.sql.Date;
 import java.util.Arrays;
-import java.util.Date;
+
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,50 +44,49 @@ public class GeneralMember implements java.io.Serializable {
 	@Column(name = "memberID", updatable = false) // 會員ID
 	private Integer memberID;
 
-	
+	@NotEmpty(message="帳號: 請勿空白")
+	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "格式須符合有@")
 	@Column(name = "memberAccount") // "帳號(E-mail)"
 	private String memberAccount;
 
-	
+	@NotEmpty(message="密碼: 請勿空白")
 	@Column(name = "memberPassword") // "密碼"
 	private String memberPassword;
 
 	
 	@NotEmpty(message="姓名: 請勿空白")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "姓名: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "姓名: 只能是中、英文字母")
 	@Column(name = "memberName") // "姓名"
 	private String memberName;
 
 	
 	@NotEmpty(message="電話: 請勿空白")
-	@Pattern(regexp = "^09\\\\d{8}$", message = "電話: 只能數字和09開頭")
 	@Column(name = "memberPhone") // "電話"
 	private String memberPhone;
 
 	
 	@NotEmpty(message="暱稱: 請勿空白")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "暱稱: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "暱稱: 只能是中、英文字母、數字和")
 	@Column(name = "memberNickName") // "暱稱"
 	private String memberNickName;
 
 	
 	@NotEmpty(message="地址: 請勿空白")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "地址: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間")
+	@Pattern(regexp = "^[a-zA-Z0-9\\u4e00-\\u9fa5]+$", message = "地址: 只能是中、英文字母、數字")
 	@Column(name = "memberAddress") // "地址"
 	private String memberAddress;
 
 	
 	@NotEmpty(message="身分證字號: 請勿空白")
-	@Pattern(regexp = "^[A-Z][12]\\\\d{8}$", message = "身分證字號: 只能是第一位必須是大寫字母第二位必須是 1 或 2及的八位必須是數字")
 	@Column(name = "nationalID") // "身分證字號"
 	private String nationalID;
 
-	
+	@NotEmpty(message="性別: 請勿空白")
 	@Column(name = "gender") // "性別"
 	private String gender;
 	
-	
-	@Temporal(TemporalType.DATE)
+//	@NotEmpty(message="生日: 請勿空白")
+//	@Temporal(TemporalType.DATE)
 	@Column(name = "birthday") // "生日"
 	private Date birthday;
 	
@@ -96,10 +96,10 @@ public class GeneralMember implements java.io.Serializable {
 	
 
 	@Column(name = "memberStatus") // "帳號狀態 0:帳號已黑單 1:帳號正常"
-	private Integer memberStatus;
+	private Integer memberStatus = 1;
 	
-
-	@Column(name = "memberCreateTime", updatable = false) // "帳號建立時間"
+//	@Temporal(TemporalType.DATE)
+	@Column(name = "memberCreateTime", updatable = false, insertable = false) // "帳號建立時間"
 	private Date memberCreateTime;
 	
 	
@@ -109,28 +109,29 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<MemberCoupon> memberCoupons;
 	
 	
+	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+	@OrderBy("cartID asc")
+	private Set<Cart> carts;
+	
+	
 //	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-//	@OrderBy("cartID asc")
-//	private Set<Cart> carts;
-	
-	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("articleCollectionID asc")
-	private Set<ArticleCollection> articleCollections;
-	
-	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("articleID asc")
-	private Set<Article> articles;
-	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("heartID asc")
-	private Set<Heart> hearts;
-	
-	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("messageID asc")
-	private Set<Message> messages;
+//	@OrderBy("articleCollectionID asc")
+//	private Set<ArticleCollection> articleCollections;
+//	
+//	
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("articleID asc")
+//	private Set<Article> articles;
+//	
+//	
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("heartID asc")
+//	private Set<Heart> hearts;
+//	
+//	
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("messageID asc")
+//	private Set<Message> messages;
 	
 	
 	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
@@ -138,9 +139,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<ActivityCollection> activityCollections;
 	
 	
-//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-//	@OrderBy("orderID asc")
-//	private Set<Orders> orders;
+	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+	@OrderBy("orderID asc")
+	private Set<Orders> orders;
 	
 	
 	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
@@ -303,54 +304,54 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-//	public Set<Cart> getCarts() {
-//		return carts;
+	public Set<Cart> getCarts() {
+		return carts;
+	}
+
+
+	public void setCarts(Set<Cart> carts) {
+		this.carts = carts;
+	}
+
+
+//	public Set<ArticleCollection> getArticleCollections() {
+//		return articleCollections;
 //	}
 //
 //
-//	public void setCarts(Set<Cart> carts) {
-//		this.carts = carts;
+//	public void setArticleCollections(Set<ArticleCollection> articleCollections) {
+//		this.articleCollections = articleCollections;
 //	}
-
-
-	public Set<ArticleCollection> getArticleCollections() {
-		return articleCollections;
-	}
-
-
-	public void setArticleCollections(Set<ArticleCollection> articleCollections) {
-		this.articleCollections = articleCollections;
-	}
-
-
-	public Set<Article> getArticles() {
-		return articles;
-	}
-
-
-	public void setArticles(Set<Article> articles) {
-		this.articles = articles;
-	}
-
-
-	public Set<Heart> getHearts() {
-		return hearts;
-	}
-
-
-	public void setHearts(Set<Heart> hearts) {
-		this.hearts = hearts;
-	}
-
-
-	public Set<Message> getMessages() {
-		return messages;
-	}
-
-
-	public void setMessages(Set<Message> messages) {
-		this.messages = messages;
-	}
+//
+//
+//	public Set<Article> getArticles() {
+//		return articles;
+//	}
+//
+//
+//	public void setArticles(Set<Article> articles) {
+//		this.articles = articles;
+//	}
+//
+//
+//	public Set<Heart> getHearts() {
+//		return hearts;
+//	}
+//
+//
+//	public void setHearts(Set<Heart> hearts) {
+//		this.hearts = hearts;
+//	}
+//
+//
+//	public Set<Message> getMessages() {
+//		return messages;
+//	}
+//
+//
+//	public void setMessages(Set<Message> messages) {
+//		this.messages = messages;
+//	}
 
 
 	public Set<ActivityCollection> getActivityCollections() {
@@ -363,14 +364,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-//	public Set<Orders> getOrders() {
-//		return orders;
-//	}
-//
-//
-//	public void setOrders(Set<Orders> orders) {
-//		this.orders = orders;
-//	}
+	public Set<Orders> getOrders() {
+		return orders;
+	}
+
+
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
+	}
 
 
 	public Set<Ticket> getTickets() {
