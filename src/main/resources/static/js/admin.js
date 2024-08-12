@@ -6,20 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 console.log('Received data:', data);
                 sidebarPlaceholder.innerHTML = data;
+                bindNavLinks(); // 在這裡綁定 navLinks 事件
             })
             .catch(error => console.error('Error loading sidebar:', error));
     } else {
         console.error('Sidebar placeholder element not found');
     }
-})
-  .catch(error => console.error('Error loading sidebar:', error));
+});
+
+function bindNavLinks() {
     var navLinks = document.querySelectorAll('.nav-link[data-section]');
     var sections = document.querySelectorAll('.section');
     var submenuLinks = document.querySelectorAll('.nav-link[data-toggle="submenu"]');
 
     navLinks.forEach(function(link) {
         link.addEventListener('click', function(event) {
-            event.preventDefault();
+//            event.preventDefault();
 
             // 隱藏所有 section
             sections.forEach(function(section) {
@@ -54,5 +56,4 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sections.length > 0) {
         sections[0].classList.add('active');
     }
-
-    
+}
