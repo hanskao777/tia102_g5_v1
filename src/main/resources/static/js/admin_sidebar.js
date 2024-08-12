@@ -12,7 +12,7 @@ function initializeSidebar() {
     const navLinks = document.querySelectorAll('.nav-link[data-section]');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
+//            e.preventDefault();
             const targetSection = this.getAttribute('data-section');
             showSection(targetSection);
         });
