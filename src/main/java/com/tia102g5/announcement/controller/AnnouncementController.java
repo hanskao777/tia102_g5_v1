@@ -48,8 +48,8 @@ public class AnnouncementController {
 
     @GetMapping("/listAllAnnouncement")
     public String listAllAnnouncement(Model model) {
-//        return "back-end/announcement-news/listAllAnnouncement";
-        return "front-end/announcement-news/listAllAnnouncement";
+        return "back-end-partner/announcement-news/announcement";
+//        return "front-end/announcement-news/listAllAnnouncement";
 
     }
     
