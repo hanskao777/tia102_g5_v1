@@ -102,9 +102,13 @@ public class ActivityController {
 
 		//////// 設置未在表單中的資訊 ////////////
 		
-		activity.setPartnerMember(activitySvc.getOneActivity(activity.getActivityID()).getPartnerMember());
-		activity.setVenue(activitySvc.getOneActivity(activity.getActivityID()).getVenue());
-		activity.setVenueRental(activitySvc.getOneActivity(activity.getActivityID()).getVenueRental());
+		Activity activityORI = activitySvc.getOneActivity(activity.getActivityID());
+		
+		activity.setPartnerMember(activityORI.getPartnerMember());
+		activity.setVenue(activityORI.getVenue());
+		activity.setVenueRental(activityORI.getVenueRental());
+		activity.setActivityStatus(1);
+		activity.setTicketSetStatus(activityORI.getTicketSetStatus());
 		
 		////////設置未在表單中的資訊 ////////////
 		
@@ -117,6 +121,7 @@ public class ActivityController {
 				ActivityPicture activityPicture = new ActivityPicture();
 				
 				activityPicture.setActivityPicture(multipartFile.getBytes());
+				activityPicture.setActivity(activity);
 				activity.getActivityPictures().add(activityPicture);
 			}
 		}
@@ -124,6 +129,7 @@ public class ActivityController {
 //			return "back-end-partner/activity/activityConfig";
 //		}
 		/*************************** 2.開始修改資料 *****************************************/
+		
 		
 		activitySvc.updateActivity(activity);
 		

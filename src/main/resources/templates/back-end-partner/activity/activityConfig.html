@@ -139,6 +139,12 @@
                 </div>
 
                 <div>
+                    <label><strong>起售日:</strong></label>
+                    <input type="date" th:field="*{sellTime}" onclick="hideContent('sellTime.errors');" /><br/>
+                    <span  th:if="${#fields.hasErrors('sellTime')}" th:errors="*{sellTime}" class="error" id="sellTime.errors"></span>
+                </div>
+
+                <div>
                     <button type="submit" id="submit"> 送出修改 </button>
                 </div>	
             </form>
