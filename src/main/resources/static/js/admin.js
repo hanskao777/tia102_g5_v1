@@ -54,3 +54,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sections.length > 0) {
         sections[0].classList.add('active');
     }
+
+    
