@@ -23,7 +23,6 @@ public class ActivityService {
 	
 	//修改
 	public void updateActivity(Activity activity) {
-		System.out.println("ID " + activity.getActivityID());
 		repository.save(activity);
 	}
 	
