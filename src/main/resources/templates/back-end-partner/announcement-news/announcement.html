@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>廠商後台-公告</title>
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/partner.css">
+<link rel="stylesheet" href="/css/partner_sidebar.css">
+<style>
+body {
+	font-family: 'Noto Sans TC', sans-serif;
+	background: linear-gradient(135deg, #e2e4ee 0%, #aba6b0 100%);
+	margin: 0;
+	padding: 20px;
+	min-height: 100vh;
+	/* display: flex;
+        justify-content: center;
+        align-items: center; */
+}
+
+.container {
+	background-color: rgba(255, 255, 255, 0.95);
+	border-radius: 20px;
+	padding: 40px;
+	box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+	width: 100%;
+	max-width: 900px;
+}
+
+h1 {
+	color: #4a4a4a;
+	text-align: center;
+	margin-bottom: 30px;
+	font-size: 2.8em;
+	font-weight: 700;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.news-list {
+	list-style-type: none;
+	padding: 0;
+}
+
+.news-item {
+	background-color: #ffffff;
+	border-left: 5px solid #4e54c8;
+	margin-bottom: 20px;
+	padding: 20px;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.news-item:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.news-date {
+	font-size: 0.9em;
+	color: #8e8e8e;
+	margin-bottom: 8px;
+	font-weight: 300;
+}
+
+.news-title {
+	font-size: 1.2em;
+	color: #333;
+	font-weight: 500;
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	animation: fadeIn 0.3s;
+}
+
+@
+keyframes fadeIn {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+.modal-content {
+	background-color: #fefefe;
+	margin: 10% auto;
+	padding: 30px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 700px;
+	border-radius: 15px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+	animation: slideIn 0.4s ease-out;
+}
+
+@
+keyframes slideIn {from { transform:translateY(-50px);
+	opacity: 0;
+}
+
+to {
+	transform: translateY(0);
+	opacity: 1;
+}
+
+}
+.close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.close:hover {
+	color: #4e54c8;
+}
+
+.modal-title {
+	margin-top: 0;
+	color: #4e54c8;
+	font-size: 1.8em;
+}
+
+.modal-date {
+	color: #8e8e8e;
+	margin-bottom: 20px;
+	font-size: 0.9em;
+}
+
+.modal-body {
+	line-height: 1.8;
+	color: #4a4a4a;
+}
+
+/* 分頁 */
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 30px;
+}
+
+.pagination button {
+	background-color: #4e54c8;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	margin: 0 5px;
+	cursor: pointer;
+	border-radius: 5px;
+	font-size: 1em;
+	transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+	background-color: #3c4299;
+}
+
+.pagination button:disabled {
+	background-color: #cccccc;
+	cursor: not-allowed;
+}
+
+.pagination span {
+	margin: 0 10px;
+	font-size: 1em;
+	color: #4a4a4a;
+}
+/*  */
+@media ( max-width : 768px) {
+	.container {
+		padding: 20px;
+	}
+	h1 {
+		font-size: 2.2em;
+	}
+	.modal-content {
+		width: 90%;
+		margin: 20% auto;
+	}
+}
+</style>
+
+
+</head>
+
+
+<body>
+	<div id="sidebar-placeholder"></div>
+
+
+	<div class="content">
+		<div id="dynamic-content">
+			<section id="news1" class="section"> <!-- id看看有沒有要修改 -->
+				<div class="container">
+					<h1>最新消息</h1>
+					<ul class="news-list" id="newsList"></ul>
+					<div class="pagination">
+						<button id="prevBtn" onclick="changePage(-1)">
+							<i class="fas fa-chevron-left"></i> 上一頁
+						</button>
+						<span id="pageInfo">第 1 頁，共 1 頁</span>
+						<button id="nextBtn" onclick="changePage(1)">
+							下一頁 <i class="fas fa-chevron-right"></i>
+						</button>
+					</div>
+				</div>
+
+				<div id="newsModal" class="modal">
+					<div class="modal-content">
+						<span class="close">&times;</span>
+						<h2 id="modalTitle" class="modal-title"></h2>
+						<p id="modalDate" class="modal-date"></p>
+						<div id="modalBody" class="modal-body"></div>
+					</div>
+				</div>
+				
+				
+
+				<script>
+          const newsData = [
+              { date: '2024/01/01', title: '【置頂】場地租用申請流程', content: '此為場地租用申請流程的詳細說明...' },
+              { date: '2024/01/01', title: '【置頂】場地設備租金暨服務收費表', content: '這裡列出了所有場地設備的租金和服務收費明細...' },
+              { date: '2024/01/23', title: '公告標題1', content: '公告1的詳細內容...' },
+              { date: '2024/04/25', title: '公告標題2', content: '公告2的詳細內容...' },
+              { date: '2024/04/27', title: '公告標題3', content: '公告3的詳細內容...' },
+              { date: '2024/05/01', title: '公告標題4', content: '公告4的詳細內容...' },
+              { date: '2024/05/05', title: '公告標題5', content: '公告5的詳細內容...' },
+              { date: '2024/05/10', title: '公告標題6', content: '公告6的詳細內容...' },
+              { date: '2024/05/15', title: '公告標題7', content: '公告7的詳細內容...' },
+              { date: '2024/05/20', title: '公告標題8', content: '公告8的詳細內容...' },
+              // ... 可以繼續添加更多新聞項目
+          ];
+  
+          const newsList = document.getElementById('newsList');
+          const modal = document.getElementById('newsModal');
+          const modalTitle = document.getElementById('modalTitle');
+          const modalDate = document.getElementById('modalDate');
+          const modalBody = document.getElementById('modalBody');
+          const closeBtn = document.getElementsByClassName('close')[0];
+          const prevBtn = document.getElementById('prevBtn');
+          const nextBtn = document.getElementById('nextBtn');
+          const pageInfo = document.getElementById('pageInfo');
+  
+          let currentPage = 1;
+          const itemsPerPage = 5;
+          const totalPages = Math.ceil(newsData.length / itemsPerPage);
+  
+          function renderNews() {
+              const startIndex = (currentPage - 1) * itemsPerPage;
+              const endIndex = startIndex + itemsPerPage;
+              const pageNews = newsData.slice(startIndex, endIndex);
+  
+              newsList.innerHTML = '';
+              pageNews.forEach(news => {
+                  const li = document.createElement('li');
+                  li.className = 'news-item';
+                  li.innerHTML = `
+                      <div class="news-date">${news.date}</div>
+                      <div class="news-title">${news.title}</div>
+                  `;
+                  li.onclick = () => showModal(news);
+                  newsList.appendChild(li);
+              });
+  
+              pageInfo.textContent = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
+              prevBtn.disabled = currentPage === 1;
+              nextBtn.disabled = currentPage === totalPages;
+          }
+  
+          function changePage(delta) {
+              currentPage += delta;
+              renderNews();
+          }
+  
+          function showModal(news) {
+              modalTitle.textContent = news.title;
+              modalDate.textContent = news.date;
+              modalBody.textContent = news.content;
+              modal.style.display = 'block';
+          }
+  
+          closeBtn.onclick = () => modal.style.display = 'none';
+          window.onclick = (event) => {
+              if (event.target == modal) {
+                  modal.style.display = 'none';
+              }
+          };
+  
+          renderNews();
+      </script>
+		</div>
+	</div>
+
+	<script src="/js/partner.js"></script>
+	<script src="/js/partner_sidebar.js"></script>
+
+
+</body>
+</html>
