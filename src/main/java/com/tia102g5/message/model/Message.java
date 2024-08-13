@@ -19,6 +19,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tia102g5.article.model.Article;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.prosecute.model.Prosecute;
@@ -65,6 +66,7 @@ public class Message implements java.io.Serializable {
 	
 
 	@OneToOne(mappedBy = "message",cascade = CascadeType.ALL, fetch = FetchType.LAZY) //檢舉
+	@JsonIgnoreProperties("message")
 	private Prosecute prosecute; 
 	
 	
