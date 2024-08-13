@@ -1,6 +1,7 @@
 package com.tia102g5.activity.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.SessionFactory;
@@ -13,8 +14,8 @@ public class ActivityService {
 	@Autowired
 	ActivityRepository repository;
 	
-//	@Autowired
-//	private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	//新增
 	public void addActivity(Activity activity) {
@@ -44,4 +45,10 @@ public class ActivityService {
 	public List<Activity> getAll(){
 		return repository.findAll();
 	}
+	
+//	//查詢 (複合)
+//	public List<Activity> getAll(Map<String, String[]> map) {
+//		return HibernateUtil_CompositeQuery_Activity.getAllC(map,sessionFactory.openSession());
+//	}
+	
 }

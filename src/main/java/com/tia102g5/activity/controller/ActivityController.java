@@ -33,6 +33,15 @@ public class ActivityController {
 	ActivityService activitySvc;
 	
 /********************* 跳轉 **********************/	
+//////////////// 前台 ////////////////
+	//活動資訊
+	@GetMapping("/activityInfo")
+	public String activityInfo() {
+		return "/front-end/activity/activityInfo";
+	}
+//////////////// 前台 ////////////////
+	
+//////////////// 後台 ////////////////
 	//活動資訊
 	@GetMapping("/activityDisplay")
 	public String activityDisplay() {
@@ -51,31 +60,10 @@ public class ActivityController {
 		
 		return "back-end-partner/activity/activityConfig";
 	}
+//////////////// 後台 ////////////////
 /********************* 跳轉 **********************/
 	
 /********************* action **********************/
-	//查詢 (單一)
-//	@PostMapping("getOne_For_Display")
-//	public String getOne_For_Display(
-//			/***************************1.接收請求參數 - 輸入格式的錯誤處理*************************/
-//			@RequestParam("activityID") String activityID, ModelMap model) {
-//		/***************************2.開始查詢資料*********************************************/
-//		Activity activity = activitySvc.getOneActivity(Integer.valueOf(activityID));
-//		
-//		List<Activity> activityList = activitySvc.getAll();
-//		model.addAttribute("empListData", activityList);
-//		
-//		if(activity == null) {
-//			model.addAttribute("errorMessage", "查無資料");
-//			return "back-end/activity/select_page";
-//		}
-//		
-//		/***************************3.查詢完成,準備轉交(Send the Success view)*****************/
-//		model.addAttribute("activity", activity);
-//		model.addAttribute("getOne_For_Display", "true");
-//		
-//		return "back-end/activity/select_page";
-//	}
 	
 //	@GetMapping("addActivity")
 //	public String addActivity(ModelMap model) {
