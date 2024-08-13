@@ -22,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.articleImg.model.ArticleImg;
@@ -88,6 +89,7 @@ public class Article implements java.io.Serializable {
 	
 
 	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY)
+	@JsonIgnoreProperties("article")
 	private Prosecute prosecute; 
 	
 	
