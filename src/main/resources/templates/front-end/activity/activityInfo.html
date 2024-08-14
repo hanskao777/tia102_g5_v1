@@ -7,6 +7,7 @@
     <title>活動資訊</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,59 +16,8 @@
             padding: 0;
         }
 
-        
-        .swiper-container {
-            width: 100%;
-            height: 400px;
-            margin: 10px 0;
-        }
-
-        .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            color: white;
-        }
-
-        .swiper-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .swiper-pagination {
-            position: relative;
-            margin-top: 10px;
-        }
-
         .content {
             padding: 20px;
-        }
-
-        .calendar {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .calendar select {
-            margin-bottom: 20px;
-        }
-
-        .calendar table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-        }
-
-        .calendar th,
-        .calendar td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            vertical-align: top;
         }
 
         .events {
@@ -109,7 +59,34 @@
             color: #666;
         }
 
+        /*輪播圖片區塊*/
+        .image-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
 
+        /* .custom-image-wrapper {
+            flex: 0 0 30%;
+            max-width: 30%;
+            padding: 20px;
+            box-sizing: border-box;
+        } */
+
+        .custom-image-wrapper {
+            overflow: hidden;
+        }
+
+        .custom-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .custom-image {
+            width: 100%;
+            flex-shrink: 0;
+            border-radius: 20px;
+        }
 
         @media (max-width: 768px) {
             .header {
@@ -124,11 +101,6 @@
             .nav-bar {
                 flex-wrap: wrap;
                 gap: 10px;
-            }
-
-            .calendar th,
-            .calendar td {
-                padding: 5px;
             }
 
             .event-item {
@@ -149,10 +121,6 @@
             .nav-bar {
                 flex-wrap: wrap;
                 gap: 5px;
-            }
-
-            .swiper-container {
-                height: 300px;
             }
 
             .event-item {
@@ -183,236 +151,135 @@
 
     <div class="container mt-5">
         <h2>活動資訊</h2>
+
         <div class="row mt-3">
             <!-- 地區與類型選擇 -->
             <div class="col-md-12">
                 <form>
                     <div class="mb-3">
-                        <label for="region" class="form-label">地區:</label>
+                        <label for="venueLocation" class="form-label">地區:</label>
                         <div>
-                            <input type="checkbox" id="north" name="region" value="北部"> 北部
-                            <input type="checkbox" id="central" name="region" value="中部"> 中部
-                            <input type="checkbox" id="south" name="region" value="南部"> 南部
+                            <label>
+                                <input type="checkbox" id="north" name="venueLocation" value="北部"> 北部
+                            </label>
+                            <label>
+                                <input type="checkbox" id="central" name="venueLocation" value="中部"> 中部
+                            </label>
+                            <label>
+                                <input type="checkbox" id="south" name="venueLocation" value="南部"> 南部
+                            </label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="type" class="form-label">類型:</label>
                         <div>
-                            <input type="checkbox" id="concert" name="type" value="演唱會"> 演唱會
-                            <input type="checkbox" id="musical" name="type" value="音樂劇"> 音樂劇
-                            <input type="checkbox" id="exhibition" name="type" value="展覽"> 展覽
-                            <input type="checkbox" id="play" name="type" value="戲劇"> 戲劇
-                            <input type="checkbox" id="dance" name="type" value="舞蹈"> 舞蹈
-                            <input type="checkbox" id="lecture" name="type" value="講座"> 講座
-                            <input type="checkbox" id="others" name="type" value="其它"> 其它
+                            <label>
+                                <input type="checkbox" id="concert" name="type" value="演唱會"> 演唱會
+                            </label>
+                            <label>
+                                <input type="checkbox" id="musical" name="type" value="音樂劇"> 音樂劇
+                            </label>
+                            <label>
+                                <input type="checkbox" id="exhibition" name="type" value="展覽"> 展覽
+                            </label>
+                            <label>
+                                <input type="checkbox" id="play" name="type" value="戲劇"> 戲劇
+                            </label>
+                            <label>
+                                <input type="checkbox" id="dance" name="type" value="舞蹈"> 舞蹈
+                            </label>
+                            <label>
+                                <input type="checkbox" id="lecture" name="type" value="講座"> 講座
+                            </label>
+                            <label>
+                                <input type="checkbox" id="others" name="type" value="其它"> 其它
+                            </label>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- 篩選按鈕 -->
-        <div class="row mb-3">
-            <div class="col-md-12 text-end">
-                <button class="btn btn-primary">演出日期</button>
-                <button class="btn btn-secondary">開賣日期</button>
-            </div>
-        </div>
-
         <!-- 活動卡片列表 -->
         <div class="row">
-            <div class="col-md-4 mb-3" th:each="event : ${events}">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- 圖片部分 -->
-                        <div style="width: 100%; height: 180px; background-color: #e0e0e0;"></div>
-                        <!-- 文字部分 -->
+            <!-- 針對每個活動生成一個卡片 -->
+            <div class="col-md-4 mb-3" th:each="activity : ${activityListData}">
+                <!-- 設定 overflow: hidden; 確保卡片內的內容不會超出卡片範圍 -->
+                <div class="card" style="overflow: hidden;"> <!-- 修改部分 -->
+                    <div class="card-body text-center">
                         <h5 class="mt-3">
-                            <a href="#" th:text="${event.name}">XXX 2024 Tour in Taipei</a>
+                            <!-- 設定圖片容器的寬度和 overflow: hidden; 來限制圖片顯示範圍 -->
+                            <div class="custom-image-wrapper" style="width: 100%; overflow: hidden;"> <!-- 修改部分 -->
+                                <!-- 輪播圖片的容器，設定為flex布局以顯示多張圖片 -->
+                                <div class="image-slider" style="display: flex; transition: transform 0.5s ease-in-out;">
+                                    <!-- 使用 th:each 遍歷每張圖片並顯示 -->
+                                    <img th:each="activityPicture : ${activity.activityPictures}" 
+                                         th:src="@{|/activity/DBGifReader?activityPictureID=${activityPicture.activityPictureID}|}" 
+                                         class="custom-image" alt="Image" 
+                                         style="width: 100%; object-fit: cover;"> <!-- 修改部分，設定圖片寬度與填滿樣式 -->
+                                </div>
+                            </div>
                         </h5>
-                        <p th:text="'日期：' + ${event.date}">2024/XX/XX(一) 18:30</p>
-                        <p th:text="'地點：' + ${event.location}">台北XXX展覽館</p>
+                        <!-- 顯示活動日期 -->
+                        <p th:text="'日期：' + ${activity.sellTime}"></p>
+                        <!-- 顯示活動地點 -->
+                        <p th:text="'地點：' + ${activity.venue.venueName}"></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
         
-    <!-- <span>活動資訊</span>
-        
-    <div class="events">
-        <div class="event-item">
-            <img src="images/slide1.jpg" alt="Event Image">
-            <div class="event-details">
-                <h3>XXX 2024 Tour in Taipei</h3>
-                <p>2024/XX/XX (一) 18:30</p>
-                <p>台北XXX體育館</p>
-            </div>
-        </div>
-        <div class="event-item">
-            <img src="images/slide2.jpg" alt="Event Image">
-            <div class="event-details">
-                <h3>XXX 2024 Tour in Taipei</h3>
-                <p>2024/XX/XX (一) 18:30</p>
-                <p>台北XXX體育館</p>
-            </div>
-        </div>
-        <div class="event-item">
-            <img src="images/slide3.jpg" alt="Event Image">
-            <div class="event-details">
-                <h3>XXX 2024 Tour in Taipei</h3>
-                <p>2024/XX/XX (一) 18:30</p>
-                <p>台北XXX體育館</p>
-            </div>
-        </div>
-        <div class="event-item">
-            <img src="images/slide4.jpg" alt="Event Image">
-            <div class="event-details">
-                <h3>XXX 2024 Tour in Taipei</h3>
-                <p>2024/XX/XX (一) 18:30</p>
-                <p>台北XXX體育館</p>
-            </div>
-        </div>
-        <div class="event-item">
-            <img src="images/slide5.jpg" alt="Event Image">
-            <div class="event-details">
-                <h3>XXX 2024 Tour in Taipei</h3>
-                <p>2024/XX/XX (一) 18:30</p>
-                <p>台北XXX體育館</p>
-            </div>
-        </div>
-    </div>
 
-        <div id="footer"></div>
+    <div id="footer"></div>
 
-        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-        <script>
-	     // 載入 header
-	        fetch('/header')
-	            .then(response => {
-	                if (!response.ok) {
-	                    throw new Error(`HTTP error! status: ${response.status}`);
-	                }
-	                return response.text();
-	            })
-	            .then(data => {
-	                document.getElementById('header').innerHTML = data;
-	            })
-	            .catch(error => {
-	                console.error('Error loading header:', error);
-	                document.getElementById('header').innerHTML = '<p>Error loading header</p>';
-	            });
-	
-	        // 載入 footer
-	        fetch('/footer')
-	            .then(response => {
-	                if (!response.ok) {
-	                    throw new Error(`HTTP error! status: ${response.status}`);
-	                }
-	                return response.text();
-	            })
-	            .then(data => {
-	                document.getElementById('footer').innerHTML = data;
-	            })
-	            .catch(error => {
-	                console.error('Error loading footer:', error);
-	                document.getElementById('footer').innerHTML = '<p>Error loading footer</p>';
-	            });
-
-
-
-            var swiper = new Swiper('.swiper-container', {
-                loop: true,
-                autoplay: {
-                    delay: 3000,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-            });
-
-            // Function to generate the calendar
-            function generateCalendar(year, month) {
-                const calendarBody = document.getElementById('calendar-body');
-                calendarBody.innerHTML = '';
-
-                const firstDay = new Date(year, month, 1).getDay();
-                const lastDate = new Date(year, month + 1, 0).getDate();
-                let date = 1;
-
-                for (let i = 0; i < 6; i++) {
-                    const row = document.createElement('tr');
-
-                    for (let j = 0; j < 7; j++) {
-                        const cell = document.createElement('td');
-                        if (i === 0 && j < firstDay) {
-                            cell.textContent = '';
-                        } else if (date > lastDate) {
-                            cell.textContent = '';
-                        } else {
-                            cell.textContent = `${month + 1}/${date}`;
-                            date++;
-                        }
-                        row.appendChild(cell);
-                    }
-                    calendarBody.appendChild(row);
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // 載入 header
+        fetch('/header')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            }
-
-            // Populate year and month dropdowns
-            const yearSelect = document.getElementById('year-select');
-            const monthSelect = document.getElementById('month-select');
-            const currentYear = new Date().getFullYear();
-
-            for (let i = currentYear - 5; i <= currentYear + 5; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                yearSelect.appendChild(option);
-            }
-
-            for (let i = 0; i < 12; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i + 1;
-                monthSelect.appendChild(option);
-            }
-
-            // Set current year and month
-            yearSelect.value = currentYear;
-            monthSelect.value = new Date().getMonth();
-
-            // Generate initial calendar
-            generateCalendar(currentYear, new Date().getMonth());
-
-            // Update calendar when year or month changes
-            yearSelect.addEventListener('change', () => {
-                generateCalendar(parseInt(yearSelect.value), parseInt(monthSelect.value));
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading header:', error);
+                document.getElementById('header').innerHTML = '<p>Error loading header</p>';
             });
 
-            monthSelect.addEventListener('change', () => {
-                generateCalendar(parseInt(yearSelect.value), parseInt(monthSelect.value));
+        // 載入 footer
+        fetch('/footer')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('footer').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading footer:', error);
+                document.getElementById('footer').innerHTML = '<p>Error loading footer</p>';
             });
 
-            
-       	  // 註釋掉 loginBtn 相關的
-       	  /*            
-           // 獲取會員登入超連結元素
-            var loginBtn = document.getElementById('loginBtn');
-            // 獲取登入浮動視窗元素
-            var loginPopup = document.querySelector('.login-popup');
+        // 輪播圖片區塊
+        $(document).ready(function () {
+            let currentIndex = 0;
+            const images = $('.custom-image');
+            const totalImages = images.length;
 
-            // 點擊會員登入超連結時顯示浮動視窗
-            loginBtn.addEventListener('click', function (event) {
-                event.preventDefault(); // 防止默認行為（如頁面跳轉）
-
-                // 顯示登入浮動視窗
-                loginPopup.style.display = 'block';
-            }); 
-            */
-            
-        </script> -->
+            setInterval(function () {
+                currentIndex = (currentIndex + 1) % totalImages;
+                $('.image-slider').css('transform', 'translateX(-' + currentIndex * 100 + '%)');
+            }, 3000); // 每3秒切換一次圖片
+        });
+    </script>
 </body>
 
 </html>
