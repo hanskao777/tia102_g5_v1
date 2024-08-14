@@ -154,9 +154,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<BookTicket> bookTickets;
 	
 	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("prosecuteID asc")
-	private Set<Prosecute> prosecutes;
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("prosecuteID asc")
+//	private Set<Prosecute> prosecutes;
 
 
 	public GeneralMember() {
@@ -394,14 +394,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-	public Set<Prosecute> getProsecutes() {
-		return prosecutes;
-	}
-
-
-	public void setProsecutes(Set<Prosecute> prosecutes) {
-		this.prosecutes = prosecutes;
-	}
+//	public Set<Prosecute> getProsecutes() {
+//		return prosecutes;
+//	}
+//
+//
+//	public void setProsecutes(Set<Prosecute> prosecutes) {
+//		this.prosecutes = prosecutes;
+//	}
 
 
 	public static long getSerialversionuid() {

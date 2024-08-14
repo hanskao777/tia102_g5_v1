@@ -12,4 +12,6 @@ public interface PartnerMemberRepository extends JpaRepository<PartnerMember, In
 	@Modifying
 	@Query(value = "delete PartnerMember where partnerID =?1", nativeQuery = true)
 	void deleteBypartnerID(int partnerID);
+
+	PartnerMember findByTaxID(String taxID);
 }
