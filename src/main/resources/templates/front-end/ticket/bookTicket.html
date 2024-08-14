@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>票券結帳</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <!-- 訂單內容 -->
+    <div class="order-details">
+        <h2 align="center"><b>訂單內容</b></h2>
+        <table id="example" class="display" style="width: 100%">
+            <thead>
+                <tr style="background-color:#CCCCFF">
+                    <th>計數</th>
+                    <th>活動名稱</th>
+                    <th>日期 / 時間</th>
+                    <th>場館</th>
+                    <th>座位</th>
+                    <th>數量</th>
+                    <th>票價</th>
+                    <th>移除</th>
+                </tr>
+            </thead>
+                
+            <tbody>
+                <th:block th:each="ticket : ${ticketListData}">
+                    <tr>
+                        <td th:text="${ticketStat.count}"></td>
+                        <td th:text="${ticket.activity.activityName}"></td>
+                        <td th:text="${ticket.activityTimeSlot.activityTimeSlot}"></td>
+                        <td th:text="${ticket}"></td>
+                        <td th:text="${activity.activityPostTime}"></td>
+                        <td th:text="${activity.activityTag}"></td>
+                        <td th:text="${activity.sellTime}"></td>
+                        <td th:switch="${activity.activityStatus}">
+                            <div th:case="0">未設定</div>
+                            <div th:case="1">已設定</div>
+                        </td>
+                        <td>
+                            <form method="post" th:action="@{/activity/activityConfig}" style="margin-bottom: 0px;">
+                                <input type="submit" value="設定">
+                                <input type="hidden" name="activityID" th:value="${activity.activityID}">
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">優惠折扣：</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td colspan="6">合計：</td>
+                    <td>$7,200</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- 會員資料 -->
+    <div class="member-details">
+        <h2>購買資料</h2>
+        <label for="member-id-1">序號1, 會員帳號：</label>
+        <input type="text" id="member-id-1" name="member-id-1">
+        <label for="member-id-2">序號2, 會員帳號：</label>
+        <input type="text" id="member-id-2" name="member-id-2">
+    </div>
+
+    <!-- 付款資訊 -->
+    <div class="payment-details">
+        <h2>付款資訊</h2>
+        <div class="payment-method">
+            <label>持卡人：</label>
+            <input type="text" name="cardholder-name">
+
+            <label>信用卡卡號：</label>
+            <input type="text" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
+
+            <label>信用卡到期日：</label>
+            <input type="text" name="expiry-date" placeholder="MM/YY">
+
+            <label>信用卡背面碼：</label>
+            <input type="text" name="cvv" placeholder="XXX">
+        </div>
+    </div>
+
+    <!-- 按鈕 -->
+    <div class="buttons">
+        <button type="button" th:onclick="|window.location.href='@{/cart}'|">取消訂單</button>
+        <button type="submit" th:onclick="|window.location.href='@{/order/complete}'|">繼續送出</button>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        // 載入 header
+           fetch('/header')
+               .then(response => {
+                   if (!response.ok) {
+                       throw new Error(`HTTP error! status: ${response.status}`);
+                   }
+                   return response.text();
+               })
+               .then(data => {
+                   document.getElementById('header').innerHTML = data;
+               })
+               .catch(error => {
+                   console.error('Error loading header:', error);
+                   document.getElementById('header').innerHTML = '<p>Error loading header</p>';
+               });
+   
+           // 載入 footer
+           fetch('/footer')
+               .then(response => {
+                   if (!response.ok) {
+                       throw new Error(`HTTP error! status: ${response.status}`);
+                   }
+                   return response.text();
+               })
+               .then(data => {
+                   document.getElementById('footer').innerHTML = data;
+               })
+               .catch(error => {
+                   console.error('Error loading footer:', error);
+                   document.getElementById('footer').innerHTML = '<p>Error loading footer</p>';
+               });
+    </script>
+</body>
+</html>

@@ -20,20 +20,30 @@ public class TicketController {
 	ActivityService activitySvc;
 	
 	/********************* 跳轉 **********************/
+//////////////// 前台 ////////////////
+	//票券結帳
+	@GetMapping("/bookTicket")
+	public String bookTicket() {
+		return "front-end/ticket/bookTicket";
+	}
+//////////////// 前台 ////////////////
+	
+//////////////// 後台 ////////////////
 	//售票資訊
 	@GetMapping("/ticketDisplay")
 	public String ticketDisplay() {
-		return "back-end-partner/ticket/ticketDisplay";
+	return "back-end-partner/ticket/ticketDisplay";
 	}
-	/********************* 跳轉 **********************/
-	
-	/********************* bean **********************/
+//////////////// 後台 ////////////////
+/********************* 跳轉 **********************/
+
+/********************* bean **********************/
 	//查全部，給 ticketDisplay 用
-		@ModelAttribute("activityListData")
-		protected List<Activity> referenceListData(Model model) {
-	    	List<Activity> list = activitySvc.getAll();
-	    	return list;
-		}
-	/********************* bean **********************/
+	@ModelAttribute("activityListData")
+	protected List<Activity> referenceListData(Model model) {
+    	List<Activity> list = activitySvc.getAll();
+    	return list;
+	}
+/********************* bean **********************/
 	
 }

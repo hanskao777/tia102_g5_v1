@@ -126,6 +126,7 @@ public class ActivityController {
 	@ModelAttribute("activityListData")
 	protected List<Activity> referenceListData(Model model) {
     	List<Activity> list = activitySvc.getAll();
+    	
     	return list;
 	}
 /********************* bean **********************/
