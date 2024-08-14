@@ -1,11 +1,14 @@
 package com.tia102g5.partnermember.model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_partnerMember3;
 
 @Service("partnermemberService")
 public class PartnerMemberService {
@@ -41,4 +44,11 @@ public class PartnerMemberService {
 		return repository.findAll();
 	}
 
+	public List<PartnerMember> getAll(Map<String, String[]> map) {
+		return HibernateUtil_CompositeQuery_partnerMember3.getAllC(map,sessionFactory.openSession());  //openSession
+	}
+	
+	public PartnerMember getByTaxID(String taxID) {
+		return repository.findByTaxID(taxID);
+	}
 }

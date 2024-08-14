@@ -7,8 +7,8 @@
 			<a href="#" class="nav-link" data-toggle="submenu"
 				data-target="member-management-submenu">會員管理</a>
 			<div id="member-management-submenu" class="submenu">
-				<a href="/adminMembers" class="nav-link"
-					data-section="general-members">會員列表</a> <a href="/adminPartners"
+				<a href="/generalmember/listAllGeneralMember" class="nav-link"
+					data-section="general-members">會員列表</a> <a href="/partnermember/listAllPartnerMember"
 					class="nav-link" data-section="vendor-members">廠商列表</a> <a
 					href="#vendor-approval" class="nav-link"
 					data-section="vendor-approval">廠商審核</a> <a href="#blacklist"
@@ -48,7 +48,7 @@
 					data-section="news-approval1">消息公告1</a>
 			</div>
 		</div>
-		<a href="#logout" class="text-center text-danger py-4">登出</a>
+		<a th:href="@{/logout}" class="text-center text-danger py-4">登出</a>
 	</div>
 	</body>
 </html>
