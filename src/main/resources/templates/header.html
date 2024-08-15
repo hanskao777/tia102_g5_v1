@@ -13,7 +13,7 @@
     <div class="header">
         <div class="top-bar">
             <div class="logo">
-                <a href="./">
+                <a th:href="@{/}">
                     <img th:src="@{/images/logo.png}" alt="Logo">
                 </a>
             </div>
@@ -47,7 +47,7 @@
                         <a class="nav-link" href="#">最新消息</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">活動資訊</a>
+                        <a class="nav-link" th:href="@{/activity/activityInfo}">活動資訊</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -124,7 +124,7 @@
                 <h6 style="color: red">* 請填入票券持有人</h6>
                 <div th:each="ticket:${ticketListData}" style="margin: 10px 0">
                     <label>序號 <span th:text="${ticketStat.count}"></span> 
-                        會員帳號：<input type="text"  name="memberID" th:value="${ticket.generalMember.memberID}">
+                        會員帳號：<input type="text"  name="memberID">
                         <!--  <span th:text="${ticket.generalMember.memberID}"> -->
                     </label>
                 </div>
