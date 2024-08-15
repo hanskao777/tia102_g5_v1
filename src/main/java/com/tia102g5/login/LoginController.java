@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tia102g5.administrator.model.Administrator;
@@ -26,7 +27,7 @@ import com.tia102g5.partnermember.model.PartnerMemberService;
 @Controller
 @RequestMapping(value = { "/generalmember", "/partnermember" })
 public class LoginController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 	@Autowired
@@ -34,7 +35,6 @@ public class LoginController {
 
 	@Autowired
 	PartnerMemberService partnerSvc;
-	
 
 	@GetMapping("/login")
 	public String getLogin() {
@@ -45,8 +45,6 @@ public class LoginController {
 	public String getpartnerLogin() {
 		return "partnerLogin";
 	}
-	
-
 
 	// 會員登入
 	@PostMapping("login")
@@ -79,96 +77,111 @@ public class LoginController {
 			return "login"; // 返回登入頁
 		}
 	}
-	
+
 	// 會員中心
 	@GetMapping("/memberCenter")
-	public String memberCenter(HttpSession session, Model model,@RequestParam(required = false) Boolean updated) {
+	public String memberCenter(HttpSession session, Model model, @RequestParam(required = false) Boolean updated) {
 		System.out.println("memberCenter method called!");
-		
-	    logger.info("Entering memberCenter method");
-	    
-	    if (updated != null && updated) {
-	        System.out.println("Redirected from updateMember");
-	    }
 
+		logger.info("Entering memberCenter method");
+
+		if (updated != null && updated) {
+			System.out.println("Redirected from updateMember");
+		}
+
+		if (session.getAttribute("memberAccount") == null) {
+			logger.info("User not logged in, redirecting to login");
+			return "redirect:/login";
+		}
+
+		String memberAccount = (String) session.getAttribute("memberAccount");
+		logger.info("Fetching data for member account: {}", memberAccount);
+
+		GeneralMember generalMember = gmemberSvc.getByMemberAccount(memberAccount);
+
+		if (generalMember == null) {
+			logger.warn("Member not found for account: {}", memberAccount);
+			return "redirect:/login";
+		}
+
+		logger.info("Member data retrieved successfully");
+		model.addAttribute("generalMember", generalMember);
+
+		return "front-end/generalmember/memberCenter";
+	}
+
+	// 修改會員中心編輯頁面
+
+	@GetMapping("/editMember/{memberID}")
+	public String showEditMemberForm(@PathVariable Integer memberID, HttpSession session, Model model) {
+		// 檢查用戶是否已登入
+		if (session.getAttribute("memberAccount") == null) {
+			return "redirect:/generalmember/login";
+		}
+
+		// 從數據庫獲取會員資料
+		GeneralMember generalMember = gmemberSvc.getOneGeneralMember(memberID);
+
+		if (generalMember == null) {
+			// 處理找不到會員的情況
+			return "redirect:/memberCenter";
+		}
+
+		// 將會員資料添加到模型中
+		model.addAttribute("generalMember", generalMember);
+
+		return "front-end/generalmember/editMember"; // 返回編輯頁面的視圖名稱
+	}
+
+	// 更新會員中心資料
+	@PostMapping("/updateMember")
+	public String updateMember(@ModelAttribute GeneralMember generalMember,
+	                           HttpSession session, 
+	                           RedirectAttributes redirectAttributes) {
+	    
+	    System.out.println("=====================");
+	    System.out.println("updateMember CALLED!");
+	    System.out.println("=====================");
+	    
+	    logger.info("Entering updateMember method");
+	    
 	    if (session.getAttribute("memberAccount") == null) {
 	        logger.info("User not logged in, redirecting to login");
 	        return "redirect:/login";
 	    }
 
-	    String memberAccount = (String) session.getAttribute("memberAccount");
-	    logger.info("Fetching data for member account: {}", memberAccount);
+	    try {
+	        // 獲取數據庫中現有的會員資料
+	        GeneralMember existingMember = gmemberSvc.getOneGeneralMember(generalMember.getMemberID());
+	        
+	        // 如果有新的文件上傳，則更新 memberPicture
+	        if (generalMember.getMemberPictureFile() != null && !generalMember.getMemberPictureFile().isEmpty()) {
+	            generalMember.setMemberPicture(generalMember.getMemberPictureFile().getBytes());
+	        } else {
+	            // 如果沒有新的文件上傳，保留原有的 memberPicture
+	            generalMember.setMemberPicture(existingMember.getMemberPicture());
+	        }
 
-	    GeneralMember generalMember = gmemberSvc.getByMemberAccount(memberAccount);
-	    
-	    if (generalMember == null) {
-	        logger.warn("Member not found for account: {}", memberAccount);
-	        return "redirect:/login";
+	        // 更新其他可能沒有在表單中提交的字段
+	        generalMember.setMemberAccount(existingMember.getMemberAccount());
+	        generalMember.setMemberPassword(existingMember.getMemberPassword());
+	        generalMember.setNationalID(existingMember.getNationalID());
+	        generalMember.setBirthday(existingMember.getBirthday());
+	        // ... 其他需要保留的字段
+
+	        logger.info("Updating member data for account: {}", generalMember.getMemberAccount());
+	        gmemberSvc.updateGeneralMember(generalMember);
+	        logger.info("Member data updated successfully");
+
+	        redirectAttributes.addFlashAttribute("message", "資料已成功更新！");
+	        return "redirect:/generalmember/memberCenter";
+	    } catch (Exception e) {
+	        logger.error("Error updating member data", e);
+	        redirectAttributes.addFlashAttribute("error", "更新資料時發生錯誤：" + e.getMessage());
+	        return "redirect:/generalmember/memberCenter";
 	    }
-
-	    logger.info("Member data retrieved successfully");
-	    model.addAttribute("generalMember", generalMember);
-	    
-	    return "front-end/generalmember/memberCenter";
 	}
-	
-	// 修改會員中心編輯頁面
-	
-	@GetMapping("/editMember/{memberID}")
-	public String showEditMemberForm(@PathVariable Integer memberID, HttpSession session, Model model) {
-	    // 檢查用戶是否已登入
-	    if (session.getAttribute("memberAccount") == null) {
-	        return "redirect:/generalmember/login";
-	    }
 
-	    // 從數據庫獲取會員資料
-	    GeneralMember generalMember = gmemberSvc.getOneGeneralMember(memberID);
-
-	    if (generalMember == null) {
-	        // 處理找不到會員的情況
-	        return "redirect:/memberCenter";
-	    }
-
-	    // 將會員資料添加到模型中
-	    model.addAttribute("generalMember", generalMember);
-
-	    return "front-end/generalmember/editMember"; // 返回編輯頁面的視圖名稱
-	}
-	
-	// 更新會員中心資料
-	@PostMapping("/updateMember")
-    public String updateMember(@ModelAttribute GeneralMember generalMember, HttpSession session, RedirectAttributes redirectAttributes) {
-		System.out.println("=====================");
-	    System.out.println("updateMember CALLED!");
-	    System.out.println("=====================");
-	    
-        logger.info("Entering updateMember method");
-        System.out.println("updateMember method called!");
-        
-        if (session.getAttribute("memberAccount") == null) {
-            logger.info("User not logged in, redirecting to login");
-            return "redirect:/login";
-        }
-
-        try {
-            logger.info("Updating member data for account: {}", generalMember.getMemberAccount());
-            gmemberSvc.updateGeneralMember(generalMember);
-            logger.info("Member data updated successfully");
-
-            redirectAttributes.addFlashAttribute("message", "資料已成功更新！");
-            generalMember = gmemberSvc.getOneGeneralMember(Integer.valueOf(generalMember.getMemberID()));
-            logger.info("Redirecting to memberCenter");
-            return "redirect:/generalmember/memberCenter";
-        } catch (Exception e) {
-            logger.error("Error updating member data", e);
-            redirectAttributes.addFlashAttribute("error", "更新資料時發生錯誤：" + e.getMessage());
-            System.out.println("Redirecting to /memberCenter");
-            return "redirect:/generalmember/memberCenter?updated=true";
-        }
-    }
-
-	
-	
 	// 登出
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
@@ -186,9 +199,6 @@ public class LoginController {
 	private boolean isPasswordCorrect(String inputPassword, String storedPassword) {
 		return inputPassword.equals(storedPassword);
 	}
-	
-	
-	
 
 	// 廠商登入
 	@PostMapping("partnerLogin")
@@ -220,5 +230,5 @@ public class LoginController {
 		}
 
 	}
-	
+
 }
