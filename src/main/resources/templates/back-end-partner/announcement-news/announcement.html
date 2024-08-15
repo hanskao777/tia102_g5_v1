@@ -8,20 +8,26 @@
 <link
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 	rel="stylesheet">
-<link rel="stylesheet" href="/css/partner.css">
+<!--<link rel="stylesheet" href="/css/partner.css">-->
 <link rel="stylesheet" href="/css/partner_sidebar.css">
 <style>
 body {
-	font-family: 'Noto Sans TC', sans-serif;
+	display: flex;
+	font-family: 'Arial', sans-serif;
 	background: linear-gradient(135deg, #e2e4ee 0%, #aba6b0 100%);
 	margin: 0;
-	padding: 20px;
+	padding: 0;
 	min-height: 100vh;
 	/* display: flex;
         justify-content: center;
         align-items: center; */
 }
-
+.content {
+	flex-grow: 1;
+	padding: 20px;
+	margin-left: 250px; /* 與側邊欄寬度相同 */
+	box-sizing: border-box;
+}
 .container {
 	background-color: rgba(255, 255, 255, 0.95);
 	border-radius: 20px;
@@ -40,12 +46,12 @@ h1 {
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.news-list {
+.announcement--list {
 	list-style-type: none;
 	padding: 0;
 }
 
-.news-item {
+.announcement-item {
 	background-color: #ffffff;
 	border-left: 5px solid #4e54c8;
 	margin-bottom: 20px;
@@ -56,19 +62,19 @@ h1 {
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
-.news-item:hover {
+.announcement-item:hover {
 	transform: translateY(-5px);
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.news-date {
+.announcement-date {
 	font-size: 0.9em;
 	color: #8e8e8e;
 	margin-bottom: 8px;
 	font-weight: 300;
 }
 
-.news-title {
+.announcement-title {
 	font-size: 1.2em;
 	color: #333;
 	font-weight: 500;
@@ -86,7 +92,7 @@ h1 {
 	animation: fadeIn 0.3s;
 }
 
-@
+
 keyframes fadeIn {from { opacity:0;
 	
 }
@@ -108,7 +114,7 @@ to {
 	animation: slideIn 0.4s ease-out;
 }
 
-@
+
 keyframes slideIn {from { transform:translateY(-50px);
 	opacity: 0;
 }
@@ -119,18 +125,33 @@ to {
 }
 
 }
+/*.close {*/
+/*	color: #aaa;*/
+/*	float: right;*/
+/*	font-size: 28px;*/
+/*	font-weight: bold;*/
+/*	cursor: pointer;*/
+/*	transition: color 0.3s;*/
+/*}*/
+
+/*.close:hover {*/
+/*	color: #4e54c8;*/
+/*}*/
 .close {
 	color: #aaa;
-	float: right;
 	font-size: 28px;
 	font-weight: bold;
 	cursor: pointer;
 	transition: color 0.3s;
+	position: absolute;
+	top: 10px; /* 根據需要調整 */
+	right: 10px; /* 根據需要調整 */
 }
 
 .close:hover {
 	color: #4e54c8;
 }
+
 
 .modal-title {
 	margin-top: 0;
@@ -203,15 +224,35 @@ to {
 
 
 <body>
-	<div id="sidebar-placeholder"></div>
+<div id="sidebar-placeholder"></div>
 
 
 	<div class="content">
 		<div id="dynamic-content">
-			<section id="news1" class="section"> <!-- id看看有沒有要修改 -->
+			<section id="news1" class="section">
 				<div class="container">
-					<h1>最新消息</h1>
-					<ul class="news-list" id="newsList"></ul>
+					<h1>最新公告</h1>
+					<div th:if="${#lists.isEmpty(announcements)}">
+						<p>目前沒有公告</p>
+					</div>
+
+<!--					<div id="announcementTable">-->
+<!--						<ul>-->
+<!--							<li th:each="announcement : ${announcements}" class="news-item" th:onclick="'showModal(' + ${announcement.announcementID} + ')'">-->
+<!--								<div class="news-date" th:text="${#dates.format(announcement.announcementCreateTime, 'yyyy-MM-dd')}"></div>-->
+<!--								<div class="news-title" th:text="${announcement.announcementTitle}"></div>-->
+<!--							</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+					<div th:each="announcement : ${announcements}" class="announcement-item">
+						<div class="announcement-header">
+							<div class="announcement-date" th:text="${#dates.format(announcement.announcementCreateTime, 'yyyy/MM/dd')}"></div>
+						</div>
+						<h3 th:text="${announcement.announcementTitle}" class="announcement-title"></h3>
+						<div th:text="${announcement.announcementContent}" class="announcement-content" style="display: none;"></div>
+					</div>
+
+
 					<div class="pagination">
 						<button id="prevBtn" onclick="changePage(-1)">
 							<i class="fas fa-chevron-left"></i> 上一頁
@@ -221,96 +262,137 @@ to {
 							下一頁 <i class="fas fa-chevron-right"></i>
 						</button>
 					</div>
+<!--					<div class="pagination" th:if="${totalPages > 1}">-->
+<!--						<a th:if="${currentPage > 1}" th:href="@{'/announcement/list?page=' + ${currentPage - 1}}">上一頁</a>-->
+<!--						<span th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>-->
+<!--						<a th:if="${currentPage < totalPages}" th:href="@{'/announcement/list?page=' + ${currentPage + 1}}">下一頁</a>-->
+<!--					</div>-->
 				</div>
 
-				<div id="newsModal" class="modal">
-					<div class="modal-content">
-						<span class="close">&times;</span>
-						<h2 id="modalTitle" class="modal-title"></h2>
-						<p id="modalDate" class="modal-date"></p>
-						<div id="modalBody" class="modal-body"></div>
-					</div>
-				</div>
-				
-				
 
-				<script>
-          const newsData = [
-              { date: '2024/01/01', title: '【置頂】場地租用申請流程', content: '此為場地租用申請流程的詳細說明...' },
-              { date: '2024/01/01', title: '【置頂】場地設備租金暨服務收費表', content: '這裡列出了所有場地設備的租金和服務收費明細...' },
-              { date: '2024/01/23', title: '公告標題1', content: '公告1的詳細內容...' },
-              { date: '2024/04/25', title: '公告標題2', content: '公告2的詳細內容...' },
-              { date: '2024/04/27', title: '公告標題3', content: '公告3的詳細內容...' },
-              { date: '2024/05/01', title: '公告標題4', content: '公告4的詳細內容...' },
-              { date: '2024/05/05', title: '公告標題5', content: '公告5的詳細內容...' },
-              { date: '2024/05/10', title: '公告標題6', content: '公告6的詳細內容...' },
-              { date: '2024/05/15', title: '公告標題7', content: '公告7的詳細內容...' },
-              { date: '2024/05/20', title: '公告標題8', content: '公告8的詳細內容...' },
-              // ... 可以繼續添加更多新聞項目
-          ];
-  
-          const newsList = document.getElementById('newsList');
-          const modal = document.getElementById('newsModal');
-          const modalTitle = document.getElementById('modalTitle');
-          const modalDate = document.getElementById('modalDate');
-          const modalBody = document.getElementById('modalBody');
-          const closeBtn = document.getElementsByClassName('close')[0];
-          const prevBtn = document.getElementById('prevBtn');
-          const nextBtn = document.getElementById('nextBtn');
-          const pageInfo = document.getElementById('pageInfo');
-  
-          let currentPage = 1;
-          const itemsPerPage = 5;
-          const totalPages = Math.ceil(newsData.length / itemsPerPage);
-  
-          function renderNews() {
-              const startIndex = (currentPage - 1) * itemsPerPage;
-              const endIndex = startIndex + itemsPerPage;
-              const pageNews = newsData.slice(startIndex, endIndex);
-  
-              newsList.innerHTML = '';
-              pageNews.forEach(news => {
-                  const li = document.createElement('li');
-                  li.className = 'news-item';
-                  li.innerHTML = `
-                      <div class="news-date">${news.date}</div>
-                      <div class="news-title">${news.title}</div>
-                  `;
-                  li.onclick = () => showModal(news);
-                  newsList.appendChild(li);
-              });
-  
-              pageInfo.textContent = `第 ${currentPage} 頁，共 ${totalPages} 頁`;
-              prevBtn.disabled = currentPage === 1;
-              nextBtn.disabled = currentPage === totalPages;
-          }
-  
-          function changePage(delta) {
-              currentPage += delta;
-              renderNews();
-          }
-  
-          function showModal(news) {
-              modalTitle.textContent = news.title;
-              modalDate.textContent = news.date;
-              modalBody.textContent = news.content;
-              modal.style.display = 'block';
-          }
-  
-          closeBtn.onclick = () => modal.style.display = 'none';
-          window.onclick = (event) => {
-              if (event.target == modal) {
-                  modal.style.display = 'none';
-              }
-          };
-  
-          renderNews();
-      </script>
+			</section>
 		</div>
 	</div>
 
-	<script src="/js/partner.js"></script>
-	<script src="/js/partner_sidebar.js"></script>
+<!--<div id="newsModal" class="modal">-->
+<!--	<div class="modal-content">-->
+<!--		<span class="close">&times;</span>-->
+<!--		<h2 id="modalTitle" class="modal-title"></h2>-->
+<!--		<p id="modalDate" class="modal-date"></p>-->
+<!--		<div id="modalBody" class="modal-body"></div>-->
+<!--	</div>-->
+<!--</div>-->
+<div id="modal" class="modal">
+	<div class="modal-content">
+		<span class="close">&times;</span>
+		<h2 id="modalTitle"></h2>
+		<div id="modalContent"></div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+	// 顯示模態框的JavaScript代碼
+	var modal = document.getElementById("modal");
+	var span = document.getElementsByClassName("close")[0];
+
+	document.querySelectorAll('.announcement-title').forEach(item => {
+		item.addEventListener('click', function() {
+			var content = this.nextElementSibling.textContent;
+			var title = this.textContent;
+			document.getElementById("modalTitle").textContent = title;
+			document.getElementById("modalContent").innerHTML = content;
+			modal.style.display = "block";
+		});
+	});
+
+	span.onclick = function() {
+		modal.style.display = "none";
+	}
+
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+</script>
+
+<script src="/js/partner.js"></script>
+<script src="/js/partner_sidebar.js"></script>
+
+
+<!--	<script th:inline="javascript">-->
+<!--		document.addEventListener('DOMContentLoaded', function() {-->
+<!--			/*<![CDATA[*/-->
+<!--			const announcements = /*[[${announcements}]]*/ [];-->
+<!--			let currentPage = 1;-->
+<!--			const itemsPerPage = 5; // 每頁顯示的公告數量-->
+<!--			let totalPages = Math.ceil(announcements.length / itemsPerPage);-->
+
+<!--			const announcementTable = document.getElementById('announcementTable');-->
+<!--			const modal = document.getElementById('newsModal');-->
+<!--			const modalTitle = document.getElementById('modalTitle');-->
+<!--			const modalDate = document.getElementById('modalDate');-->
+<!--			const modalBody = document.getElementById('modalBody');-->
+<!--			const closeBtn = document.getElementsByClassName('close')[0];-->
+<!--			const prevBtn = document.getElementById('prevBtn');-->
+<!--			const nextBtn = document.getElementById('nextBtn');-->
+<!--			const pageInfo = document.getElementById('pageInfo');-->
+
+<!--			function renderAnnouncements() {-->
+<!--				const startIndex = (currentPage - 1) * itemsPerPage;-->
+<!--				const endIndex = startIndex + itemsPerPage;-->
+<!--				const pageAnnouncements = announcements.slice(startIndex, endIndex);-->
+
+<!--				announcementTable.innerHTML = '';-->
+<!--				const ul = document.createElement('ul');-->
+<!--				pageAnnouncements.forEach(announcement => {-->
+<!--					const li = document.createElement('li');-->
+<!--					li.className = 'news-item';-->
+<!--					li.innerHTML = `-->
+<!--                    <div class="news-date">${new Date(announcement.announcementCreateTime).toLocaleDateString()}</div>-->
+<!--                    <div class="news-title">${announcement.announcementTitle}</div>-->
+<!--                `;-->
+<!--					li.onclick = () => showModal(announcement);-->
+<!--					ul.appendChild(li);-->
+<!--				});-->
+<!--				announcementTable.appendChild(ul);-->
+
+<!--				pageInfo.textContent = `第 ${currentPage} 頁，共 ${totalPages} 頁`;-->
+<!--				prevBtn.disabled = currentPage === 1;-->
+<!--				nextBtn.disabled = currentPage === totalPages;-->
+<!--			}-->
+
+<!--			function changePage(delta) {-->
+<!--				currentPage += delta;-->
+<!--				renderAnnouncements();-->
+<!--			}-->
+
+<!--			function showModal(announcement) {-->
+<!--				modalTitle.textContent = announcement.announcementTitle;-->
+<!--				modalDate.textContent = new Date(announcement.announcementCreateTime).toLocaleDateString();-->
+<!--				modalBody.textContent = announcement.announcementContent;-->
+<!--				modal.style.display = 'block';-->
+<!--			}-->
+
+<!--			if (closeBtn) {-->
+<!--				closeBtn.onclick = () => modal.style.display = 'none';-->
+<!--			}-->
+
+<!--			window.onclick = (event) => {-->
+<!--				if (event.target == modal) {-->
+<!--					modal.style.display = 'none';-->
+<!--				}-->
+<!--			};-->
+
+<!--			// 綁定changePage函數到全局作用域-->
+<!--			window.changePage = changePage;-->
+
+<!--			renderAnnouncements();-->
+<!--			/*]]>*/-->
+<!--		});-->
+<!--	</script>-->
+
+
 
 
 </body>

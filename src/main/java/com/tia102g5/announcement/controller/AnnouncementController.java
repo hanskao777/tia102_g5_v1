@@ -15,6 +15,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -39,18 +41,48 @@ public class AnnouncementController {
     @Autowired
     AdministratorService administratorSvc;
 
-    @GetMapping("/select_page")
-    public String select_page(Model model) {
-//        return "back-end/announcement-news/select_page";
-        return "front-end/announcement-news/select_page";
+//    @GetMapping("/select_page")
+//    public String select_page(Model model) {
+////        return "back-end/announcement-news/select_page";
+//        return "front-end/announcement-news/select_page";
+//
+//    }
 
+//    @GetMapping("/listAllAnnouncement")
+//    public String listAllAnnouncement(Model model) {
+//        List<Announcement> announcements = announcementSvc.getAll();
+//        model.addAttribute("announcements", announcements);
+//        return "back-end-partner/announcement-news/announcement";
+////        return "front-end/announcement-news/listAllAnnouncement";
+//
+//    }
+    // 管理員公告頁面 沒有側邊攔
+    @GetMapping("/listAllAnnouncement")
+    public String listAllAnnouncement(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 10; // 每頁顯示的公告數量
+        Page<Announcement> announcementPage = announcementSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
+
+        model.addAttribute("announcements", announcementPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", announcementPage.getTotalPages());
+
+        return "back-end-admin/announcement-news/announcement";
     }
 
-    @GetMapping("/listAllAnnouncement")
-    public String listAllAnnouncement(Model model) {
-        return "back-end-partner/announcement-news/announcement";
-//        return "front-end/announcement-news/listAllAnnouncement";
+    // 廠商公告頁面
+    @GetMapping("/allAnnouncement")
+    public String allAnnouncement(Model model, @RequestParam(defaultValue = "1") int page) {
+        List<Announcement> announcementList = announcementSvc.getAll();
+        model.addAttribute("announcements", announcementList);
 
+        int pageSize = 5; // 每頁顯示的公告數量
+        Page<Announcement> announcementPage = announcementSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
+
+        model.addAttribute("announcements", announcementPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", announcementPage.getTotalPages());
+
+        return "back-end-partner/announcement-news/announcement";
     }
     
 
@@ -60,24 +92,27 @@ public class AnnouncementController {
         return list;
     }
 
+    // 新增公告
     @GetMapping("addAnnouncement")
     public String addAnnouncement(ModelMap model) {
+//        Announcement announcement = new Announcement();
+//        model.addAttribute("announcement", announcement);
         Announcement announcement = new Announcement();
+        announcement.setAdministrator(new Administrator()); // 初始化 Administrator 對象
         model.addAttribute("announcement", announcement);
-
 //        List<Administrator> administratorList = administratorSvc.getAll();
 //        model.addAttribute("administratorListData", administratorList);
 
-//        return "back-end/announcement/addAnnouncement";
-        return "front-end/announcement-news/addAnnouncement";
+        return "back-end-admin/announcement-news/addAnnouncement";
+//        return "front-end/announcement-news/addAnnouncement";
 
     }
 
     @PostMapping("insert")
     public String insert(@Valid Announcement announcement, BindingResult result, ModelMap model) throws IOException {
         if (result.hasErrors()) {
-//            return "back-end/announcement/addAnnouncement";
-            return "front-end/announcement-news/addAnnouncement";
+            return "back-end-admin/announcement-news/addAnnouncement";
+//            return "front-end/announcement-news/addAnnouncement";
 
         }
 
@@ -89,6 +124,8 @@ public class AnnouncementController {
         return "redirect:/announcement/listAllAnnouncement";
     }
 
+
+    // 修改公告
     @PostMapping("getOne_For_Update")
     public String getOne_For_Update(@RequestParam("announcementID") String announcementIDStr, ModelMap model) {
         Integer announcementID = Integer.valueOf(announcementIDStr);
@@ -99,7 +136,7 @@ public class AnnouncementController {
 
         model.addAttribute("announcement", announcement);
 //        return "back-end/announcement/update_announcement_input";
-        return "front-end/announcement-news/update_announcement_input";
+        return "back-end-admin/announcement-news/updateAnnouncement";
 
     }
 
@@ -107,7 +144,7 @@ public class AnnouncementController {
     public String update(@Valid Announcement announcement, BindingResult result, ModelMap model) throws IOException {
         if (result.hasErrors()) {
 //            return "back-end/announcement/update_announcement_input";
-            return "front-end/announcement-news/update_announcement_input";
+            return "back-end-admin/announcement-news/updateAnnouncement";
 
         }
 
@@ -117,7 +154,8 @@ public class AnnouncementController {
         announcement = announcementSvc.getOneAnnouncement(announcement.getAnnouncementID());
         model.addAttribute("announcement", announcement);
 //        return "back-end/announcement/listOneAnnouncement";
-        return "front-end/announcement-news/listOneAnnouncement";
+//        return "back-end-admin/announcement-news/announcement";
+        return "redirect:/announcement/listAllAnnouncement";
 
     }
 
@@ -128,9 +166,16 @@ public class AnnouncementController {
         model.addAttribute("announcementListData", list);
         model.addAttribute("success", "- (刪除成功)");
 //        return "back-end/announcement/listAllAnnouncement";
-        return "front-end/announcement-news/listAllAnnouncement";
+        return "back-end-admin/announcement-news/announcement";
 
     }
+
+
+
+
+
+
+
 
     @PostMapping("listAnnouncements_ByCompositeQuery")
     public String listAllAnnouncement(HttpServletRequest req, Model model) {
@@ -184,4 +229,11 @@ public class AnnouncementController {
         return new ModelAndView("front-end/announcement-news/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
 
     }
+    @GetMapping("/announcement")
+    public String getAnnouncement(Model model) {
+        List<Announcement> announcements = announcementSvc.getAll();
+        model.addAttribute("announcements", announcements);
+        return "back-end-partner/announcement-news/announcement";
+    }
+
 }
