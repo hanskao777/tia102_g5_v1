@@ -111,7 +111,6 @@ public class LoginController {
 	}
 
 	// 修改會員中心編輯頁面
-
 	@GetMapping("/editMember/{memberID}")
 	public String showEditMemberForm(@PathVariable Integer memberID, HttpSession session, Model model) {
 		// 檢查用戶是否已登入
@@ -182,12 +181,7 @@ public class LoginController {
 	    }
 	}
 
-	// 登出
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate(); // 使會話失效
-		return "login"; // 重定向到登入頁
-	}
+
 
 	// 驗證電子郵件格式的輔助方法
 	private boolean isInvalidEmail(String email) {
@@ -223,12 +217,55 @@ public class LoginController {
 		if (partnerPasswordStr.equals(partnerMember.getPartnerPassword())) {
 			model.addAttribute("taxID", taxIDStr);
 			session.setAttribute("partnerName", partnerMember.getPartnerName());
-			return "/back-end-partner/partner"; // 登入成功
+			session.setAttribute("partnerID", partnerMember.getPartnerID());
+			session.setAttribute("taxID", partnerMember.getTaxID());
+			return "successpartner"; // 登入成功
 		} else {
 			model.addAttribute("errorMessage", "密碼錯誤，登入失敗!!!");
 			return "partnerLogin"; // 返回登入頁
 		}
 
+	}
+	
+	// 廠商會員中心
+	@GetMapping("/partnerCenter")
+	public String partnerCenter(HttpSession session, Model model, @RequestParam(required = false) Boolean updated) {
+		System.out.println("partnerCenter method called!");
+
+		logger.info("Entering partnerCenter method");
+
+		if (updated != null && updated) {
+			System.out.println("Redirected from updatePartner");
+		}
+
+		if (session.getAttribute("taxID") == null) {
+			logger.info("User not logged in, redirecting to login");
+			return "redirect:/partnermember/partnerLogin";
+		}
+
+		String taxID = (String) session.getAttribute("taxID");
+		logger.info("Fetching data for member account: {}", taxID);
+
+		PartnerMember partnerMember = partnerSvc.getByTaxID(taxID);
+
+		if (partnerMember == null) {
+			logger.warn("Member not found for account: {}", taxID);
+			return "redirect:/partnermember/partnerLogin";
+		}
+
+		logger.info("Member data retrieved successfully");
+		model.addAttribute("partnerMember", partnerMember);
+
+		return "back-end/partnermember/partnerCenter";
+	}
+	
+	
+	
+	// 登出
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate(); // 使會話失效
+		return "/login"; // 重定向到登入頁
 	}
 
 }

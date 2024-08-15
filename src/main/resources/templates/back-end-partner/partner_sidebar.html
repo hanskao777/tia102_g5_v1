@@ -5,9 +5,9 @@
 	    <div class="menu-content">
 			<h2 class="text-center text-white py-4">廠商後臺管理</h2>
 			
-			<a href="#" class="nav-link" data-toggle="submenu" data-target="vendor-submenu">廠商資料</a>
+			<a href="#" class="nav-link" data-toggle="submenu" data-target="vendor-submenu">廠商中心</a>
 			<div id="vendor-submenu" class="submenu">
-				<a href="#vendor1" class="nav-link" data-section="vendor1">廠商資料1</a>
+				<a href="/partnermember/partnerCenter" class="nav-link" data-section="vendor1">廠商資料</a>
 			</div>
 			
 	        <a href="#" class="nav-link" data-toggle="submenu" data-target="news-submenu">最新消息</a>
@@ -52,7 +52,7 @@
 	
 	    </div>
 
-	    <a href="#logout" class="text-center text-danger py-20">登出</a>
+	    <a th:href="@{/partnermember/logout}" class="text-center text-danger py-20">登出</a>
 	</div>
 </body>
 </html>
