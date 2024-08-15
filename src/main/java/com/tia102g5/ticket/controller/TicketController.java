@@ -59,6 +59,9 @@ public class TicketController {
 	@ModelAttribute("ticketListData")
 	protected List<Ticket> referenceTicketListData(Model model) {
 		List<Ticket> list = ticketSvc.getAll();
+		System.out.println("------------------------------------------");
+		System.out.println(list);
+		System.out.println("------------------------------------------");
 		
 		return list;
 	}
