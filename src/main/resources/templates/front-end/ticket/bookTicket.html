@@ -117,10 +117,10 @@
             <div class="member-details">
                 <h2 style="margin: 20px 0"><b>購買資料</b></h2>
                 <h6 style="color: red">* 請填入票券持有人</h6>
-                <div th:each="ticket, ticketStat : ${ticketListData}" style="margin: 10px 0">
+                <div th:each="ticket : ${ticketListData}" style="margin: 10px 0">
                     <label>序號 <span th:text="${ticketStat.count}"></span> 
-                        會員帳號：<input type="text" th:field="${ticketListData[__${ticketStat.index}__].member.account}">
-                        <!-- th:field="*{member}" -->
+                        會員帳號：<input type="text">
+                        <!-- th:field="${ticketListData[__${ticketStat.index}__].member.account}" -->
                     </label>
                 </div>
             </div>
