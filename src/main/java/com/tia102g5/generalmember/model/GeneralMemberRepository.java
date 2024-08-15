@@ -16,4 +16,6 @@ public interface GeneralMemberRepository extends JpaRepository<GeneralMember, In
 	void deleteByMemberID(int memberID);
 	
 	
+	GeneralMember findByMemberAccount(String memberAccount);
+	
 }
