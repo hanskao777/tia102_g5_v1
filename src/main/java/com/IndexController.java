@@ -36,5 +36,19 @@ public class IndexController {
     public String getPartnerSidebar() {
         return "/back-end-partner/partner_sidebar";
     }
+    
+    //Prosecutes的Mapping先移到這邊
+    //因為@RestController會讓@RequestMapping("/prosecutes")失效
+    //要用@RestController, 傳給前端的才會是Json格式, 所以Prosecutes那邊不能改成用@Controller
+    @GetMapping("/adminProsecute")
+    public String getAdminProsecute(Model model) {
+        model.addAttribute("message", "Welcome to Admin Prosecute Page");
+        return "/back-end-admin/admin_prosecute";
+    }
+
+    @GetMapping("/adminSidebar")
+    public String getAdminSidebar() {
+        return "/back-end-admin/admin_sidebar";
+    }
 
 }
