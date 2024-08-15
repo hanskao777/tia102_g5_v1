@@ -89,10 +89,16 @@ public class IndexController {
     	return list;
     }
     
- // 導向登入成功登入
+ // 導向登入成功會員
  	@GetMapping("/success")
  	public String getsuccess() {
  		return "success";
+ 	}
+ 	
+ 	// 導向登入成功廠商
+ 	@GetMapping("/successpartner")
+ 	public String getSuccessPartner() {
+ 		return "successpartner";
  	}
  	
  	// 導向註冊成功
