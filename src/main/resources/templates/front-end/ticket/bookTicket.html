@@ -49,6 +49,11 @@
         hr{
             background-color: gray;
         }
+
+        #submit{
+            text-align: center;
+            margin-top: 100px;
+        }
     </style>
 </head>
 <body>
@@ -113,14 +118,14 @@
         <hr>
 
         <!-- 會員資料 -->
-        <form method="post" th:action="@{/ticket/}" th:object="${bookTicket}">
+        <form method="post" th:action="@{/ticket/}">
             <div class="member-details">
                 <h2 style="margin: 20px 0"><b>購買資料</b></h2>
                 <h6 style="color: red">* 請填入票券持有人</h6>
-                <div th:each="ticket : ${ticketListData}" style="margin: 10px 0">
+                <div th:each="ticket:${ticketListData}" style="margin: 10px 0">
                     <label>序號 <span th:text="${ticketStat.count}"></span> 
-                        會員帳號：<input type="text">
-                        <!-- th:field="${ticketListData[__${ticketStat.index}__].member.account}" -->
+                        會員帳號：<input type="text"  name="memberID" th:value="${ticket.generalMember.memberID}">
+                        <!--  <span th:text="${ticket.generalMember.memberID}"> -->
                     </label>
                 </div>
             </div>
@@ -131,24 +136,33 @@
             <div class="payment-details">
                 <h2 style="margin: 20px 0"><b>付款資訊</b></h2>
                 <div class="payment-method">
-                    <label>
-                        持卡人：<input type="text" name="cardholder-name">
-                    </label>
-                    <label>信用卡卡號：</label>
-                    <input type="text" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
-
-                    <label>信用卡到期日：</label>
-                    <input type="text" name="expiry-date" placeholder="MM/YY">
-
-                    <label>信用卡背面碼：</label>
-                    <input type="text" name="cvv" placeholder="XXX">
+                    <div>
+                        <label>
+                            持卡人：<input type="text" name="cardholder-name">
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            信用卡卡號：<input type="text" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            信用卡到期日：<input type="text" name="expiry-date" placeholder="MM/YY">
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            信用卡背面碼：<input type="text" name="cvv" placeholder="XXX">
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- 按鈕 -->
-            <div class="buttons">
-                <button type="button" th:onclick="|window.location.href='@{/cart}'|">取消訂單</button>
-                <button type="submit" th:onclick="|window.location.href='@{/order/complete}'|">繼續送出</button>
+            <div class="buttons" id="submit">
+                    <button type="button" th:onclick="|window.location.href='@{/cart}'|">取消訂單</button>
+                    <button type="submit" th:onclick="|window.location.href='@{/order/complete}'|">繼續送出</button>
             </div>
         </form>
     </div>
