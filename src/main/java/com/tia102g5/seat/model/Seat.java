@@ -26,7 +26,7 @@ public class Seat implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "seatID")
-	private Integer seatID;  // 修改為 Integer
+	private Integer seatID;  // 修改為 Integer.
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "venueID", referencedColumnName = "venueID")
