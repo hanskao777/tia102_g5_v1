@@ -363,7 +363,7 @@ CREATE TABLE Commodity(
 CREATE TABLE CommodityPicture(
 	commodityPictureID           INT           AUTO_INCREMENT       COMMENT "商品圖片",
     commodityID                  INT           NOT NULL             COMMENT "商品ID",
-    commodityPicture             INT                                COMMENT "商品圖片",
+    commodityPicture             MEDIUMBLOB                         COMMENT "商品圖片",
     
     CONSTRAINT pk_CommodityPicture PRIMARY KEY (commodityPictureID)
 ) COMMENT "商品圖片";

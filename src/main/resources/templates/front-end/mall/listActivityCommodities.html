@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>藝票人商城</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* style.css */
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+
+        }
+
+        .product-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .product-card .price {
+            font-size: 16px;
+            color: #e74c3c;
+        }
+
+        .product-card .description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .product-card button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .product-card .buy-now {
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-card .buy-now:hover {
+            background-color: #27ae60;
+        }
+
+        .product-card .add-to-cart {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-card .add-to-cart:hover {
+            background-color: #c0392b;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* 加入購物車 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+
+    <div class="content">
+
+        <div id="cartModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>商品已成功加入購物車！</p>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <a href="commodity1.html">
+                    <img src="/static/images/yujin1.jpg" alt="商品1">
+                    <h3>IVE SWITCH</h3>
+                    <p class="price">$580</p>
+                    <p class="description">安兪真單封</p>
+                </a>
+                <a href="/templates/front-end/mall/mall-checkout.html">
+                    <button class="buy-now">直接購買</button>
+                </a>
+                <a>
+                    <button id="addToCartBtn" class="add-to-cart"><i class="fas fa-shopping-cart"></i> 加入購物車</button>
+                </a>
+            </div>
+
+            <div class="product-card">
+                <a href="commodity1.html">
+                    <img src="/static/images/yujin1.jpg" alt="商品1">
+                    <h3>IVE SWITCH</h3>
+                </a>
+                <p class="price">$580</p>
+                <p class="description">安兪真單封</p>
+                <a href="/templates/front-end/mall/mall-checkout.html" class="buy-now">直接購買</a>
+                <a id="addToCartBtn" class="add-to-cart"><i class="fas fa-shopping-cart"></i> 加入購物車</a>
+            </div>
+
+            <div class="product-card">
+                <a href="commodity2.html">
+                <img src="/static/images/ive1.jpg" alt="商品2">
+                <h3>IVE MAGAZINE</h3>
+                </a>
+                <p class="price">$980</p>
+                <p class="description">IVE手燈</p>
+                <a href="/templates/front-end/mall/mall-checkout.html">
+                    <button class="buy-now">直接購買</button>
+                </a>                
+                <button id="addToCartBtn" class="add-to-cart"><i class="fas fa-shopping-cart"></i> 加入購物車</button>
+
+            </div>
+            <div class="product-card">
+                <a href="/templates/front-end/mall/commodity.html">
+                <img src="/static/images/yujin2.jpg" alt="商品3">
+                <h3>IVE MAGAZINE</h3>
+                </a>
+                <p class="price">$980</p>
+                <p class="description">安兪真設計保溫瓶</p>
+                <a href="/templates/front-end/mall/mall-checkout.html">
+                    <button class="buy-now">直接購買</button>
+                </a>                
+                <button id="addToCartBtn" class="add-to-cart"><i class="fas fa-shopping-cart"></i> 加入購物車</button>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        // 獲取模態框元素
+        var modal = document.getElementById("cartModal");
+
+        // 獲取所有"加入購物車"按鈕
+        var btns = document.getElementsByClassName("add-to-cart");
+
+        // 獲取 <span> 元素，用於關閉模態框
+        var span = document.getElementsByClassName("close")[0];
+
+        // 為每個"加入購物車"按鈕添加點擊事件
+        Array.from(btns).forEach(function (btn) {
+            btn.onclick = function (event) {
+                event.preventDefault(); // 阻止默認行為（如果按鈕在 <a> 標籤內）
+                modal.style.display = "block";
+            }
+        });
+
+        // 當用戶點擊 <span> (x)，關閉模態框
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // 當用戶點擊模態框外的任何地方，關閉它
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        function loadHTML(elementId, filePath) {
+            fetch(filePath)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                });
+        }
+
+        loadHTML('header', '/templates/header.html');
+        loadHTML('footer', '/templates/footer.html');
+    </script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
