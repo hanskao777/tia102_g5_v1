@@ -15,13 +15,6 @@
             background-color: #f8f9fa;
         }
 
-        #header {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-        }
-
         .container {
             margin: 20px auto;
             max-width: 800px;
@@ -53,22 +46,82 @@
             bottom: 0;
             width: 100%;
         }
+             .member-details {
+        display: flex;
+        align-items: flex-start;
+    }
+    .info {
+        flex: 2; /* 縮小資訊區域的比例 */
+        padding-right: 20px;
+        font-size: 0.9em; /* 縮小字體大小 */
+    }
+    .image {
+        flex: 1; /* 擴大圖片區域的比例 */
+    }
+    .image img {
+        max-width: 200px; /* 增加圖片的最大寬度 */
+        height: auto;
+    }
+    
+    .link-container {
+    display: flex; /* 使用 flexbox 來排列連結 */
+    justify-content: space-between; /* 在兩個連結之間均勻分配空間 */
+    margin-top: 20px; /* 增加上邊距 */
+}
+
+.link-container a {
+    display: inline-block; /* 使連結成為塊級元素 */
+    padding: 10px 15px; /* 增加內邊距 */
+    background-color: #007BFF; /* 背景顏色 */
+    color: white; /* 文字顏色 */
+    border-radius: 5px; /* 圓角 */
+    text-decoration: none; /* 去掉下劃線 */
+    transition: background-color 0.3s; /* 增加過渡效果 */
+}
+
+.link-container a:hover {
+    background-color: #0056b3; /* 滑鼠懸停時背景顏色 */
+}
+        
     </style>
 </head>
 
 <body>
     <div id="header"></div>
     
-    <h1>歡迎來到會員中心</h1>
-    <div th:if="${memberID != null}">
-        <p>會員ID: <span th:text="${member.memberID}"></span>
-        <p>會員名稱: <span th:text="${member.memberName}"></span>>
-        <p>會員帳號: <span th:text="${member.memberAccount}"></span>>
-        <p>電話: <span th:text="${member.memberPhone}"></span>
-        <p>暱稱: <span th:text="${member.memberNickName}"></span></p>
-        <p>地址: <span th:text="${member.memberAddress}"></span></p>
-        <!-- 可以根據需要添加更多字段 -->
+    <div class="container">
+    <h1>會員中心</h1>
+    
+    <div class="member-info" th:if="${generalMember != null}">
+        <h2>會員資訊</h2>
+        <div class="member-details">
+            <div class="info">
+                <p><strong>會員編號:</strong> <span th:text="${generalMember.memberID}"></span></p>
+                <p><strong>名稱:</strong> <span th:text="${generalMember.memberName}"></span></p>
+                <p><strong>帳號:</strong> <span th:text="${generalMember.memberAccount}"></span></p>
+                <p><strong>身分證字號:</strong> <span th:text="${generalMember.nationalID}"></span></p>
+                <p><strong>性別:</strong> <span th:text="${generalMember.gender}"></span></p>
+                <p><strong>生日:</strong> <span th:text="${generalMember.birthday}"></span></p>
+                <p><strong>電話:</strong> <span th:text="${generalMember.memberPhone}"></span></p>
+                <p><strong>暱稱:</strong> <span th:text="${generalMember.memberNickName}"></span></p>
+                <p><strong>地址:</strong> <span th:text="${generalMember.memberAddress}"></span></p>
+                <p><strong>建立時間:</strong> <span th:text="${generalMember.memberCreateTime}"></span></p>
+            	
+            </div>
+            <div class="image">
+                <img th:src="@{/generalmember/DBGifReader} + '?memberID=' + ${generalMember.memberID}" width="150px">
+            </div>
+        </div>
     </div>
+    
+    <div th:if="${generalMember == null}">
+        <p>無法獲取會員資訊。請確保你已登入。</p>
+    </div>
+    <div class="link-container">
+    <p><a th:href="@{/generalmember/editMember/{memberID}(memberID=${generalMember.memberID})}">修改會員資料</a></p>
+    <p><a th:href="@{/}">返回首頁</a></p>
+</div>
+</div>
 
     <div id="footer"></div>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

@@ -66,7 +66,6 @@ public class GeneralMember implements java.io.Serializable {
 
 	
 	@NotEmpty(message="暱稱: 請勿空白")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "暱稱: 只能是中、英文字母、數字和")
 	@Column(name = "memberNickName") // "暱稱"
 	private String memberNickName;
 
