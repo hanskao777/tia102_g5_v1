@@ -8,7 +8,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//import HibernateUtil.HibernateUtil_CompositeQuery_GeneralMember;
+import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_GeneralMember;
+
+
 
 @Service("generalmemberService")
 public class GeneralMemberService {
@@ -43,7 +45,15 @@ public class GeneralMemberService {
 		return repository.findAll();
 	}
 	
-//	public List<GeneralMember> getAll(Map<String, String[]>map){
-//		return HibernateUtil_CompositeQuery_GeneralMember.getAllC(map,sessionFactory.openSession());
-//	}
+	public List<GeneralMember> getAll(Map<String, String[]>map){
+		return HibernateUtil_CompositeQuery_GeneralMember.getAllC(map,sessionFactory.openSession());
+	}
+	
+	public GeneralMember getByMemberAccount(String memberAccount) {
+        return repository.findByMemberAccount(memberAccount);
+    }
+	
+	public GeneralMember getById(Integer id) {
+	    return repository.findById(id).orElse(null); // 使用 JPA 獲取會員資料
+	}
 }

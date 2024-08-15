@@ -63,7 +63,7 @@ public class ActivityController {
 //////////////// 後台 ////////////////
 /********************* 跳轉 **********************/
 	
-/********************* action **********************/
+/********************* action *******************/
 	
 //	@GetMapping("addActivity")
 //	public String addActivity(ModelMap model) {
@@ -119,13 +119,14 @@ public class ActivityController {
 		
 		return "back-end-partner/activity/activityDisplay"; // 修改成功後轉交activityDispaly.html
 	}
-/********************* action **********************/
+/********************* action ********************/
 	
 /********************* bean **********************/
 	//查全部，給 activityDisplay 用
 	@ModelAttribute("activityListData")
 	protected List<Activity> referenceListData(Model model) {
     	List<Activity> list = activitySvc.getAll();
+    	
     	return list;
 	}
 /********************* bean **********************/

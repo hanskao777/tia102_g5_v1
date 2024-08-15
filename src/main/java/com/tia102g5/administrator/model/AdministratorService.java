@@ -39,4 +39,8 @@ public class AdministratorService {
 	public List<Administrator> getALL(){
 		return repository.findAll();
 	}
+	
+	public Administrator getAdministratorAccount(String administratorAccount) {
+		return repository.findByAdministratorAccount(administratorAccount);
+	}
 }

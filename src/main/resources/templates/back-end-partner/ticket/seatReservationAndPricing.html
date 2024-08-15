@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>設定票價/保留位</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/partner_sidebar.css">
+<style>
+/* 全域樣式 */
+body, html {
+	font-family: 'Noto Sans TC', sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #ffffff;
+	color: #333;
+	font-size: 14px; /* 減小基礎字體大小 */
+}
+
+/* 主內容區域樣式 */
+.main-content {
+	margin-left: 260px; /* 為側邊欄留出260px空間 */
+	padding: 30px; /* 減少內邊距 */
+}
+
+/* 標題樣式 */
+h1 {
+	color: #225388;
+	text-align: center;
+	margin: 0 0 30px; /* 減少下邊距 */
+	font-size: 28px; /* 減小標題大小 */
+	font-weight: 700;
+	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+	color: #34495e;
+	text-align: center;
+	margin-bottom: 20px; /* 減少下邊距 */
+	font-size: 20px; /* 減小副標題大小 */
+}
+
+/* 內容布局 */
+.content-wrapper {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px; /* 減少間隙 */
+	background-color: #ffffff;
+	border-radius: 12px; /* 稍微減小圓角 */
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+	padding: 20px; /* 減少內邊距 */
+}
+
+/* 座位圖樣式 */
+.seat-map {
+	flex: 2;
+	padding: 20px; /* 減少內邊距 */
+	border-radius: 8px; /* 稍微減小圓角 */
+	background-color: #e8f0fe;
+}
+
+.seat-map-title {
+	color: #34495e;
+	text-align: center;
+	margin-bottom: 15px; /* 減少下邊距 */
+	font-size: 20px; /* 減小字體大小 */
+	font-weight: bold;
+}
+
+.seat-area {
+	margin-bottom: 25px; /* 減少下邊距 */
+}
+
+.area-label {
+	font-weight: bold;
+	margin-bottom: 12px; /* 減少下邊距 */
+	color: #2c3e50;
+	text-align: center;
+	font-size: 16px; /* 減小字體大小 */
+	text-transform: uppercase;
+}
+
+.seat-row {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 8px; /* 減少下邊距 */
+}
+
+.seat {
+	width: 30px; /* 減小座位寬度 */
+	height: 30px; /* 減小座位高度 */
+	margin: 0 4px; /* 減少水平間距 */
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	background-color: #ffffff;
+	border: 1px solid #bdc3c7;
+	border-radius: 4px; /* 稍微減小圓角 */
+	font-size: 12px; /* 減小字體大小 */
+	color: #333;
+	transition: all 0.3s ease;
+}
+
+.seat:hover {
+	background-color: #ecf0f1;
+}
+
+.seat.reserved {
+	background-color: #3498db;
+	color: #ffffff;
+	border-color: #3498db;
+}
+
+.seat.aisle {
+	background-color: transparent;
+	border: none;
+	cursor: default;
+}
+
+/* 設定區塊樣式 */
+.settings-section {
+	flex: 1;
+	padding: 20px; /* 減少內邊距 */
+	border-radius: 8px; /* 稍微減小圓角 */
+	background-color: #e8f0fe;
+	display: flex;
+	flex-direction: column;
+	max-width: 250px; /* 減小最大寬度 */
+}
+
+/* 表單樣式 */
+form {
+	display: grid;
+	gap: 15px; /* 減少間隙 */
+}
+
+.form-group {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+label {
+	font-weight: bold;
+	color: #34495e;
+	font-size: 14px; /* 減小字體大小 */
+}
+
+input[type="number"] {
+	width: 100px; /* 減小寬度 */
+	padding: 8px; /* 減少內邊距 */
+	border: 1px solid #bdc3c7;
+	border-radius: 4px; /* 稍微減小圓角 */
+	font-size: 14px; /* 減小字體大小 */
+	transition: border-color 0.3s ease;
+	-moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button
+	{
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"]:focus {
+	border-color: #3498db;
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* 按鈕樣式 */
+/* 按鈕容器樣式 */
+.btn-container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: auto;
+	padding-top: 25px;
+	gap: 15px; /* 按鈕之間的間距 */
+}
+
+/* 按鈕基本樣式 */
+.btn {
+	padding: 10px 15px;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: all 0.3s ease;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	white-space: nowrap; /* 防止文字換行 */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-width: 100px;
+	flex: 0 1 auto;
+	text-align: center; /* 確保文字居中 */
+}
+
+/* 懸停效果 */
+.btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 返回按鈕樣式 */
+.btn-back {
+	background-color: #95a5a6;
+}
+
+.btn-back:hover {
+	background-color: #7f8c8d;
+}
+
+/* 確認按鈕樣式 */
+.btn-confirm {
+	background-color: #2ecc71;
+}
+
+.btn-confirm:hover {
+	background-color: #27ae60;
+}
+
+/* 響應式調整 */
+@media ( max-width : 768px) {
+	.btn-container {
+		flex-direction: row; /* 保持水平排列 */
+		justify-content: space-between;
+	}
+	.btn {
+		flex: 1;
+		min-width: 0; /* 移除最小寬度限制 */
+		padding: 8px 12px; /* 在小屏幕上稍微減少內邊距 */
+	}
+}
+
+/* 極小屏幕的額外調整 */
+@media ( max-width : 480px) {
+	.btn-container {
+		flex-direction: column; /* 在極小屏幕上垂直排列按鈕 */
+	}
+	.btn {
+		width: 100%; /* 讓按鈕占滿寬度 */
+		margin-bottom: 10px; /* 添加垂直間距 */
+	}
+	.btn:last-child {
+		margin-bottom: 0; /* 移除最後一個按鈕的底部邊距 */
+	}
+}
+</style>
+</head>
+
+<body>
+	<div id="sidebar-placeholder"></div>
+
+	<div class="main-content">
+		<h1>設定票價/保留位</h1>
+
+		<div class="content-wrapper">
+			<!-- 動態座位圖 -->
+			<div class="seat-map" id="seatMap">
+				<h2 class="seat-map-title">設定保留位</h2>
+				<!-- 座位圖會在這裡動態生成 -->
+			</div>
+
+			<!-- 設定區域票價 -->
+			<div class="settings-section">
+				<h2>設定區域票價</h2>
+				<form id="priceForm">
+					<div class="form-group">
+						<label for="vipPrice">VIP區價格：</label> <input type="number"
+							id="vipPrice" name="vipPrice" min="0" required>
+					</div>
+					<div class="form-group">
+						<label for="aPrice">A區價格：</label> <input type="number" id="aPrice"
+							name="aPrice" min="0" required>
+					</div>
+					<div class="form-group">
+						<label for="bPrice">B區價格：</label> <input type="number" id="bPrice"
+							name="bPrice" min="0" required>
+					</div>
+				</form>
+				<div class="btn-container">
+					<button class="btn btn-back" onclick="goBack()">返回上一頁</button>
+					<button class="btn btn-confirm" onclick="submitSettings()">確認設定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        // 座位圖生成邏輯
+        const seatMap = document.getElementById('seatMap');
+        const seatData = {
+            VIP: [
+                { row: 1, seats: [1, 2, 3, 4, 5, 6, 7, 8, 9] }
+            ],
+            A: [
+                { row: 2, seats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                { row: 3, seats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                { row: 4, seats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                { row: 5, seats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] }
+            ],
+            B: [
+                { row: 6, seats: [1, 2, 3, null, 4, 5, 6, null, 7, 8, 9] },
+                { row: 7, seats: [1, 2, 3, null, 4, 5, 6, null, 7, 8, 9] },
+                { row: 8, seats: [1, 2, 3, null, 4, 5, 6, null, 7, 8, 9] },
+                { row: 9, seats: [1, 2, 3, null, 4, 5, 6, null, 7, 8, 9] }
+            ]
+        };
+
+        function createSeatMap() {
+            for (let area in seatData) {
+                const areaDiv = document.createElement('div');
+                areaDiv.className = 'seat-area';
+                areaDiv.innerHTML = `<div class="area-label">${area}區</div>`;
+
+                seatData[area].forEach(row => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'seat-row';
+
+                    row.seats.forEach(seat => {
+                        const seatDiv = document.createElement('div');
+                        if (seat === null) {
+                            seatDiv.className = 'seat aisle';
+                        } else {
+                            seatDiv.className = 'seat';
+                            seatDiv.textContent = seat;
+                            seatDiv.dataset.id = `${area}${row.row}${seat}`;
+                            seatDiv.addEventListener('click', toggleReservedSeat);
+                        }
+                        rowDiv.appendChild(seatDiv);
+                    });
+
+                    areaDiv.appendChild(rowDiv);
+                });
+
+                seatMap.appendChild(areaDiv);
+            }
+        }
+
+        // 切換保留位狀態
+        function toggleReservedSeat(event) {
+            const seat = event.target;
+            seat.classList.toggle('reserved');
+        }
+
+        // 初始化座位圖
+        createSeatMap();
+
+        // 防止輸入負數
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function () {
+                if (this.value < 0) {
+                    this.value = 0;
+                }
+            });
+        });
+
+        // 返回上一頁功能
+        function goBack() {
+            window.history.back();
+        }
+
+        // 確認設定功能
+        function submitSettings() {
+            // 收集所有保留位資訊
+            const reservedSeats = Array.from(document.querySelectorAll('.seat.reserved')).map(seat => seat.dataset.id);
+
+            // 收集票價資訊
+            const prices = {
+                VIP: document.getElementById('vipPrice').value,
+                A: document.getElementById('aPrice').value,
+                B: document.getElementById('bPrice').value
+            };
+
+            // 這裡可以發送資料到後端
+            console.log('保留位：', reservedSeats);
+            console.log('票價設定：', prices);
+
+            // 實際應用中，這裡應該發送AJAX請求到後端
+            alert('設定已確認！');
+        }
+    </script>
+    <script src="/js/partner.js"></script>
+	<script src="/js/partner_sidebar.js"></script>
+</body>
+
+</html>

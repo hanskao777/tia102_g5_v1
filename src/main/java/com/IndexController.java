@@ -1,11 +1,30 @@
 package com;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.tia102g5.generalmember.model.GeneralMember;
+import com.tia102g5.generalmember.model.GeneralMemberService;
+import com.tia102g5.partnermember.model.PartnerMember;
+import com.tia102g5.partnermember.model.PartnerMemberService;
 
 @Controller
 public class IndexController {
+	
+	@Autowired
+	GeneralMemberService gmemberSvc;
+	
+	@Autowired
+	PartnerMemberService partnerSvc;
+	
+    
 	
 	//導向首頁
     @GetMapping("/")
@@ -36,19 +55,82 @@ public class IndexController {
     public String getPartnerSidebar() {
         return "/back-end-partner/partner_sidebar";
     }
-    
-    //Prosecutes的Mapping先移到這邊
-    //因為@RestController會讓@RequestMapping("/prosecutes")失效
-    //要用@RestController, 傳給前端的才會是Json格式, 所以Prosecutes那邊不能改成用@Controller
-    @GetMapping("/adminProsecute")
-    public String getAdminProsecute(Model model) {
-        model.addAttribute("message", "Welcome to Admin Prosecute Page");
-        return "/back-end-admin/admin_prosecute";
-    }
 
-    @GetMapping("/adminSidebar")
-    public String getAdminSidebar() {
-        return "/back-end-admin/admin_sidebar";
+    @GetMapping("/generalmember/select_page")
+	public String select_page(Model model) {
+		return "back-end/generalmember/select_page";
+	}
+	
+	@GetMapping("/partnermember/select_page")
+	public String select_page1(Model model) {
+		return "back-end/partnermember/select_page";
+	}
+
+	@GetMapping("/generalmember/listAllGeneralMember")
+	public String listAllGeneralMember(Model model) {
+		return "back-end/generalmember/listAllGeneralMember";
+	}
+
+	@ModelAttribute("generalMemberListData") // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+	protected List<GeneralMember> referenceListData(Model model) {
+
+		List<GeneralMember> list = gmemberSvc.getAll();
+		return list;
+	}
+    @GetMapping("/partnermember/listAllPartnerMember")
+    public String listAllPartnerMember(Model model) {
+    	return "back-end/partnermember/listAllPartnerMember";
     }
+    
+    @ModelAttribute("partnerMemberListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+    protected List<PartnerMember> referenceListData1(Model model) {
+    	
+    	List<PartnerMember> list = partnerSvc.getAll();
+    	return list;
+    }
+    
+ // 導向登入成功會員
+ 	@GetMapping("/success")
+ 	public String getsuccess() {
+ 		return "success";
+ 	}
+ 	
+ 	// 導向登入成功廠商
+ 	@GetMapping("/successpartner")
+ 	public String getSuccessPartner() {
+ 		return "successpartner";
+ 	}
+ 	
+ 	// 導向註冊成功
+ 	@GetMapping("/successInRegister")
+ 	public String getsuccessInRegister() {
+ 		return "successInRegister";
+ 	}
+ 	
+ 	// 導向後臺主頁
+ 	@GetMapping("/admin")
+     public String getAdmin() {
+         return "/back-end-admin/admin";
+     }
+
+ 	// 導向管理員後台側邊攔
+ 	@GetMapping("/adminSidebar")
+ 	public String getAdminSidebar() {
+ 	    return "back-end-admin/admin_sidebar";
+ 	}
+ 	
+ // inject(注入資料) via application.properties
+    @Value("${welcome.message}")
+    private String message;
+    
+ // http://......../hello?name=peter1
+    @GetMapping("/hello")
+    public String indexWithParam(
+            @RequestParam(name = "name", required = false, defaultValue = "") String name, Model model) {
+        model.addAttribute("message", name);
+        return "index"; //view
+    }
+	
+
 
 }

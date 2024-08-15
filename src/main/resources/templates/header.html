@@ -7,6 +7,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/header_footer.css}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
 </head>
 <body>
     <div class="header">
@@ -17,9 +18,26 @@
                 </a>
             </div>
             <div class="search-container">
-                <div class="icons">
-                    <a href="#">會員登入/註冊</a>
+                <div class="icons">                
                     <a href="#"><i class="fas fa-shopping-cart"></i> 購物車</a>
+	<nav>
+    <div class="nav-container">
+        <!-- 檢查用戶是否已登入 -->
+        <span th:if="${session.memberName == null}">
+            <a th:href="@{/generalmember/login}">登入</a>
+        </span>
+        <span th:if="${session.memberName == null}">
+            <a th:href="@{/generalmember/register}">註冊</a>
+        </span>
+        <!-- 用戶已登入的選單 -->
+        <span th:if="${session.memberName != null}">
+            <a th:href="@{/generalmember/memberCenter}">會員中心</a>
+        </span>
+        <span th:if="${session.memberName != null}">
+            <a th:href="@{/generalmember/logout}">登出</a>
+        </span>
+    </div>
+</nav>
                 </div>
             </div>
         </div>

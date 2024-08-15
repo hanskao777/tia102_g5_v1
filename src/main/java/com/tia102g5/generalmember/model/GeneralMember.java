@@ -3,8 +3,6 @@ package com.tia102g5.generalmember.model;
 
 
 import java.sql.Date;
-import java.util.Arrays;
-
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,21 +14,17 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.tia102g5.activitycollection.model.ActivityCollection;
-import com.tia102g5.article.model.Article;
-import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.bookticket.model.BookTicket;
 import com.tia102g5.cart.model.Cart;
-import com.tia102g5.heart.model.Heart;
 import com.tia102g5.membercoupon.model.MemberCoupon;
-import com.tia102g5.message.model.Message;
 import com.tia102g5.orders.model.Orders;
-import com.tia102g5.prosecute.model.Prosecute;
 import com.tia102g5.ticket.model.Ticket;
 
 
@@ -66,7 +60,6 @@ public class GeneralMember implements java.io.Serializable {
 
 	
 	@NotEmpty(message="暱稱: 請勿空白")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$", message = "暱稱: 只能是中、英文字母、數字和")
 	@Column(name = "memberNickName") // "暱稱"
 	private String memberNickName;
 
@@ -94,6 +87,19 @@ public class GeneralMember implements java.io.Serializable {
 	@Column(name = "memberPicture", columnDefinition = "mediumblob") // "大頭照"
 	private byte[] memberPicture;
 	
+	@Transient // 這個註解表示這個字段不會被持久化到數據庫
+    private MultipartFile memberPictureFile;
+	
+
+	public MultipartFile getMemberPictureFile() {
+		return memberPictureFile;
+	}
+
+
+	public void setMemberPictureFile(MultipartFile memberPictureFile) {
+		this.memberPictureFile = memberPictureFile;
+	}
+
 
 	@Column(name = "memberStatus") // "帳號狀態 0:帳號已黑單 1:帳號正常"
 	private Integer memberStatus = 1;
@@ -154,9 +160,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<BookTicket> bookTickets;
 	
 	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("prosecuteID asc")
-	private Set<Prosecute> prosecutes;
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("prosecuteID asc")
+//	private Set<Prosecute> prosecutes;
 
 
 	public GeneralMember() {
@@ -394,14 +400,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-	public Set<Prosecute> getProsecutes() {
-		return prosecutes;
-	}
-
-
-	public void setProsecutes(Set<Prosecute> prosecutes) {
-		this.prosecutes = prosecutes;
-	}
+//	public Set<Prosecute> getProsecutes() {
+//		return prosecutes;
+//	}
+//
+//
+//	public void setProsecutes(Set<Prosecute> prosecutes) {
+//		this.prosecutes = prosecutes;
+//	}
 
 
 	public static long getSerialversionuid() {

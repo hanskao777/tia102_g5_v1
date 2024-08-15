@@ -54,9 +54,19 @@ public class AnnouncementService {
     }
 
     // 分頁查詢
-//    public Page<Announcement> getAllPaginated(Pageable pageable) {
-//        return repository.findAll(pageable);
-//    }
+    public Page<Announcement> getAllPaginated(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    // 按狀態分頁查詢公告
+    public Page<Announcement> getAnnouncementsByStatus(Integer status, Pageable pageable) {
+        return repository.findByAnnouncementStatus(status, pageable);
+    }
+
+    // 按日期範圍分頁查詢公告
+    public Page<Announcement> getAnnouncementsByDateRange(Date startDate, Date endDate, Pageable pageable) {
+        return repository.findByAnnouncementCreateTimeBetween(startDate, endDate, pageable);
+    }
 
     // 按狀態查詢公告
 //    public List<Announcement> getAnnouncementsByStatus(Integer status) {
