@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改會員資料</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+    <h1>修改會員資料</h1>
+    <form th:action="@{/generalmember/updateMember}" th:object="${generalMember}" method="post">
+        <input type="hidden" th:field="*{memberID}" />
+        
+        <div class="form-group">
+            <label for="memberName"><strong>姓名:</strong></label>
+            <input type="text" id="memberName" class="form-control" th:field="*{memberName}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label for="memberPhone"><strong>電話:</strong></label>
+            <input type="text" id="memberPhone" class="form-control" th:field="*{memberPhone}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label for="memberAddress"><strong>地址:</strong></label>
+            <input type="text" id="memberAddress" class="form-control" th:field="*{memberAddress}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label for="memberAccount"><strong></strong></label>
+            <input type="hidden" id="memberAccount" class="form-control" th:field="*{memberAccount}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label for="memberPassword"><strong>密碼:</strong></label>
+            <input type="password" id="memberPassword" class="form-control" th:field="*{memberPassword}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label for="nationalID"><strong></strong></label>
+            <input type="hidden" id="memberIDNumber" class="form-control" th:field="*{nationalID}" required/>
+        </div>
+        
+        <div class="form-group">
+            <label for="memberNickname"><strong>暱稱:</strong></label>
+            <input type="text" id="memberNickname" class="form-control" th:field="*{memberNickName}"/>
+        </div>
+        
+        <div class="form-group">
+            <label><strong>性別:</strong></label>
+            <div class="form-check">
+                <input type="radio" id="male" class="form-check-input" th:field="*{gender}" value="男" required/>
+                <label class="form-check-label" for="male">男</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="female" class="form-check-input" th:field="*{gender}" value="女" required/>
+                <label class="form-check-label" for="female">女</label>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">保存修改</button>
+        <a th:href="@{/generalmember/memberCenter}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
