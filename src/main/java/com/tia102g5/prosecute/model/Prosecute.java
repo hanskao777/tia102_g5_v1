@@ -18,7 +18,8 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tia102g5.article.model.Article;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.message.model.Message;
@@ -43,7 +44,7 @@ public class Prosecute implements java.io.Serializable {
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
-	@JsonIgnoreProperties("prosecute")
+	@JsonIgnore
 	private Article article; 
 	
 	
@@ -56,7 +57,7 @@ public class Prosecute implements java.io.Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "messageID", referencedColumnName = "messageID") //留言ID
-	@JsonIgnoreProperties("prosecute")
+	@JsonIgnore
 	private Message message; 
 
 	
@@ -73,6 +74,16 @@ public class Prosecute implements java.io.Serializable {
         if (prosecuteCreateTime == null) {
             prosecuteCreateTime = new Date(System.currentTimeMillis());
         }
+    }
+    
+    @JsonProperty("articleId")
+    public Integer getArticleId() {
+        return article != null ? article.getArticleID() : null;
+    }
+
+    @JsonProperty("messageId")
+    public Integer getMessageId() {
+        return message != null ? message.getMessageID() : null;
     }
 
 	
