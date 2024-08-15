@@ -55,7 +55,7 @@ public class IndexController {
     public String getPartnerSidebar() {
         return "/back-end-partner/partner_sidebar";
     }
-    
+
     @GetMapping("/generalmember/select_page")
 	public String select_page(Model model) {
 		return "back-end/generalmember/select_page";
@@ -131,5 +131,6 @@ public class IndexController {
         return "index"; //view
     }
 	
+
 
 }

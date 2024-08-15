@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.articleImg.model.ArticleImg;
@@ -81,15 +81,13 @@ public class Article implements java.io.Serializable {
 	private Date  articleCreateTime;
 	
 
-	
-
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@OrderBy("heartID asc")
 	private Set<Heart> hearts = new HashSet<Heart>();
 	
 
 	@OneToOne(mappedBy = "article", fetch = FetchType.LAZY)
-	@JsonIgnoreProperties("article")
+	@JsonIgnore
 	private Prosecute prosecute; 
 	
 	
