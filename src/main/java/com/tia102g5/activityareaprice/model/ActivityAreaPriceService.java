@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 public class ActivityAreaPriceService {
 	@Autowired
 	private ActivityAreaPriceRepository activityAreaPriceRepository;
-	//用場館區域ID跟活動ID來查找活動區域價格ID
-	public Integer findActivityAreaPriceID(Integer venueAreaID, Integer activityID) {
-		return activityAreaPriceRepository.findActivityAreaPriceID(venueAreaID, activityID);
+
+	// 用場館區域ID跟活動ID來查找活動區域價格ID
+	public ActivityAreaPrice findActivityAreaPrice(Integer venueAreaID, Integer activityID) {
+		return activityAreaPriceRepository.findActivityAreaPrice(venueAreaID, activityID);
 	}
 }

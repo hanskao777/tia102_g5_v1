@@ -16,6 +16,7 @@
             <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
+
                         <th>文章編號</th>
                         <th>文章分類</th>
                         <th>文章標題</th>
@@ -26,6 +27,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="collection : ${collections}">
+
                         <td th:text="${collection.article.articleID}">文章編號</td>
                         <td th:text="${collection.article.articleCategory}">文章分類</td>
                         <td>
@@ -34,6 +36,9 @@
                         </td>
                         <td th:text="${collection.article.generalMember.memberName}">發文者</td>
                         <td th:text="${collection.article.board.boardName}">討論版</td>
+
+                       
+
                         <td th:text="${#dates.format(collection.collectionCreateTime, 'yyyy-MM-dd HH:mm')}">收藏時間</td>
                     </tr>
                 </tbody>
