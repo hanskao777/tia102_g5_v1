@@ -397,12 +397,14 @@ h1 {
 
 		<div class="custom-button-container">
 			<button class="custom-btn custom-btn-prev" onclick="goBack()">上一步</button>
-			<form id="seatSelectionForm" action="/seatSelect/submitSeats" method="POST">
-				<input type="text" id="seat1" name="seat1" value=""> <input
-					type="text" id="seat2" name="seat2" value=""> <input
-					type="text" id="seat3" name="seat3" value=""> <input
-					type="text" id="seat4" name="seat4" value=""> <input
-					type="text" id="seat5" name="seat5" value="">
+			<form id="seatSelectionForm" action="/seatSelect/submitSeats"
+				method="POST">
+				<input type="hidden" id="activityTimeSlotID" name="activityTimeSlotID" value="1"> <input
+					type="hidden" id="seat1" name="seat1" value=""> <input
+					type="hidden" id="seat2" name="seat2" value=""> <input
+					type="hidden" id="seat3" name="seat3" value=""> <input
+					type="hidden" id="seat4" name="seat4" value=""> <input
+					type="hidden" id="seat5" name="seat5" value="">
 				<button type="submit" id="nextButton"
 					class="custom-btn custom-btn-next">下一步</button>
 			</form>
