@@ -8,9 +8,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.tia102g5.heart.model.Heart;
 
 public interface ArticleCollectionRepository extends JpaRepository<ArticleCollection, Integer> {
 
@@ -30,5 +29,12 @@ public interface ArticleCollectionRepository extends JpaRepository<ArticleCollec
 	// 會員對特定文章的收藏記錄
 	@Query("from ArticleCollection where generalMember.memberID = ?1 and article.articleID = ?2")
 	List<ArticleCollection> findByMemberAndArticle(int memberID, int articleID);
+	
+	// 會員收藏的所有文章
+	@Query("from ArticleCollection where generalMember.memberID = ?1")
+	List<ArticleCollection> findByMemberAndArticleList(int memberID);
+	
+	@Query("SELECT ac FROM ArticleCollection ac JOIN FETCH ac.article WHERE ac.generalMember.memberID = :memberID")
+    List<ArticleCollection> findByGeneralMemberMemberIDWithArticle(@Param("memberID") Integer memberID);
 
 }

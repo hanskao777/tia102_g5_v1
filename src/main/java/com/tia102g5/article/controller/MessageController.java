@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -98,10 +99,23 @@ public class MessageController {
 	//新增留言
 	@PostMapping("insert")
 	@ResponseBody
-	public ResponseEntity<?> insert(@Valid @RequestBody Message message) {
+	public ResponseEntity<?> insert(@Valid @RequestBody Message message, HttpSession session) {
 	    if (message.getArticle() == null || message.getArticle().getArticleID() == null) {
 	        return ResponseEntity.badRequest().body("Article ID cannot be null");
 	    }
+	    // 獲取當前登入的會員信息
+	    String memberAccount = (String) session.getAttribute("memberAccount");
+	    if (memberAccount == null || memberAccount.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("登入已過期，請重新登入");
+	    }
+
+	    GeneralMember generalMember = generalMemberSvc.getByMemberAccount(memberAccount);
+	    if (generalMember == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("無法找到會員資料，請重新登入");
+	    }
+
+	    // 設置留言的作者
+	    message.setGeneralMember(generalMember);
 	    
 	    try {
 	        Message savedMessage = messageSvc.addMessage(message);
