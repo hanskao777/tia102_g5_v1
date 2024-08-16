@@ -6,19 +6,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.activity.model.ActivityService;
 import com.tia102g5.activityareaprice.model.ActivityAreaPrice;
 import com.tia102g5.activityareaprice.model.ActivityAreaPriceService;
+import com.tia102g5.activitytimeslot.model.ActivityTimeSlot;
+import com.tia102g5.activitytimeslot.model.ActivityTimeSlotService;
 import com.tia102g5.seat.model.SeatService;
+import com.tia102g5.seatstatus.model.SeatStatus;
 import com.tia102g5.seatstatus.model.SeatStatusService;
-import com.tia102g5.ticket.model.TicketService;
+import com.tia102g5.ticket.model.Ticket;
 import com.tia102g5.venuearea.model.VenueAreaService;
 
 @Controller
@@ -26,17 +33,20 @@ import com.tia102g5.venuearea.model.VenueAreaService;
 public class SeatSelectController {
 
 	@Autowired
-	private TicketService ticketService;
+	private ActivityTimeSlotService activityTimeSlotService;
+
+	@Autowired
+	private ActivityService activityService;
 
 	@Autowired
 	private SeatService seatService;
-	
+
 	@Autowired
 	private SeatStatusService seatStatusService;
-	
+
 	@Autowired
 	private VenueAreaService venueAreaService;
-	
+
 	@Autowired
 	private ActivityAreaPriceService activityAreaPriceService;
 
@@ -55,16 +65,23 @@ public class SeatSelectController {
 	}
 
 	@PostMapping("/submitSeats")
-	public ResponseEntity<?> submitSeats(@RequestParam String seat1, @RequestParam(required = false) String seat2,
-	                                     @RequestParam(required = false) String seat3, @RequestParam(required = false) String seat4,
-	                                     @RequestParam(required = false) String seat5) {
+	public String submitSeats(@RequestParam Integer activityTimeSlotID,
+	        @RequestParam String seat1, 
+	        @RequestParam(required = false) String seat2,
+	        @RequestParam(required = false) String seat3, 
+	        @RequestParam(required = false) String seat4,
+	        @RequestParam(required = false) String seat5, 
+	        HttpSession session,
+	        RedirectAttributes redirectAttributes) {
 	    List<String> seatNames = Arrays.asList(seat1, seat2, seat3, seat4, seat5).stream().filter(Objects::nonNull)
 	            .filter(seat -> !seat.trim().isEmpty()).collect(Collectors.toList());
 
-	    List<Integer> seatStatusIds = new ArrayList<>();
-	    Integer venueId = 1; // 場館ID寫死為1
-	    Integer activityTimeSlotId = 1; // 活動時段ID寫死為1
-	    Integer activityId = 1;//活動ID寫死為1
+	    List<Ticket> ticketList = new ArrayList<>();
+	    ActivityTimeSlot activityTimeSlot = activityTimeSlotService.getActivityTimeSlotById(activityTimeSlotID);
+	    Integer activityId = activityTimeSlot.getActivity().getActivityID();// 活動ID從活動時段ID抓取
+	    Activity activity = activityService.getOneActivity(activityId);
+	    activity.setActivityID(activityId);
+	    Integer venueId = activity.getVenue().getVenueID();// 場館ID從活動ID抓取
 
 	    try {
 	        System.out.println("處理座位選擇開始");
@@ -80,45 +97,63 @@ public class SeatSelectController {
 	            Integer venueAreaId = venueAreaService.findVenueAreaIdByVenueIdAndVenueAreaName(venueId, venueAreaName);
 	            if (venueAreaId == null) {
 	                System.out.println("未找到區域: " + venueAreaName);
-	                return ResponseEntity.badRequest().body("未找到區域: " + venueAreaName);
+	                redirectAttributes.addFlashAttribute("error", "未找到區域: " + venueAreaName);
+	                return "redirect:/error";
 	            }
 
 	            System.out.println("找到區域ID: " + venueAreaId + " 對應區域名稱: " + venueAreaName);
 
-	            // 使用 ActivityAreaPriceService 查找 activityAreaPriceId
-	            Integer activityAreaPriceId = activityAreaPriceService.findActivityAreaPriceID(venueAreaId, activityId);
-	            if (activityAreaPriceId == null) {
+	            // 使用 ActivityAreaPriceService 查找 ActivityAreaPrice
+	            ActivityAreaPrice activityAreaPrice = activityAreaPriceService.findActivityAreaPrice(venueAreaId,
+	                    activityId);
+	            if (activityAreaPrice == null) {
 	                System.out.println("未找到活動區域價格: 區域ID " + venueAreaId + ", 活動ID " + activityId);
-	                return ResponseEntity.badRequest().body("未找到活動區域價格: " + venueAreaName);
+	                redirectAttributes.addFlashAttribute("error", "未找到活動區域價格: " + venueAreaName);
+	                return "redirect:/error";
 	            }
 
-	            System.out.println("找到活動區域價格ID: " + activityAreaPriceId + " 對應區域ID: " + venueAreaId + ", 活動ID: " + activityId);
+	            System.out.println("找到活動區域價格ID: " + activityAreaPrice.getActivityAreaPriceID() + " 對應區域ID: "
+	                    + venueAreaId + ", 活動ID: " + activityId);
 
 	            // 使用 venueId 和 seatNumber 找出 seatId
 	            Integer seatId = seatService.findSeatId(venueId, seatName);
 	            if (seatId != null) {
 	                System.out.println("找到座位ID: " + seatId + " 對應座位名稱: " + seatName + " 在區域ID: " + venueAreaId);
-	                Integer seatStatusId = seatStatusService
-	                        .getSeatStatusByActivityTimeSlotIdAndSeatId(activityTimeSlotId, seatId);
-	                if (seatStatusId != null) {
-	                    System.out.println("找到座位狀態ID: " + seatStatusId + " 對應座位ID: " + seatId + " 在區域ID: " + venueAreaId);
-	                    seatStatusIds.add(seatStatusId);
+	                // 使用 activityTimeSlotId 和 seatId 找出 SeatStatus
+	                SeatStatus seatStatus = seatStatusService
+	                        .getSeatStatusByActivityTimeSlotIdAndSeatId(activityTimeSlotID, seatId);
+	                if (seatStatus != null) {
+	                    System.out.println("找到座位狀態ID: " + seatStatus.getSeatStatusID() + " 對應座位ID: " + seatId
+	                            + " 在區域ID: " + venueAreaId);
+
+	                    // Create a new Ticket object and add it to the list
+	                    Ticket ticket = new Ticket();
+	                    ticket.setSeatStatus(seatStatus);
+	                    ticket.setActivityAreaPrice(activityAreaPrice);
+	                    ticket.setActivityTimeSlot(activityTimeSlot);
+	                    ticketList.add(ticket);
 	                } else {
 	                    System.out.println("未找到座位狀態: " + seatName + " 在區域ID: " + venueAreaId);
-	                    return ResponseEntity.badRequest().body("未找到座位狀態: " + seatName);
+	                    redirectAttributes.addFlashAttribute("error", "未找到座位狀態: " + seatName);
+	                    return "redirect:/error";
 	                }
 	            } else {
 	                System.out.println("座位不存在: " + seatName + " 在區域ID: " + venueAreaId);
-	                return ResponseEntity.badRequest().body("座位不存在: " + seatName);
+	                redirectAttributes.addFlashAttribute("error", "座位不存在: " + seatName);
+	                return "redirect:/error";
 	            }
 	        }
 
-	        System.out.println("所有座位狀態ID: " + seatStatusIds);
-	        return ResponseEntity.ok(seatStatusIds);
+	        // Store the ticketList in the session
+	        session.setAttribute("ticketList", ticketList);
+
+	        System.out.println("所有票券資訊已存入session");
+	        return "redirect:/ticket/bookTicket";
 	    } catch (Exception e) {
 	        System.out.println("處理座位選擇時發生錯誤: " + e.getMessage());
 	        e.printStackTrace();
-	        return ResponseEntity.internalServerError().body("處理座位選擇時發生錯誤: " + e.getMessage());
+	        redirectAttributes.addFlashAttribute("error", "處理座位選擇時發生錯誤: " + e.getMessage());
+	        return "redirect:/error";
 	    }
 	}
 }

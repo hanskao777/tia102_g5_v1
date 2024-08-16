@@ -9,7 +9,7 @@ public class SeatStatusService {
 	@Autowired
 	private SeatStatusRepository seatStatusRepository;
 
-	public Integer getSeatStatusByActivityTimeSlotIdAndSeatId(Integer activityTimeSlotId, Integer seatId) {
+	public SeatStatus getSeatStatusByActivityTimeSlotIdAndSeatId(Integer activityTimeSlotId, Integer seatId) {
 		return seatStatusRepository.findSeatStatusByActivityTimeSlotIdAndSeatId(activityTimeSlotId, seatId);
 	}
 }
