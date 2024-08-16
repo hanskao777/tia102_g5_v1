@@ -16,24 +16,24 @@
             <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        <th>文章ID</th>
-                        <th>文章類別</th>
+                        <th>文章編號</th>
+                        <th>文章分類</th>
                         <th>文章標題</th>
-                        <th>作者</th>
-                        <th>版面</th>
+                        <th>發文者</th>
+                        <th>討論版</th>
                         <th>收藏時間</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="collection : ${collections}">
-                        <td th:text="${collection.article.articleID}">文章ID</td>
-                        <td th:text="${collection.article.articleCategory}">文章類別</td>
+                        <td th:text="${collection.article.articleID}">文章編號</td>
+                        <td th:text="${collection.article.articleCategory}">文章分類</td>
                         <td>
-                            <a th:href="@{/article/{id}(id=${collection.article.articleID})}" 
-                               th:text="${collection.article.articleTitle}">文章標題</a>
+                            <a th:href="@{'/article/OneArticle/' + ${collection.article.articleID}}" 
+   								th:text="${collection.article.articleTitle}">文章標題</a>
                         </td>
-                        <td th:text="${collection.article.generalMember.memberName}">作者名稱</td>
-                        <td th:text="${collection.article.board.boardName}">版面名稱</td>
+                        <td th:text="${collection.article.generalMember.memberName}">發文者</td>
+                        <td th:text="${collection.article.board.boardName}">討論版</td>
                         <td th:text="${#dates.format(collection.collectionCreateTime, 'yyyy-MM-dd HH:mm')}">收藏時間</td>
                     </tr>
                 </tbody>
