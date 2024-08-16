@@ -1,61 +1,47 @@
 package com.tia102g5.generalmember.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
-import org.apache.naming.java.javaURLContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Jedis;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.tia102g5.article.model.ArticleService;
+import com.tia102g5.articleCollection.model.ArticleCollection;
+import com.tia102g5.articleCollection.model.ArticleCollectionService;
 import com.tia102g5.email.MailService;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.generalmember.model.GeneralMemberService;
-import com.tia102g5.membercoupon.model.MemberCouponService;
-import com.tia102g5.verify.Verify;
-
-
-import javassist.expr.NewArray;
 
 @Controller
 @RequestMapping("/generalmember")
 public class GeneralMemberController {
 
-	Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
 	@Autowired
 	GeneralMemberService gmemberSvc;
@@ -63,6 +49,11 @@ public class GeneralMemberController {
 	@Autowired
 	MailService mailService;
 
+	@Autowired
+	ArticleService articeSvc;
+	
+	@Autowired
+	ArticleCollectionService artCollSvc;
 
 	/*
 	 * This method will serve as addEmp.html handler.
@@ -121,6 +112,11 @@ public class GeneralMemberController {
 				@RequestParam("memberPicture") MultipartFile[] parts,HttpSession session) throws IOException {
 	
 			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+			// 檢查生日是否為空
+		    if (generalMember.getBirthday() == null) {
+		        result.rejectValue("birthday", "error.birthday", "生日: 請勿空白");
+		    }
+			
 			result = removeFieldError(generalMember, result, "memberPicture");
 	
 			if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
@@ -316,5 +312,39 @@ public class GeneralMemberController {
 	    model.addAttribute("member", member); // 將會員資料添加到模型
 	    return "memberCenter"; // 返回前端模板名稱
 	}
+	
+	
+	// 會員收藏文章列表
+//	@GetMapping("/myCollections")
+//	public String showAllArticles(Model model) {
+//	    List<Article> articles = articeSvc.getAll();
+//	    model.addAttribute("articles", articles);
+//	    return "front-end/generalmember/myCollections";
+//	}
+	
+	
+	// 會員收藏文章列表
+//	@GetMapping("myCollections")
+//    public String showMyCollections(Model model, HttpSession session) {
+//        // 假設你在session中存儲了用戶ID
+//        Integer memberID = (Integer) session.getAttribute("memberID");
+//        
+//        if (memberID == null) {
+//            // 如果用戶未登錄，重定向到登錄頁面
+//            return "redirect:/login";
+//        }
+//
+//        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
+//        model.addAttribute("collections", collections);
+//        return "front-end/generalmember/myCollections";
+//    }
 
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    dateFormat.setLenient(false);
+	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
+	
 }
+
