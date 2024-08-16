@@ -23,10 +23,10 @@ public class ArticleCollectionService {
 	private RedisTemplate<String, String> redisTemplate;
 
 	//測試會員收藏 測試之後刪掉
-	public boolean isArticleCollectionByMember(Integer articleID, Integer memberID) {
-	    return !repository.findByMemberAndArticle(memberID, articleID).isEmpty();
-	}
-	
+//	public boolean isArticleCollectionByMember(Integer articleID, Integer memberID) {
+//	    return !repository.findByMemberAndArticle(memberID, articleID).isEmpty();
+//	}
+//	
 	
 	// 確保文章收藏統計的一致性和安全性，同時提高程式碼的可維護性
 	private static final String ARTICLECOLLECTION_COUNT_KEY = "article:collection:count:";
@@ -116,12 +116,13 @@ public class ArticleCollectionService {
 	        long sqlCount = collections.size();
 	        String key = ARTICLECOLLECTION_COUNT_KEY + articleID;
 	        redisTemplate.opsForValue().set(key, String.valueOf(sqlCount));
-	        System.out.println("同步文章 " + articleID + " 的收藏數: " + sqlCount);
 	    } catch (Exception e) {
 	        System.err.println("同步文章 " + articleID + " 的收藏數時發生錯誤: " + e.getMessage());
 	    }
 	}
 
-
+	public List<ArticleCollection> getCollectionsByMemberID(Integer memberID) {
+        return repository.findByGeneralMemberMemberIDWithArticle(memberID);
+    }
 	
 }

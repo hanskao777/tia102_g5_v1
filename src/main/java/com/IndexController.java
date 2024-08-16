@@ -131,6 +131,12 @@ public class IndexController {
         return "index"; //view
     }
 	
+    //管理員檢舉管理
+    @GetMapping("/adminProsecute")
+    public String getAdminProsecute(Model model) {
+        model.addAttribute("message", "Welcome to Admin Prosecute Page");
+        return "/back-end-admin/admin_prosecute";
+    }
 
 
 }

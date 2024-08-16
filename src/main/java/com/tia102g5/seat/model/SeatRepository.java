@@ -1,7 +1,12 @@
 package com.tia102g5.seat.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-public interface SeatRepository extends JpaRepository<Seat, Integer>{
+@Repository
+public interface SeatRepository extends JpaRepository<Seat, Integer> {
 
+    @Query(value = "SELECT * FROM seat WHERE venueID = ?1 AND seatName = ?2", nativeQuery = true)
+    Seat findByVenueIdAndSeatName(Integer venueID, String seatName);
 }

@@ -35,97 +35,82 @@ fetch('/footer')
 
 /*按讚和收藏功能*/
 $(document).ready(function() {
+	
+	//初始化收藏按鈕
+	var $collectionBtn = $('.bookmark-btn');
+	  if ($collectionBtn.length) {
+	      updateButtonState($collectionBtn, $collectionBtn.data('articleid'), '/articleCollection/status/');
+	  }
 
-	/*測試-載入會員選項到當前會員選擇下拉選單*/
-	loadMembersForCurrentUser();
-
-	/*測試-當選擇當前會員時，更新按鈕狀態*/
-	$('#currentMemberSelect').change(function() {
-		updateAllButtonsState();
-	});
-
-
-	/*通用的文章互動函數*/
-	/*原有的JS 因測試會員先隱藏
-	function handleArticleInteraction(buttonClass, toggleUrl, countUrl) {
-		$(buttonClass).click(function() {
-			var $btn = $(this);
-			var articleId = $btn.data('articleid');
-			var memberId = $btn.data('memberid');
-		    
-			$.ajax({
-				url: toggleUrl,
-				method: 'POST',
-				data: {
-					memberID: memberID,
-					articleID: articleID
-				},
-				success: function(response) {
-					updateButtonUI($btn, response);
-					updateInteractionCount($btn, countUrl, articleID);
-				},
-				error: function(xhr, status, error) {
-					console.error("Error: " + error);
-					alert("操作失敗，請稍後再試。");
-				}
-			});
-		});
-	}*/
 
 	function handleArticleInteraction(buttonClass, toggleUrl, countUrl, statusUrl) {
-		$(buttonClass).each(function() {
-			var $btn = $(this);
-			var articleID = $btn.data('articleid');
-			updateButtonState($btn, articleID, statusUrl);
-		});
+	    $(buttonClass).each(function() {
+	        var $btn = $(this);
+	        var articleID = $btn.data('articleid');
+	        updateButtonState($btn, articleID, statusUrl);
+	    });
 
-		$(buttonClass).click(function() {
-			var $btn = $(this);
-			var articleID = $btn.data('articleid');
-			var memberID = $('#currentMemberSelect').val();
+	    $(buttonClass).click(function() {
+	        var $btn = $(this);
+	        var articleID = $btn.data('articleid');
 
-			if (!memberID) {
-				alert('請先選擇當前會員');
-				return;
-			}
-
-			$.ajax({
-				url: toggleUrl,
-				method: 'POST',
-				data: {
-					memberID: memberID,
-					articleID: articleID
-				},
-				success: function(response) {
-					updateButtonUI($btn, response);
-					updateInteractionCount($btn, countUrl, articleID);
-				},
-				error: function(xhr, status, error) {
-					console.error("Error: " + error);
-					alert("操作失敗，請稍後再試。");
-				}
-			});
-		});
+	        $.ajax({
+	            url: toggleUrl,
+	            method: 'POST',
+	            data: {
+	                articleID: articleID
+	            },
+	            success: function(response) {
+	                if (typeof response === 'boolean') {
+	                    updateButtonUI($btn, response);
+	                    updateInteractionCount($btn, countUrl, articleID);
+	                } else {
+	                    alert(response);
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("Error: " + error);
+	                if (xhr.status === 401) {
+	                    alert("請先登入");
+	                } else {
+	                    alert("操作失敗，請稍後再試。");
+	                }
+	            }
+	        });
+	    });
 	}
 
-	/*更新按鈕狀態*/
+	/*更新按鈕狀態UI*/
 	function updateButtonUI($btn, isActive) {
-		var $icon = $btn.find('i');
-		if (isActive) {
-			$icon.removeClass('far').addClass('fas').css('color', '#ff0000');
-		} else {
-			$icon.removeClass('fas').addClass('far').css('color', '');
-		}
+	    var $icon = $btn.find('i');
+	    if (isActive) {
+	        $icon.removeClass('far').addClass('fas').css('color', '#ff0000');
+	    } else {
+	        $icon.removeClass('fas').addClass('far').css('color', '');
+	    }
 	}
 
-	// 測試會員：更新按鈕狀態
+	// 更新按鈕狀態
 	function updateButtonState($btn, articleID, statusUrl) {
-		var memberID = $('#currentMemberSelect').val();
-		if (!memberID) return;
-
-		$.get(statusUrl + articleID + '/' + memberID, function(isActive) {
-			updateButtonUI($btn, isActive);
-		});
+	    $.ajax({
+	        url: statusUrl + articleID,
+	        method: 'GET',
+	        success: function(response) {
+	            if (typeof response === 'boolean') {
+	                updateButtonUI($btn, response);
+	            } else {
+	                console.log(response);
+	            }
+	        },
+	        error: function(xhr) {
+	            if (xhr.status === 401 && xhr.responseText === "USER_NOT_LOGGED_IN") {
+	                console.log('User not logged in, hiding collection button');
+	                $btn.hide(); // 或者使用 $btn.prop('disabled', true);
+	            } else {
+	                console.error('Error checking collection status:', xhr.responseText);
+	            }
+	        }
+	    });
 	}
 
 
@@ -140,37 +125,7 @@ $(document).ready(function() {
 		});
 	}
 
-	// 測試會員：載入會員選項到當前會員選擇下拉選單
-	function loadMembersForCurrentUser() {
-		$.ajax({
-			url: '/messages/members',
-			type: 'GET',
-			success: function(response) {
-				var select = $('#currentMemberSelect');
-				select.empty();
-				select.append($('<option>', {
-					value: '',
-					text: '請選擇當前會員'
-				}));
 
-				var generalMemberListData = response.generalMemberListData;
-
-				if (Array.isArray(generalMemberListData) && generalMemberListData.length > 0) {
-					generalMemberListData.forEach(function(generalmember) {
-						select.append($('<option>', {
-							value: generalmember.memberID,
-							text: generalmember.memberNickName
-						}));
-					});
-				} else {
-					console.log("No members received or invalid data format");
-				}
-			},
-			error: function(xhr, status, error) {
-				console.error('載入會員列表失敗:', error);
-			}
-		});
-	}
 
 	/*更新統計*/
 	function updateInteractionCount($btn, countUrl, articleID) {
@@ -186,21 +141,123 @@ $(document).ready(function() {
 	handleArticleInteraction('.bookmark-btn', '/articleCollection/toggle', '/articleCollection/count/', '/articleCollection/status/');
 });
 
+
+//文章檢舉
+    
+
 // 文章檢舉按鈕點擊事件
 $(document).on('click', '.report-btn', function() {
-	const articleID = $(this).data('articleid');
-	const memberID = $(this).data('memberid');
-	// 在這裡添加檢舉文章的邏輯
-	console.log(`檢舉文章: articleID=${articleID}, memberID=${memberID}`);
+    const $btn = $(this);
+    const articleID = $btn.data('articleid');
+
+    if (!articleID) {
+        console.error('無法獲取文章ID');
+        alert('無法檢舉文章，請刷新頁面後重試');
+        return;
+    }
+
+	console.log('Checking article ID:', articleID); // 用於調試
+	
+    // 首先檢查文章是否已被檢舉
+    $.ajax({
+        url: `/prosecutes/article/${articleID}`,
+        method: 'GET',
+        success: function(isReported) {
+            if (isReported) {
+                alert('此文章已被檢舉，無法重複檢舉');
+                updateReportButtonUI($btn, true);
+            } else {
+                // 如果未被檢舉，則繼續檢舉流程
+                proceedWithProsecution($btn, articleID);
+            }
+        },
+		error: function(xhr, status, error) {
+		    console.error('檢查文章檢舉狀態失敗:', error);
+		    console.error('狀態碼:', xhr.status);
+		    console.error('回應文本:', xhr.responseText);
+		    let errorMessage = '檢查文章狀態失敗，請稍後再試';
+		    if (xhr.status === 404) {
+		        errorMessage = '找不到指定的文章';
+		    }
+		    alert(errorMessage);
+		}
+    });
 });
 
+function proceedWithProsecution($btn, articleID) {
+    // 彈出輸入框讓用戶填寫檢舉原因
+    const prosecuteReason = prompt('請輸入檢舉原因（2-50字，只能包含中文、英文、數字和底線）：');
+
+    if (prosecuteReason === null) {
+        return; // 用戶取消了輸入
+    }
+
+    // 檢查prosecuteReason是否符合規則
+    if (!/^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,50}$/.test(prosecuteReason)) {
+        alert('檢舉原因格式不正確，請重新輸入。');
+        return;
+    }
+
+    if (confirm('您確定要檢舉這篇文章嗎？')) {
+        $.ajax({
+            url: '/prosecutes',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                article: { articleID: articleID },
+                prosecuteReason: prosecuteReason
+            }),
+            success: function(response) {
+                alert('文章檢舉已提交，感謝您的回報。');
+                updateReportButtonUI($btn, true);
+            },
+            error: function(xhr, status, error) {
+                console.error('檢舉失敗:', error);
+                let errorMessage = '檢舉失敗，請稍後再試。';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                alert(errorMessage);
+            }
+        });
+    }
+}
+
+//文章檢舉按鈕UI
+function updateReportButtonUI($btn, isReported) {
+    if (isReported) {
+        $btn.prop('disabled', true).html('<i class="fa-solid fa-shield-halved"></i> 已檢舉');
+    } else {
+        $btn.prop('disabled', false).html('<i class="fa-solid fa-shield-halved"></i> 檢舉');
+    }
+}
+
+//留言檢舉按鈕UI
+function updateCommentReportButtonUI($btn, isReported) {
+    if (isReported) {
+        $btn.prop('disabled', true).html('<i class="fa-solid fa-shield-halved"></i> 已檢舉');
+    } else {
+        $btn.prop('disabled', false).html('<i class="fa-solid fa-shield-halved"></i> 檢舉');
+    }
+}
+
+// 在文章加載完成後初始化檢舉按鈕
+function initReportButtons() {
+    $('.report-btn').each(function() {
+        const $btn = $(this);
+        const articleID = $btn.data('articleid');
+        $.get(`/prosecutes/article/${articleID}`, function(isReported) {
+            updateReportButtonUI($btn, isReported);
+        });
+    });
+}
 
 
 
 /*留言功能*/
 $(document).ready(function() {
 	loadComments();
-	loadMembers();
+//	loadMembers();
 
 	$('#comment-form').submit(function(e) {
 		e.preventDefault();
@@ -208,40 +265,7 @@ $(document).ready(function() {
 	});
 });
 
-/*載入會員*/
-function loadMembers() {
 
-	$.ajax({
-		url: '/messages/members',
-		type: 'GET',
-		success: function(response) {
-			var select = $('#memberSelect');
-			select.empty();
-			select.append($('<option>', {
-				value: '',
-				text: '請選擇會員'
-			}));
-
-			var generalMemberListData = response.generalMemberListData;
-
-			if (Array.isArray(generalMemberListData) && generalMemberListData.length > 0) {
-				generalMemberListData.forEach(function(generalmember) {
-					select.append($('<option>', {
-						value: generalmember.memberID,
-						text: generalmember.memberNickName
-					}));
-				});
-			} else {
-				console.log("No members received or invalid data format");
-			}
-		},
-		error: function(xhr, status, error) {
-			console.error('載入會員列表失敗:', error);
-			console.log("Response status:", xhr.status);
-			console.log("Response text:", xhr.responseText);
-		}
-	});
-}
 
 /*載入留言*/
 function loadComments() {
@@ -261,53 +285,50 @@ function loadComments() {
 
 /*送出留言*/
 function submitComment() {
-	var articleID = $('#articleID').val();  /*使用當前頁面的文章ID*/
-	var memberID = $('#memberSelect').val();
-	var content = $('#commentContent').val();
+    var articleID = $('#articleID').val(); // 使用當前頁面的文章ID
+    var content = $('#commentContent').val();
 
-	if (!articleID) {
-		alert('無法獲取文章 ID');
-		return;
-	}
+    if (!articleID) {
+        alert('無法獲取文章 ID');
+        return;
+    }
 
-	if (!memberID) {
-		alert('請選擇會員');
-		return;
-	}
+    if (!content.trim()) {
+        alert('請輸入留言內容');
+        return;
+    }
 
-	var message = {
-		article: {
-			articleID: parseInt(articleID)
-		},
-		generalMember: {
-			memberID: parseInt(memberID)
-		},
-		messageContent: content
-	};
+    var message = {
+        article: {
+            articleID: parseInt(articleID)
+        },
+        messageContent: content
+    };
 
-
-	$.ajax({
-		url: '/messages/insert',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(message),
-		success: function(response) {
-			$('#commentContent').val('');
-			$('#memberSelect').val('');
-			loadComments();
-		},
-		error: function(xhr, status, error) {
-			console.error('提交留言失敗:', error);
-			console.log('Error details:', xhr.responseText);
-			if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-				alert('提交失敗: ' + xhr.responseJSON.map(e => e.defaultMessage).join(', '));
-			} else if (xhr.responseText) {
-				alert('提交失敗: ' + xhr.responseText);
-			} else {
-				alert('提交失敗，請稍後再試');
-			}
-		}
-	});
+    $.ajax({
+        url: '/messages/insert',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(message),
+        success: function(response) {
+            $('#commentContent').val('');
+            loadComments();
+        },
+        error: function(xhr, status, error) {
+            console.error('提交留言失敗:', error);
+            console.log('Error details:', xhr.responseText);
+            if (xhr.status === 401) {
+                alert('登入已過期，請重新登入');
+                window.location.href = '/login'; // 假設登入頁面的URL是 '/login'
+            } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
+                alert('提交失敗: ' + xhr.responseJSON.map(e => e.defaultMessage).join(', '));
+            } else if (xhr.responseText) {
+                alert('提交失敗: ' + xhr.responseText);
+            } else {
+                alert('提交失敗，請稍後再試');
+            }
+        }
+    });
 }
 
 /*顯示留言*/
@@ -349,6 +370,9 @@ function displayComments(comments) {
 		commentsList.append(commentHtml);
 	});
 	updateCommentCount(comments.length);/*呼叫函數更新留言數量*/
+	
+	//始化留言檢舉按鈕
+	initCommentReportButtons();
 }
 
 /*更新留言數量*/
@@ -358,157 +382,165 @@ function updateCommentCount(count) {
 
 // 留言檢舉按鈕點擊事件
 $(document).on('click', '.report-comment-btn', function() {
-    const messageID = $(this).data('message-id');
-    
-    // 獲取當前選擇的會員ID（檢舉人）
-    const reporterID = $('#currentMemberSelect').val();
-    
-    if (!reporterID) {
-        alert('請先選擇當前會員');
-        return;
-    }
+	const $btn = $(this);
+	const messageID = $btn.data('message-id');
+	
+	console.log('Button clicked:', $btn);
+	console.log('Data attributes:', $btn.data());
+	console.log('Message ID:', messageID);
+	 
+	if (!messageID) {
+		console.error('無法獲取留言ID');
+		console.error('Button HTML:', $btn.prop('outerHTML'));
+		alert('無法檢舉留言，請刷新頁面後重試');
+		return;
+	}
 
-    // 彈出輸入框讓用戶填寫檢舉原因
-    const prosecuteReason = prompt('請輸入檢舉原因（2-50字，只能包含中文、英文、數字和底線）：');
-    
-    if (prosecuteReason === null) {
-        return; // 用戶取消了輸入
-    }
-
-    // 檢查prosecuteReason是否符合規則
-    if (!/^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,50}$/.test(prosecuteReason)) {
-        alert('檢舉原因格式不正確，請重新輸入。');
-        return;
-    }
-
-    if (confirm('您確定要檢舉這則留言嗎？')) {
-        const data = JSON.stringify({
-            message: { messageID: parseInt(messageID) },
-            generalMember: { memberID: parseInt(reporterID) },
-            prosecuteReason: prosecuteReason
-        });
-        
-		console.log('Sending data:', data);
-
-		        $.ajax({
-		            url: '/prosecutes',
-		            method: 'POST',
-		            contentType: 'application/json',
-		            data: data,
-		            success: function(response) {
-		                alert('留言檢舉已提交，感謝您的回報。');
-		                // 更新UI，例如禁用檢舉按鈕
-		                $('.report-comment-btn[data-message-id="' + messageID + '"]').prop('disabled', true).text('已檢舉');
-		            },
-		            error: function(xhr, status, error) {
-		                console.error('留言檢舉提交失敗:', error);
-		                console.error('Status:', status);
-		                console.error('Response:', xhr.responseText);
-		                alert('檢舉失敗，請稍後再試。');
-		            }
-		        });
-    }
-});
-
-// 文章檢舉按鈕點擊事件
-$(document).on('click', '.report-btn', function() {
-    const articleID = $(this).data('articleid');
-    
-    // 獲取當前選擇的會員ID（檢舉人）
-    const reporterID = $('#currentMemberSelect').val();
-    
-    if (!reporterID) {
-        alert('請先選擇當前會員');
-        return;
-    }
-
-    // 彈出輸入框讓用戶填寫檢舉原因
-    const prosecuteReason = prompt('請輸入檢舉原因（2-50字，只能包含中文、英文、數字和底線）：');
-    
-    if (prosecuteReason === null) {
-        return; // 用戶取消了輸入
-    }
-
-    // 檢查prosecuteReason是否符合規則
-    if (!/^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,50}$/.test(prosecuteReason)) {
-        alert('檢舉原因格式不正確，請重新輸入。');
-        return;
-    }
-
-    if (confirm('您確定要檢舉這篇文章嗎？')) {
-        const data = JSON.stringify({
-            article: { articleID: parseInt(articleID) },
-            generalMember: { memberID: parseInt(reporterID) },
-            prosecuteReason: prosecuteReason
-        });
-        
-        console.log('Sending data:', data);
-
-        $.ajax({
-            url: '/prosecutes',
-            method: 'POST',
-            contentType: 'application/json',
-            data: data,
-            success: function(response) {
-                alert('文章檢舉已提交，感謝您的回報。');
-                // 更新UI，例如禁用檢舉按鈕
-                $('.report-btn[data-articleid="' + articleID + '"]').prop('disabled', true).text('已檢舉');
-            },
+	console.log('Checking message ID:', messageID); // 用於調試
+	
+	    // 首先檢查留言是否已被檢舉
+	    $.ajax({
+	        url: `/prosecutes/message/${messageID}`,
+	        method: 'GET',
+	        success: function(isReported) {
+	            if (isReported) {
+	                alert('此留言已被檢舉，無法重複檢舉');
+	                updateCommentReportButtonUI($btn, true);
+	            } else {
+	                // 如果未被檢舉，則繼續檢舉流程
+	                proceedWithMessageProsecution($btn, messageID);
+	            }
+	        },
 			error: function(xhr, status, error) {
-			         console.error('文章檢舉提交失敗:', error);
-			         console.error('Status:', status);
-			         console.error('Response:', xhr.responseText);
-			         
-			         let errorMessage = '檢舉失敗，請稍後再試。';
-			         try {
-			             const response = JSON.parse(xhr.responseText);
-			             if (response.message) {
-			                 errorMessage = response.message;
-			                 if (errorMessage === "此文章已被檢舉") {
-			                     // 更新UI，例如禁用檢舉按鈕
-			                     $('.report-btn[data-articleid="' + articleID + '"]').prop('disabled', true).text('已檢舉');
-			                 }
-			             }
-			         } catch (e) {
-                        console.error('解析錯誤訊息失敗', e);
-                    
-                }
-                alert(errorMessage);
-            }
-        });
-    }
-});
+			    console.error('檢查留言檢舉狀態失敗:', error);
+			    console.error('狀態碼:', xhr.status);
+			    console.error('回應文本:', xhr.responseText);
+			    let errorMessage = '檢查留言狀態失敗，請稍後再試';
+			    if (xhr.status === 404) {
+			        errorMessage = '找不到指定的留言';
+			    }
+			    alert(errorMessage);
+			}
+	    });
+	});
+	
 
-//檢查文章是否已被檢舉
-function checkArticleReportStatus(articleID) {
-    $.ajax({
-        url: `/prosecutes/article/${articleID}`,
-        method: 'GET',
-        success: function(isReported) {
-            if (isReported) {
-                // 如果文章已被檢舉，可以禁用檢舉按鈕或顯示已檢舉的狀態
-                $('.report-btn[data-articleid="' + articleID + '"]').prop('disabled', true).text('已檢舉');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('檢查文章檢舉狀態失敗:', error);
-        }
-    });
-}
+	function proceedWithMessageProsecution($btn, messageID) {
+	    // 彈出輸入框讓用戶填寫檢舉原因
+	    const prosecuteReason = prompt('請輸入檢舉原因（2-50字，只能包含中文、英文、數字和底線）：');
+
+	    if (prosecuteReason === null) {
+	        return; // 用戶取消了輸入
+	    }
+
+	    // 檢查prosecuteReason是否符合規則
+	    if (!/^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,50}$/.test(prosecuteReason)) {
+	        alert('檢舉原因格式不正確，請重新輸入。');
+	        return;
+	    }
+
+	    if (confirm('您確定要檢舉這篇留言嗎？')) {
+	        $.ajax({
+	            url: '/prosecutes',
+	            method: 'POST',
+	            contentType: 'application/json',
+	            data: JSON.stringify({ 
+	                message: { messageID: messageID },
+	                prosecuteReason: prosecuteReason
+	            }),
+	            success: function(response) {
+	                alert('留言檢舉已提交，感謝您的回報。');
+	                updateCommentReportButtonUI($btn, true);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('檢舉失敗:', error);
+	                let errorMessage = '檢舉失敗，請稍後再試。';
+	                if (xhr.responseJSON && xhr.responseJSON.message) {
+	                    errorMessage = xhr.responseJSON.message;
+	                }
+	                alert(errorMessage);
+	            }
+	        });
+	    }
+	}
+	
+	function initCommentReportButtons() {
+	    $('.report-comment-btn').each(function() {
+	        const $btn = $(this);
+	        const messageID = $btn.data('message-id');
+	        $.get(`/prosecutes/message/${messageID}`, function(isReported) {
+	            updateCommentReportButtonUI($btn, isReported);
+	        });
+	    });
+	}
+	
+//    const messageID = $(this).data('message-id');
+//    
+//    // 獲取當前選擇的會員ID（檢舉人）
+//    const reporterID = $('#currentMemberSelect').val();
+//    
+//    if (!reporterID) {
+//        alert('請先選擇當前會員');
+//        return;
+//    }
+//
+//    // 彈出輸入框讓用戶填寫檢舉原因
+//    const prosecuteReason = prompt('請輸入檢舉原因（2-50字，只能包含中文、英文、數字和底線）：');
+//    
+//    if (prosecuteReason === null) {
+//        return; // 用戶取消了輸入
+//    }
+//
+//    // 檢查prosecuteReason是否符合規則
+//    if (!/^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,50}$/.test(prosecuteReason)) {
+//        alert('檢舉原因格式不正確，請重新輸入。');
+//        return;
+//    }
+//
+//    if (confirm('您確定要檢舉這則留言嗎？')) {
+//        const data = JSON.stringify({
+//            message: { messageID: parseInt(messageID) },
+//            generalMember: { memberID: parseInt(reporterID) },
+//            prosecuteReason: prosecuteReason
+//        });
+//        
+//		console.log('Sending data:', data);
+//
+//		        $.ajax({
+//		            url: '/prosecutes',
+//		            method: 'POST',
+//		            contentType: 'application/json',
+//		            data: data,
+//		            success: function(response) {
+//		                alert('留言檢舉已提交，感謝您的回報。');
+//		                // 更新UI，例如禁用檢舉按鈕
+//		                $('.report-comment-btn[data-message-id="' + messageID + '"]').prop('disabled', true).text('已檢舉');
+//		            },
+//		            error: function(xhr, status, error) {
+//		                console.error('留言檢舉提交失敗:', error);
+//		                console.error('Status:', status);
+//		                console.error('Response:', xhr.responseText);
+//		                alert('檢舉失敗，請稍後再試。');
+//		            }
+//		        });
+//    }
+
+
+
 
 //檢查留言是否已被檢舉
-function checkMessageReportStatus(messageID) {
-    $.ajax({
-        url: `/prosecutes/message/${messageID}`,
-        method: 'GET',
-        success: function(isReported) {
-            if (isReported) {
-                // 如果留言已被檢舉，可以禁用檢舉按鈕或顯示已檢舉的狀態
-                $('.report-comment-btn[data-message-id="' + messageID + '"]').prop('disabled', true).text('已檢舉');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('檢查留言檢舉狀態失敗:', error);
-        }
-    });
-}
+//function checkMessageReportStatus(messageID) {
+//    $.ajax({
+//        url: `/prosecutes/message/${messageID}`,
+//        method: 'GET',
+//        success: function(isReported) {
+//            if (isReported) {
+//                // 如果留言已被檢舉，可以禁用檢舉按鈕或顯示已檢舉的狀態
+//                $('.report-comment-btn[data-message-id="' + messageID + '"]').prop('disabled', true).text('已檢舉');
+//            }
+//        },
+//        error: function(xhr, status, error) {
+//            console.error('檢查留言檢舉狀態失敗:', error);
+//        }
+//    });
+//}
