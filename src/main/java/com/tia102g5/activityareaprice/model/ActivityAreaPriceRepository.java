@@ -15,7 +15,7 @@ public interface ActivityAreaPriceRepository extends JpaRepository<ActivityAreaP
 //	@Query(value = "delete from activityareaprice where activityareaprice = ?1", nativeQuery = true)
 //	void deleteByPrice(BigDecimal activityAreaPrice);
 //===============================================================================
-	@Query(value = "SELECT activityAreaPriceID FROM activityAreaPrice "
+	@Query(value = "SELECT * FROM activityAreaPrice "
 			+ "WHERE venueAreaID = ?1 AND activityID = ?2", nativeQuery = true)
-	Integer findActivityAreaPriceID(Integer venueAreaID, Integer activityID);
+	ActivityAreaPrice findActivityAreaPrice(Integer venueAreaID, Integer activityID);
 }

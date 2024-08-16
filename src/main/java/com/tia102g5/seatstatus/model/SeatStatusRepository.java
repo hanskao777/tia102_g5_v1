@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SeatStatusRepository extends JpaRepository<SeatStatus, Integer> {
 
-	@Query(value = "SELECT seatStatusID FROM seatstatus " + "WHERE activityTimeSlotID = ?1 "
+	@Query(value = "SELECT * FROM seatStatus " + "WHERE activityTimeSlotID = ?1 "
 			+ "AND seatID = ?2", nativeQuery = true)
-	Integer findSeatStatusByActivityTimeSlotIdAndSeatId(Integer activityTimeSlotId, Integer seatId);
+	SeatStatus findSeatStatusByActivityTimeSlotIdAndSeatId(Integer activityTimeSlotId, Integer seatId);
 }
