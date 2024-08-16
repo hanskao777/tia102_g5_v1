@@ -16,11 +16,13 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tia102g5.activitycollection.model.ActivityCollection;
+import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.bookticket.model.BookTicket;
 import com.tia102g5.cart.model.Cart;
 import com.tia102g5.membercoupon.model.MemberCoupon;
@@ -78,8 +80,8 @@ public class GeneralMember implements java.io.Serializable {
 	@Column(name = "gender") // "性別"
 	private String gender;
 	
-//	@NotEmpty(message="生日: 請勿空白")
 //	@Temporal(TemporalType.DATE)
+//	@NotNull(message="生日: 請勿空白")
 	@Column(name = "birthday") // "生日"
 	private Date birthday;
 	
@@ -120,9 +122,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<Cart> carts;
 	
 	
-//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-//	@OrderBy("articleCollectionID asc")
-//	private Set<ArticleCollection> articleCollections;
+	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+	@OrderBy("articleCollectionID asc")
+	private Set<ArticleCollection> articleCollections;
 //	
 //	
 //	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
@@ -320,14 +322,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-//	public Set<ArticleCollection> getArticleCollections() {
-//		return articleCollections;
-//	}
-//
-//
-//	public void setArticleCollections(Set<ArticleCollection> articleCollections) {
-//		this.articleCollections = articleCollections;
-//	}
+	public Set<ArticleCollection> getArticleCollections() {
+		return articleCollections;
+	}
+
+
+	public void setArticleCollections(Set<ArticleCollection> articleCollections) {
+		this.articleCollections = articleCollections;
+	}
 //
 //
 //	public Set<Article> getArticles() {
