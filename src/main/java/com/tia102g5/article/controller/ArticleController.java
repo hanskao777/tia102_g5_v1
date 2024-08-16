@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -84,7 +85,19 @@ public class ArticleController {
 	
 
     @GetMapping("post")
-    public String showPostForm(Model model) {
+    public String showPostForm(Model model, HttpSession session) {
+        // 會員驗證
+        String memberAccount = (String) session.getAttribute("memberAccount");
+        if (memberAccount == null || memberAccount.isEmpty()) {
+            return "redirect:/generalmember/login";
+        }
+
+        // 獲取當前登入的會員信息
+        GeneralMember member = generalMemberSvc.getByMemberAccount(memberAccount);
+        if (member == null) {
+            return "redirect:/generalmember/login";
+        }
+        
         model.addAttribute("article", new Article());
         
         List<String> articleCategories = articleSvc.getAllCategories();
@@ -93,11 +106,12 @@ public class ArticleController {
         List<Board> boardList = boardSvc.getAll();
         model.addAttribute("boardList", boardList);
         
-        List<GeneralMember> generalMemberList = generalMemberSvc.getAll();
-	    model.addAttribute("generalMemberListData", generalMemberList);
+//        List<GeneralMember> generalMemberList = generalMemberSvc.getAll();
+//	    model.addAttribute("generalMemberListData", generalMemberList);
         
         return "front-end/forum/post";
     }
+    
     
     @GetMapping("OneArticle/{articleID}")
     public String showOneArticle(@PathVariable("articleID") String articleID, ModelMap model) {
@@ -189,7 +203,25 @@ public class ArticleController {
 
 	@PostMapping("insert")
 	public String insert(@Valid Article article, BindingResult result, ModelMap model,
-			@RequestParam(value = "articlePic", required = false) MultipartFile[] parts) throws IOException {
+			@RequestParam(value = "articlePic", required = false) MultipartFile[] parts,
+			HttpSession session) throws IOException {
+		
+	       // 獲取當前登入的會員信息
+        String memberAccount = (String) session.getAttribute("memberAccount");
+        if (memberAccount == null || memberAccount.isEmpty()) {
+            model.addAttribute("error", "會話已過期，請重新登入");
+            return "redirect:/generalmember/login";
+        }
+
+        GeneralMember generalMember = generalMemberSvc.getByMemberAccount(memberAccount);
+        if (generalMember == null) {
+            model.addAttribute("error", "無法找到會員信息，請重新登入");
+            return "redirect:/generalmember/login";
+        }
+
+        // 設置文章的作者
+        article.setGeneralMember(generalMember);
+
 
 		    if (result.hasErrors()) {
 		    	setCommonModelAttributes(model);

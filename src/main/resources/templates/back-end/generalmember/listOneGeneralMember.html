@@ -43,7 +43,7 @@
 		<span>身分證字號:</span><span th:text="${generalMember.nationalID}"></span><br/>
 		<span>性別:</span><span th:text="${generalMember.gender}"></span><br/>
 		<span>生日:</span><span th:text="${generalMember.birthday}"></span><br/>
-		<span>大頭照:</span><span><img th:src="@{/generalmember/DBGifReader} + '?memberID=' + ${generalMember.memberID}" width="100px"></span><br/>
+		<span>大頭照:</span><span><img th:src="@{/generalmember/MemberDBGifReader} + '?memberID=' + ${generalMember.memberID}" width="100px"></span><br/>
 	</div>
 
 

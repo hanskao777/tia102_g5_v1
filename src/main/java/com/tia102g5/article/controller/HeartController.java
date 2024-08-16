@@ -1,5 +1,7 @@
 package com.tia102g5.article.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tia102g5.generalmember.model.GeneralMember;
+import com.tia102g5.generalmember.model.GeneralMemberService;
 import com.tia102g5.heart.model.HeartService;
 
 @Controller
@@ -20,23 +24,46 @@ public class HeartController {
 	
 	@Autowired
 	HeartService heartSvc;	
+	
+	@Autowired
+	GeneralMemberService generalMemberSvc;
 		
 	
 	/*檢查會員是否對此文章按過讚*/
-    @GetMapping("/status/{articleID}/{memberID}")
-    public ResponseEntity<Boolean> getHeartStatus(
+	@GetMapping("/status/{articleID}")
+    public ResponseEntity<?> getHeartStatus(
             @PathVariable Integer articleID,
-            @PathVariable Integer memberID) {
-        boolean isLiked = heartSvc.isArticleLikedByMember(articleID, memberID);
+            HttpSession session) {
+		String memberAccount = (String) session.getAttribute("memberAccount");
+        if (memberAccount == null || memberAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("請先登入");
+        }
+        GeneralMember member = generalMemberSvc.getByMemberAccount(memberAccount);
+        if (member == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("無法找到會員信息");
+        }
+        boolean isLiked = heartSvc.isArticleLikedByMember(articleID, member.getMemberID());
         return ResponseEntity.ok(isLiked);
     }
 	
 	
 	/*切換文章的按讚狀態*/
-    @PostMapping("/toggle")
-    public ResponseEntity<Boolean> toggleHeart(@RequestParam Integer memberID, @RequestParam Integer articleID) {
-    	// 這裡添加身份驗證檢查
-    	boolean isLiked = heartSvc.toggleHeart(memberID, articleID);
+	@PostMapping("/toggle")
+	public ResponseEntity<?> toggleHeart( @RequestParam Integer articleID,
+	        HttpSession session) {
+    	
+    	// 獲取當前登入的會員信息
+        String memberAccount = (String) session.getAttribute("memberAccount");
+        if (memberAccount == null || memberAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("登入已過期，請重新登入");
+        }
+
+        GeneralMember member  = generalMemberSvc.getByMemberAccount(memberAccount);
+        if (member  == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("無法找到會員信息，請重新登入");
+        }
+        
+        boolean isLiked = heartSvc.toggleHeart(member .getMemberID(), articleID);
         return ResponseEntity.ok(isLiked);
     }
     
@@ -47,9 +74,7 @@ public class HeartController {
         return ResponseEntity.ok(count);
     }
 
-	 
-
-    
+   
     //Redis 相關錯誤處理
     @ExceptionHandler(RedisConnectionFailureException.class)
     public ResponseEntity<String> handleRedisConnectionFailureException(RedisConnectionFailureException e) {

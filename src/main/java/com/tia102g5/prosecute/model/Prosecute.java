@@ -44,7 +44,7 @@ public class Prosecute implements java.io.Serializable {
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
-	@JsonIgnore
+//	@JsonIgnore
 	private Article article; 
 	
 	
@@ -57,7 +57,7 @@ public class Prosecute implements java.io.Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "messageID", referencedColumnName = "messageID") //留言ID
-	@JsonIgnore
+//	@JsonIgnore
 	private Message message; 
 
 	

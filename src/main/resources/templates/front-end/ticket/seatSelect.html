@@ -12,7 +12,7 @@
 <style>
 /* ====================================
            全區樣式設定
-        ==================================== */
+==================================== */
 .header-space {
 	height: 206px;
 	background-color: #dc6b72;
@@ -35,7 +35,7 @@ body, html {
 
 /* ====================================
            頁面進度條樣式
-        ==================================== */
+==================================== */
 .custom-progress-container {
 	display: flex;
 	justify-content: center;
@@ -44,7 +44,7 @@ body, html {
 	background-color: #fff;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 	margin: 20px 0;
-	max-width: 600px; /* 或者您想要的任何寬度 */
+	max-width: 600px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -71,7 +71,7 @@ body, html {
 }
 
 .custom-progress-line {
-	width: 50px; /* 修改這裡來調整線條長度 */
+	width: 50px;
 	height: 2px;
 	background-color: #e0e0e0;
 	margin: 0 10px;
@@ -108,7 +108,7 @@ body, html {
 
 /* ====================================
            活動資訊樣式
-        ==================================== */
+==================================== */
 .event-info {
 	margin-bottom: 20px;
 }
@@ -147,7 +147,7 @@ h1 {
 
 /* ====================================
            主容器及座位圖樣式
-        ==================================== */
+==================================== */
 .container {
 	display: flex;
 	justify-content: space-between;
@@ -222,7 +222,7 @@ h1 {
 
 /* ====================================
            票價資訊及已選擇座位樣式
-        ==================================== */
+==================================== */
 .seat-map, .button-container {
 	width: 50%;
 	margin-left: auto;
@@ -279,7 +279,7 @@ h1 {
 
 /* ====================================
            按鈕樣式
-        ==================================== */
+==================================== */
 .custom-button-container {
 	display: flex;
 	justify-content: space-between;
@@ -323,18 +323,9 @@ h1 {
 </head>
 
 <body>
-	<!-- ====================================
-         頁面頭部
-    ==================================== -->
 	<div id="header"></div>
 
-	<!-- ====================================
-         主內容區域
-    ==================================== -->
 	<div class="main-content">
-		<!-- ====================================
-             進度條
-        ==================================== -->
 		<div class="custom-progress-container">
 			<div class="custom-progress-step custom-active">
 				<div class="custom-step-circle"></div>
@@ -352,29 +343,21 @@ h1 {
 			</div>
 		</div>
 
-		<!-- ====================================
-             活動資訊
-        ==================================== -->
 		<div class="event-info">
 			<div class="event-title">
-				<!-- <h1 th:text="${eventName}">XXX 2024 Tour in Taipei</h1> -->
+				<h1>XXX 2024 Tour in Taipei</h1>
 			</div>
 			<div class="event-details">
-				<!-- <div class="event-date" th:text="${eventDateTime}">2024/XX/XX(一) 18:30</div>
-                <div class="event-venue" th:text="${venueName}">台北小巨蛋</div> -->
+				<div class="event-date">2024/XX/XX(一) 18:30</div>
+				<div class="event-venue">台北小巨蛋</div>
 			</div>
 		</div>
 
-		<!-- ====================================
-             座位圖和票價資訊
-        ==================================== -->
 		<div class="container">
-			<!-- 座位圖區域 -->
 			<div class="seat-map" id="seatMap">
 				<!-- 座位圖會在這裡生成 -->
 			</div>
 
-			<!-- 票價資訊及已選座位 -->
 			<div class="selection-info">
 				<div class="price-info">
 					<h3>票價資訊</h3>
@@ -412,27 +395,37 @@ h1 {
 			</div>
 		</div>
 
-		<!-- ====================================
-             上一步和下一步按鈕
-        ==================================== -->
 		<div class="custom-button-container">
-			<button class="custom-btn custom-btn-prev">上一步</button>
-			<button class="custom-btn custom-btn-next">下一步</button>
+			<button class="custom-btn custom-btn-prev" onclick="goBack()">上一步</button>
+			<form id="seatSelectionForm" action="/seatSelect/submitSeats"
+				method="POST">
+				<input type="hidden" id="activityTimeSlotID" name="activityTimeSlotID" value="1"> <input
+					type="hidden" id="seat1" name="seat1" value=""> <input
+					type="hidden" id="seat2" name="seat2" value=""> <input
+					type="hidden" id="seat3" name="seat3" value=""> <input
+					type="hidden" id="seat4" name="seat4" value=""> <input
+					type="hidden" id="seat5" name="seat5" value="">
+				<button type="submit" id="nextButton"
+					class="custom-btn custom-btn-next">下一步</button>
+			</form>
 		</div>
 	</div>
 
-	<!-- ====================================
-         JavaScript 部分
-    ==================================== -->
-	<!-- <script th:inline="javascript">
+	<script>
+        // 獲取 DOM 元素
         const seatMap = document.getElementById('seatMap');
         const selectedSeatsDiv = document.getElementById('selectedSeats');
         const totalPriceSpan = document.getElementById('totalPrice');
+        const seatInputs = [
+            document.getElementById('seat1'),
+            document.getElementById('seat2'),
+            document.getElementById('seat3'),
+            document.getElementById('seat4'),
+            document.getElementById('seat5')
+        ];
         let selectedSeats = [];
 
-        // ====================================
         // 座位資料和價格資訊的初始化
-        // ====================================
         const seatData = {
             VIP: [
                 { row: 1, seats: [1, 2, 3, 4, 5, 6, 7, 8, 9] }
@@ -457,9 +450,7 @@ h1 {
             B: 2800
         };
 
-        // ====================================
         // 創建座位圖
-        // ====================================
         function createSeatMap() {
             for (let area in seatData) {
                 const areaDiv = document.createElement('div');
@@ -504,30 +495,32 @@ h1 {
             }
         }
 
-        // ====================================
         // 切換座位選擇狀態
-        // ====================================
         function toggleSeat(seatElement) {
             if (selectedSeats.length >= 5 && !seatElement.classList.contains('selected')) {
                 alert('最多只能選擇5個座位');
                 return;
             }
-            seatElement.classList.toggle('selected');
+            
             const seatId = seatElement.dataset.id;
             const seatPrice = parseInt(seatElement.dataset.price);
 
             if (seatElement.classList.contains('selected')) {
-                selectedSeats.push({ id: seatId, price: seatPrice });
-            } else {
+                // 取消選擇座位
+                seatElement.classList.remove('selected');
                 selectedSeats = selectedSeats.filter(seat => seat.id !== seatId);
+            } else {
+                // 選擇座位
+                seatElement.classList.add('selected');
+                selectedSeats.push({ id: seatId, price: seatPrice });
             }
 
             updateSelectionInfo();
+            updateHiddenInputs();
+            updateNextButtonState();
         }
 
-        // ====================================
         // 更新選擇的座位資訊
-        // ====================================
         function updateSelectionInfo() {
             selectedSeatsDiv.innerHTML = '';
             let totalPrice = 0;
@@ -546,9 +539,18 @@ h1 {
             totalPriceSpan.textContent = totalPrice;
         }
 
-        // ====================================
+        // 更新隱藏的輸入框
+        function updateHiddenInputs() {
+            seatInputs.forEach((input, index) => {
+                if (index < selectedSeats.length) {
+                    input.value = selectedSeats[index].id;
+                } else {
+                    input.value = '';
+                }
+            });
+        }
+
         // 移除選擇的座位
-        // ====================================
         function removeSeat(seatId) {
             const seatElement = document.querySelector(`.seat[data-id="${seatId}"]`);
             if (seatElement) {
@@ -556,31 +558,43 @@ h1 {
             }
             selectedSeats = selectedSeats.filter(seat => seat.id !== seatId);
             updateSelectionInfo();
+            updateHiddenInputs();
+            updateNextButtonState();
         }
 
-        // ====================================
         // 返回上一步
-        // ====================================
         function goBack() {
             window.history.back();
         }
 
-        // ====================================
-        // 提交選擇的座位
-        // ====================================
-        function submitSelection() {
-            // 這裡通常會將 selectedSeats 資料送到伺服器
-            console.log('送出已選座位:', selectedSeats);
-            // 成功送出後，導向結帳頁面
-            // window.location.href = '/checkout';
+        // 更新下一步按鈕狀態
+        function updateNextButtonState() {
+            const nextButton = document.getElementById('nextButton');
+            if (selectedSeats.length === 0) {
+                nextButton.disabled = true;
+                nextButton.style.opacity = '0.5';
+                nextButton.style.cursor = 'not-allowed';
+            } else {
+                nextButton.disabled = false;
+                nextButton.style.opacity = '1';
+                nextButton.style.cursor = 'pointer';
+            }
         }
 
-        // ====================================
+        // 表單提交驗證
+        document.getElementById('seatSelectionForm').addEventListener('submit', function(event) {
+            if (selectedSeats.length === 0) {
+                event.preventDefault(); // 阻止表單提交
+                alert('請至少選擇一個座位才能繼續。');
+            }
+        });
+
         // 初始化座位圖
-        // ====================================
         createSeatMap();
-    </script> -->
-	<script src="/js/seatSelect.js"></script>
+
+        // 初始化按鈕狀態
+        updateNextButtonState();
+    </script>
 </body>
 
 </html>
