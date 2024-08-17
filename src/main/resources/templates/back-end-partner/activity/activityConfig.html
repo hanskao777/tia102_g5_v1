@@ -7,41 +7,48 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/partner_sidebar.css">
     <style>
-        * {
-            box-sizing: border-box;
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
-        /* 本文區塊 */
-        #main {
-            position: fixed;
-            top: 20px;
-            right: 0;
+        body {
+            display: flex;
+            overflow: hidden;
+        }
+
+        #sidebar-placeholder {
+            width: 250px;
             height: 100vh;
-            width: calc(100% - 250px);
+            overflow-y: auto;
+            flex-shrink: 0;
         }
 
-        /* 本文標題 */
+        #main-container {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        #main {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
         #title {
             text-align: center;
+            margin-bottom: 20px;
         }
 
         #inputBlock {
-            width: 80%;
-            margin: 0 auto;
+            width: 95%;
             max-width: 800px;
-        }
-
-        #example_wrapper {
-            margin: 1rem 2rem 2rem 2rem;
-        }
-
-        button {
-            padding: 5px;
-        }
-
-        form {
-            display: block;
-            width: 100%;
+            margin: 0 auto;
+            padding-bottom: 50px;
         }
 
         .form-group {
@@ -69,15 +76,6 @@
             max-width: 200px;
         }
 
-        .radio-group {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .radio-group label {
-            margin-right: 10px;
-        }
-
         textarea {
             width: 100%;
             height: 100px;
@@ -86,23 +84,6 @@
             border-radius: 4px;
             font-size: 16px;
             resize: vertical;
-        }
-
-        #submit, #back {
-            width: 100px;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .button-container button,
-        .button-container a {
-            margin: 0 10px;
-            border-radius: 20px;
         }
 
         #blob_holder {
@@ -117,6 +98,20 @@
             object-fit: cover;
         }
 
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .button-container button,
+        .button-container a {
+            margin: 0 10px;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
         .error {
             display: block;
             margin-top: 5px;
@@ -128,39 +123,22 @@
 <body>
     <div id="sidebar-placeholder"></div>
     
-    <div id="main">
+    <div id="main-container">
         <h1 id="title"><strong>活動資訊設定</strong></h1>
-        <br>
-        <div id=inputBlock>
-            <!-- <h6 font-color="red"><b>所有欄位皆為必填欄位</b></h6> -->
-            
+        <div id="inputBlock">
             <form th:action="@{/activity/update}" method="post" th:object="${activity}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{activityID}">
                 
                 <div class="form-group">
                     <strong>名稱:</strong>
-                    <div class="date-input-content">
-                        <input type="text" th:field="*{activityName}" style="border:1px" /><br/>
-                    </div>
-                </div>
-                
-                <!-- <div>
-                    <label>時段選擇:</label>
-                    <input type="date" th:field="*{}" onclick="hideContent('hiredate.errors');" /><br/>
-                    <span  th:if="${#fields.hasErrors('hiredate')}" th:errors="*{hiredate}" class="error" id="hiredate.errors"></span>
-                </div> -->
-                
-                <div class="form-group">
-                    <label><strong>排程發佈時間:</strong></label>
-                    <div class="date-input-content">
-                        <input type="date" th:field="*{activityPostTime}" onclick="hideContent('activityPostTime.errors');" /><br/>
-                        <span  th:if="${#fields.hasErrors('activityPostTime')}" th:errors="*{activityPostTime}" class="error" id="activityPostTime.errors"></span>
+                    <div class="form-input">
+                        <input type="text" th:field="*{activityName}" />
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <strong>類型:</strong>
-                    <div class="date-input-content">
+                    <div class="form-input">
                         <label>
                             <input type="radio" th:field="*{activityTag}" value="演唱會" onclick="hideContent('activityTag.errors');" th:checked="*{activityTag == null or activityTag == '演唱會'}"/>
                             演唱會
@@ -185,8 +163,7 @@
                             <input type="radio" th:field="*{activityTag}" value="其他" onclick="hideContent('activityTag.errors');" />
                             其他
                         </label>
-                        <br/>
-                        <span  th:if="${#fields.hasErrors('activityTag')}" th:errors="*{activityTag}" class="error" id="activityTag.errors"></span>
+                        <span th:if="${#fields.hasErrors('activityTag')}" th:errors="*{activityTag}" class="error" id="activityTag.errors"></span>
                     </div>
                 </div>
     
@@ -194,11 +171,9 @@
                     <strong>圖片:</strong>
                     <div class="form-input">
                         <input type="file" th:field="*{activityPictures}" onclick="previewImage()" multiple="multiple" />
-                        <!--可以不修改圖片--> 
-                        <!-- <span  th:if="${#fields.hasErrors('activity.activityPictures')}" th:errors="*{activity.activityPictures}" class="error" id="activityPictures.errors"></span> -->
                         <div id="blob_holder">
                             <img th:each="activityPicture:*{activityPictures}" 
-                                 th:src="@{'/activity/DBGifReader/' + ${activityPicture.activityPictureID}}"
+                                 th:src="@{'/activity/DBGifReader/' + '?activityPictureID=' + ${activityPicture.activityPictureID}}"
                                  width="100px" height="75px" style="object-fit: cover; margin: 5px;">
                         </div>
                     </div>
@@ -207,43 +182,33 @@
                 <div class="form-group">
                     <strong>介紹:</strong>
                     <div class="form-input">
-                        <textarea th:field="*{activityContent}" onclick="hideContent('activityContent.errors');"></textarea><br/>
-                        <span  th:if="${#fields.hasErrors('activityContent')}"
+                        <textarea th:field="*{activityContent}" onclick="hideContent('activityContent.errors');"></textarea>
+                        <span th:if="${#fields.hasErrors('activityContent')}"
                                th:errors="*{activityContent}" 
                                class="error" 
-                               id="activityConetent.errors">
+                               id="activityContent.errors">
                         </span>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label><strong>起售日:</strong></label>
-                    <div class="form-input">
-                        <input type="date" th:field="*{sellTime}" onclick="hideContent('sellTime.errors');" /><br/>
-                        <span  th:if="${#fields.hasErrors('sellTime')}" th:errors="*{sellTime}" class="error" id="sellTime.errors"></span>
-                    </div>
-                </div>
-
                 <div class="button-container">
-                    <button type="submit" id="submit"> 送出修改 </button>
-
+                    <button type="submit" id="submit">送出修改</button>
                     <a href="activityDisplay">
-                        <button type="button" id="back"> 回上頁 </button>
+                        <button type="button" id="back">回上頁</button>
                     </a>
                 </div>
             </form>
         </div>
     </div>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/partner.js"></script>
     <script src="/js/partner_sidebar.js"></script>
     <script type="text/javascript">
-        //清除提示信息
         function hideContent(d) {
              document.getElementById(d).style.display = "none";
         }
         
-        //照片上傳-預覽用
         var filereader_support = typeof FileReader != 'undefined';
         if (!filereader_support) {
             alert("No FileReader support");
@@ -280,7 +245,7 @@
                 reader.readAsDataURL(file);
                 document.getElementById('submit').disabled = false;
             } else {
-                // ... 錯誤處理邏輯 ...
+                // 錯誤處理邏輯
             }
         }
     </script>
