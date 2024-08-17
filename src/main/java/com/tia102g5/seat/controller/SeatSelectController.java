@@ -56,7 +56,7 @@ public class SeatSelectController {
 	public String getSeatSelect(ModelMap model) {
 		// @RequestParam("activityTimeSlotId") Integer activityTimeSlotId, ModelMap
 		// model//到時候需要加入這參數
-		Integer activityTimeSlotId = 1;
+		Integer activityTimeSlotId = 25;
 		ActivityTimeSlot activityTimeSlot = activityTimeSlotService.getActivityTimeSlotById(activityTimeSlotId);
 		Integer activityId = activityTimeSlot.getActivity().getActivityID();// 活動ID從活動時段ID抓取
 		Activity activity = activityService.getOneActivity(activityId);
@@ -65,14 +65,20 @@ public class SeatSelectController {
 		
 		String venueAreaName1 = "VIP";
 		Integer venueAreaId1 = venueAreaService.findVenueAreaIdByVenueIdAndVenueAreaName(venueId, venueAreaName1);
+		System.out.println("venueAreaId1================================="+venueAreaId1);
+		System.out.println("activityId================================="+activityId);
 		ActivityAreaPrice activityAreaPrice1 = activityAreaPriceService.findActivityAreaPrice(venueAreaId1, activityId);
 		
 		String venueAreaName2 = "A";
 		Integer venueAreaId2 = venueAreaService.findVenueAreaIdByVenueIdAndVenueAreaName(venueId, venueAreaName2);
+		System.out.println("venueAreaId2================================="+venueAreaId2);
+		System.out.println("activityId================================="+activityId);
 		ActivityAreaPrice activityAreaPrice2 = activityAreaPriceService.findActivityAreaPrice(venueAreaId2, activityId);
 		
 		String venueAreaName3 = "B";
 		Integer venueAreaId3 = venueAreaService.findVenueAreaIdByVenueIdAndVenueAreaName(venueId, venueAreaName3);
+		System.out.println("venueAreaId3========================================="+venueAreaId3);
+		System.out.println("activityId========================================="+activityId);
 		ActivityAreaPrice activityAreaPrice3 = activityAreaPriceService.findActivityAreaPrice(venueAreaId3, activityId);
 		
 		model.addAttribute("activityTimeSlot", activityTimeSlot);
@@ -81,6 +87,18 @@ public class SeatSelectController {
 		model.addAttribute("activityAreaPrice3", activityAreaPrice3.getActivityAreaPrice());
 		
 		// 這裡可以添加更多需要傳遞給視圖的數據
+		
+		//把座位狀態傳到前端
+		List<SeatStatus> seatStatuses = seatStatusService.getAllSeatStatusByActivityTimeSlotID(activityTimeSlotId);
+		model.addAttribute("seatStatuses", seatStatuses);
+		
+		
+		// 將不可用的座位添加到模型中
+		List<String> unavailableSeats = seatStatusService.getUnavailableSeatNames(activityTimeSlotId);
+        model.addAttribute("unavailableSeats", unavailableSeats);
+		//測試用，看能不能讓前端抓到
+//		List<String> unavailableSeats = Arrays.asList("VIP15", "A23", "A211", "B61", "B62");
+//      model.addAttribute("unavailableSeats", unavailableSeats);
 
 		return "/front-end/ticket/seatSelect";
 	}
