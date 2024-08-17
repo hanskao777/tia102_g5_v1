@@ -44,6 +44,9 @@ public class ActivityController {
 	@GetMapping("/activityInfoOne")
 	public String activityInfoOne(@RequestParam("activityID") String activityID, ModelMap model) {
 		Activity activity = activitySvc.getOneActivity(Integer.valueOf(activityID));
+		Set<ActivityPicture> activityPictures = activity.getActivityPictures();
+		
+		model.addAttribute("activityPictures", activityPictures);
 		model.addAttribute("activity", activity);
 		
 		return "/front-end/activity/activityInfoOne";
