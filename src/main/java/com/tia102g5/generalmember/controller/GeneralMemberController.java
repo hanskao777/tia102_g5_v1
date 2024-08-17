@@ -42,6 +42,8 @@ import com.tia102g5.bookticket.model.BookTicketService;
 import com.tia102g5.email.MailService;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.generalmember.model.GeneralMemberService;
+import com.tia102g5.ticket.model.Ticket;
+import com.tia102g5.ticket.model.TicketService;
 
 @Controller
 @RequestMapping("/generalmember")
@@ -63,6 +65,9 @@ public class GeneralMemberController {
 	
 	@Autowired
     BookTicketService bookTicketService;
+	
+	@Autowired
+	TicketService ticketSvc;
 
 
 
@@ -367,21 +372,40 @@ public class GeneralMemberController {
         return "front-end/generalmember/myTicketOrders";  // 返回顯示訂單的視圖名稱
     }
 	
+//	@GetMapping("/myTickets")
+//	public String getMyTickets(Model model, HttpSession session) {
+//	    Integer memberID = (Integer) session.getAttribute("memberID");
+//	    
+//	    if (memberID == null) {
+//	        return "redirect:/login";
+//	    }
+//
+//	    try {
+//	        List<Ticket> tickets = ticketSvc.getTicketsByMemberID(memberID);
+//	        model.addAttribute("tickets", tickets);
+//	    } catch (Exception e) {
+//	        // 記錄錯誤
+//	        e.printStackTrace();
+//	        model.addAttribute("error", "獲取票券信息時發生錯誤");
+//	    }
+//        return "front-end/generalmember/myTickets"; // 這是顯示我的票券的視圖名稱
+//    }
+	
 
-	@GetMapping("myCollections")
-    public String showMyCollections(Model model, HttpSession session) {
-        // 假設你在session中存儲了用戶ID
-        Integer memberID = (Integer) session.getAttribute("memberID");
-        
-        if (memberID == null) {
-            // 如果用戶未登錄，重定向到登錄頁面
-            return "redirect:/login";
-        }
-
-        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
-       model.addAttribute("collections", collections);
-       return "front-end/generalmember/myCollections";
-    }
+//	@GetMapping("myCollections")
+//    public String showMyCollections(Model model, HttpSession session) {
+//        // 假設你在session中存儲了用戶ID
+//        Integer memberID = (Integer) session.getAttribute("memberID");
+//        
+//        if (memberID == null) {
+//            // 如果用戶未登錄，重定向到登錄頁面
+//            return "redirect:/login";
+//        }
+//
+//        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
+//       model.addAttribute("collections", collections);
+//       return "front-end/generalmember/myCollections";
+//    }
 
 
 	@InitBinder
