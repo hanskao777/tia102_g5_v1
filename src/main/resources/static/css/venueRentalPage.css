@@ -55,9 +55,9 @@
 }
 
 /* 表單標籤、輸入框、選擇框等的樣式 */
-.form-container label, 
-.form-container input, 
-.form-container span, 
+.form-container label,
+.form-container input,
+.form-container span,
 .form-container select {
     display: table-cell;
     margin: 5px;
@@ -65,9 +65,9 @@
 }
 
 /* 控制文本框、密碼框、選擇框、文本區域的寬度 */
-.form-container input[type=text], 
-.form-container input[type=password], 
-.form-container select, 
+.form-container input[type=text],
+.form-container input[type=password],
+.form-container select,
 .form-container textarea {
     width: 100%; /* 將輸入框和選擇框寬度設置為 100%，自適應父容器寬度 */
     margin: 5px 0; /* 調整上下邊距 */
@@ -84,7 +84,35 @@
     margin-right: auto;
 }
 
-.error {
-    color: red;
+/* 統一錯誤訊息樣式 */
+.error,
+.text-danger {
+    color: #dc3545; /* 使用Bootstrap的危險色，確保所有錯誤信息顏色一致 */
+    display: block;
+    margin-top: 5px;
+    padding-left: 15px; /* 增加左邊距，使錯誤訊息稍微向右移 */
+    font-size: 0.9em; /* 統一字體大小 */
+    font-weight: normal; /* 統一字體粗細 */
 }
 
+/* 調整表單組的佈局，為錯誤訊息提供空間 */
+.form-group {
+    position: relative;
+    margin-bottom: 20px; /* 增加底部邊距，為錯誤訊息提供更多空間 */
+}
+
+/* 確保輸入框寬度一致 */
+.form-control {
+    width: 100%;
+}
+
+/* 特別處理文件上傳input，確保錯誤訊息位置一致 */
+.form-group input[type="file"] {
+    margin-bottom: 5px; /* 為錯誤訊息提供空間 */
+}
+
+/* 如果需要，可以特別調整某些特定字段的錯誤訊息位置 */
+#activityName-error,
+#proposal-error {
+    margin-top: 5px; /* 確保這些特定錯誤與其他錯誤位置一致 */
+}

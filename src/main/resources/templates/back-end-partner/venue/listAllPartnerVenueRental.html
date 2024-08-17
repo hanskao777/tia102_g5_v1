@@ -16,14 +16,15 @@
 	$(document)
 			.ready(
 					function() {
-						$('#example')
+
+						var table = $('#example')
 								.DataTable(
 										{
 											"lengthMenu" : [ 3, 5, 10, 20, 50,
 													100 ],
 											"pageLength" : 10, // 設定初始顯示10筆
 											"searching" : false,//改成true可以出現搜尋
-											 "lengthChange": false,  // 禁用 lengthMenu 選單
+											"lengthChange" : false, // 禁用 lengthMenu 選單
 											"paging" : true,
 											"ordering" : true,
 											"language" : {
@@ -47,6 +48,8 @@
 												}
 											}
 										});
+						// 在表格初始化後設置排序
+						table.order([ 1, 'desc' ]).draw();
 					});
 </script>
 <style type="text/css">
