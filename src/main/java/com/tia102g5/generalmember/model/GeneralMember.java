@@ -122,9 +122,9 @@ public class GeneralMember implements java.io.Serializable {
 	private Set<Cart> carts;
 	
 	
-	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
-	@OrderBy("articleCollectionID asc")
-	private Set<ArticleCollection> articleCollections;
+//	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
+//	@OrderBy("articleCollectionID asc")
+//	private Set<ArticleCollection> articleCollections;
 //	
 //	
 //	@OneToMany(mappedBy = "generalMember", cascade = CascadeType.ALL)
@@ -322,14 +322,14 @@ public class GeneralMember implements java.io.Serializable {
 	}
 
 
-	public Set<ArticleCollection> getArticleCollections() {
-		return articleCollections;
-	}
-
-
-	public void setArticleCollections(Set<ArticleCollection> articleCollections) {
-		this.articleCollections = articleCollections;
-	}
+//	public Set<ArticleCollection> getArticleCollections() {
+//		return articleCollections;
+//	}
+//
+//
+//	public void setArticleCollections(Set<ArticleCollection> articleCollections) {
+//		this.articleCollections = articleCollections;
+//	}
 //
 //
 //	public Set<Article> getArticles() {
