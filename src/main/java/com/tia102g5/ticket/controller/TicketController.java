@@ -92,7 +92,7 @@ public class TicketController {
 			@RequestParam("totalPrice") String totalPrice, HttpSession session, ModelMap model) {
 		//取消
 		if("cancel".equals(action)) {
-			return "redirect:/index";
+			return "redirect:/";
 		}
 		
 		//取得訂單
@@ -109,6 +109,7 @@ public class TicketController {
 			Ticket ticket = ticketList.get(i);
 			
 			ticket.setGeneralMember(ticketMember);
+			ticket.setBookTicket(bookTicket);
 		}
 		
 		//將票券設置至訂單
@@ -117,9 +118,9 @@ public class TicketController {
 		}
 		
 		//設置訂單資料
-		bookTicket.setGeneralMember(memberSvc.getOneGeneralMember(Integer.valueOf(memberID)));
+		bookTicket.setGeneralMember(memberSvc.getOneGeneralMember(Integer.valueOf(memberID))); //未從 session 取帳號
 		
-		ActivityTimeSlot activityTimeSlot = new ActivityTimeSlot();
+		ActivityTimeSlot activityTimeSlot = ticketList.get(0).getActivityTimeSlot();
 		bookTicket.setActivity(activityTimeSlot.getActivity());
 		bookTicket.setActivityTimeSlot(activityTimeSlot);
 		
@@ -129,8 +130,11 @@ public class TicketController {
 		//成立訂單存入資料庫
 		bookTicketSvc.addBookTicket(bookTicket);
 		
+		//session 移除選購票券
+		session.removeAttribute("ticketList");
+		
 		//跳轉
-		return "redirect:/";
+		return "redirect:/generalmember/myTicketOrders";
 	}
 /********************* action **********************/
 	
