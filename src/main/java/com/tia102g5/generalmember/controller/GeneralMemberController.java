@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -25,11 +26,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tia102g5.article.model.ArticleService;
 import com.tia102g5.articleCollection.model.ArticleCollection;
@@ -41,6 +45,9 @@ import com.tia102g5.bookticket.model.BookTicketService;
 import com.tia102g5.email.MailService;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.generalmember.model.GeneralMemberService;
+import com.tia102g5.orders.model.Orders;
+//import com.tia102g5.orders.model.OrdersService;
+import com.tia102g5.passwordchangeform.PasswordChangeForm;
 import com.tia102g5.ticket.model.Ticket;
 import com.tia102g5.ticket.model.TicketService;
 
@@ -65,6 +72,9 @@ public class GeneralMemberController {
 
 	@Autowired
 	TicketService ticketSvc;
+	
+//	@Autowired
+//	OrdersService ordersSvc;
 
 	/*
 	 * This method will serve as addEmp.html handler.
@@ -372,22 +382,67 @@ public class GeneralMemberController {
 		return "front-end/generalmember/myTickets";
 	}
 	
-	
-
-//	@GetMapping("myCollections")
-//    public String showMyCollections(Model model, HttpSession session) {
-//        // 假設你在session中存儲了用戶ID
+	// 會員中心商品訂單
+//	@GetMapping("/myOrders")
+//    public String myOrders(Model model, HttpSession session) {
 //        Integer memberID = (Integer) session.getAttribute("memberID");
-//        
 //        if (memberID == null) {
-//            // 如果用戶未登錄，重定向到登錄頁面
-//            return "redirect:/login";
+//            return "redirect:/generalmember/login";
 //        }
-//
-//        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
-//       model.addAttribute("collections", collections);
-//       return "front-end/generalmember/myCollections";
+//        List<Orders> orders = ordersSvc.getOrdersByMemberID(memberID);
+//        model.addAttribute("orders", orders);
+//        return "front-end/generalmember/myOrders";
 //    }
+	
+	
+	
+    // 顯示修改密碼的表單
+	@GetMapping("/changePassword")
+    public String showChangePasswordForm(Model model) {
+        model.addAttribute("passwordForm", new PasswordChangeForm());
+        return "front-end/generalmember/changePassword";
+    }
+	
+	// 處理密碼修改請求
+	@PostMapping("/changePassword")
+	public String changePassword(@ModelAttribute("passwordForm") @Valid PasswordChangeForm form,
+	                             BindingResult bindingResult,
+	                             HttpSession session,
+	                             RedirectAttributes redirectAttributes) {
+	    if (bindingResult.hasErrors()) {
+	        return "front-end/generalmember/changePassword";
+	    }
+
+	    Integer memberID = (Integer) session.getAttribute("memberID");
+	    if (memberID == null) {
+	        return "redirect:/generalmember/login";
+	    }
+
+	    try {
+	    	gmemberSvc.changePassword(memberID, form.getCurrentPassword(), form.getNewPassword());
+	        redirectAttributes.addFlashAttribute("passwordChangeSuccess", true);
+	        return "redirect:/generalmember/memberCenter";
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+	        return "redirect:/generalmember/changePassword";
+	    }
+    }
+
+	
+	// 會員忘記密碼
+	@PostMapping("/forgotPassword")
+    @ResponseBody
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        try {
+        	gmemberSvc.sendRecoveryEmail(email);
+            return ResponseEntity.ok().body("恢復郵件已發送，請查看您的郵箱。");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("發送恢復郵件失敗：" + e.getMessage());
+        }
+    }
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
