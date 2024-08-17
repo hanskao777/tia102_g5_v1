@@ -77,6 +77,7 @@
         .quantity:active {
             background-color: #d0d0d0;
         }
+
     </style>
 </head>
 <body>
@@ -107,21 +108,23 @@
                 </thead>
                     
                 <tbody>
-                    <th:block th:each="ticket : ${ticketListData}">
+                    <th:block th:each="ticket : ${session.ticketList}">
                         <tr>
                             <td th:text="${ticketStat.count}"></td>
-                            <td th:text="${ticket.bookTicket.activity.activityName}"></td>
+                            <td th:text="${ticket.activityTimeSlot.activity.activityName}"></td>
                             <td th:switch="${ticket.activityTimeSlot.activityTimeSlot}">
                                 <span th:case="1" th:text="${ticket.activityTimeSlot.activityTimeSlotDate} + ' 10:00'"></span>
                                 <span th:case="2" th:text="${ticket.activityTimeSlot.activityTimeSlotDate} + ' 14:00'"></span>
                                 <span th:case="3" th:text="${ticket.activityTimeSlot.activityTimeSlotDate} + ' 18:00'"></span>
                             </td>
-                            <td th:text="${ticket.bookTicket.activity.venue.venueName}"></td>
+                            <td th:text="${ticket.activityTimeSlot.activity.venue.venueName}"></td>
                             <td th:text="${ticket.seatStatus.seat.seatName}"></td>
                             <td th:text="${ticket.activityAreaPrice.activityAreaPrice}"></td>
                             <td style="width: 100px;">
                                 <form method="post" th:action="@{/ticket/deleteOneTicket}" style="margin-bottom: 0px;">
-                                    <button type="submit" class="quantity" value="x">x</button>
+                                    <button type="submit" class="quantity" value="x">
+                                        <img th:src="@{/images/trash.png}" style="width: 50px; height: 50px;"></i>
+                                    </button>
                                     <input type="hidden" name="count" th:value="${ticketStat.count}">
                                 </form>
                             </td>
@@ -144,7 +147,7 @@
             <div class="member-details">
                 <h2 style="margin: 20px 0"><b>購買資料</b></h2>
                 <h6 style="color: red">* 請填入票券持有人</h6>
-                <div th:each="ticket:${ticketListData}" style="margin: 10px 0">
+                <div th:each="ticket:${session.ticketList}" style="margin: 10px 0">
                     <label>序號 <span th:text="${ticketStat.count}"></span> 
                         會員帳號：<input type="text"  name="memberID">
                         <!--  <span th:text="${ticket.generalMember.memberID}"> -->

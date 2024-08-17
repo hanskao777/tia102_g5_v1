@@ -33,7 +33,8 @@ public class TicketController {
 //////////////// 前台 ////////////////
 	//票券結帳
 	@GetMapping("bookTicket")
-	public String bookTicket() {
+	public String bookTicket(HttpSession session, ModelMap model) {
+		
 		return "front-end/ticket/bookTicket";
 	}
 //////////////// 前台 ////////////////
@@ -54,8 +55,9 @@ public class TicketController {
 		List<Ticket> ticketList = (List<Ticket>)session.getAttribute("ticketList");
 		ticketList.remove(count - 1);
 		
+		//若移除至 0 票券，重導至 seatSelect.html
 		if(ticketList.isEmpty()) {
-			return "/";
+			return "redirect:/seatSelect";
 		}
 		
 		session.setAttribute("ticketList", ticketList);
@@ -73,12 +75,6 @@ public class TicketController {
     	return list;
 	}
 	
-	//查欲結帳票券，給 bookTicket 用
-	@ModelAttribute("ticketListData")
-	protected List<Ticket> referenceTicketListData(Model model) {
-		List<Ticket> list = ticketSvc.getAll();
-		return list;
-	}
 /********************* bean **********************/
 	
 }
