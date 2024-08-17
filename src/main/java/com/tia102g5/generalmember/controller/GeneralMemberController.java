@@ -392,20 +392,20 @@ public class GeneralMemberController {
 //    }
 	
 
-	@GetMapping("myCollections")
-    public String showMyCollections(Model model, HttpSession session) {
-        // 假設你在session中存儲了用戶ID
-        Integer memberID = (Integer) session.getAttribute("memberID");
-        
-        if (memberID == null) {
-            // 如果用戶未登錄，重定向到登錄頁面
-            return "redirect:/login";
-        }
-
-        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
-       model.addAttribute("collections", collections);
-       return "front-end/generalmember/myCollections";
-    }
+//	@GetMapping("myCollections")
+//    public String showMyCollections(Model model, HttpSession session) {
+//        // 假設你在session中存儲了用戶ID
+//        Integer memberID = (Integer) session.getAttribute("memberID");
+//        
+//        if (memberID == null) {
+//            // 如果用戶未登錄，重定向到登錄頁面
+//            return "redirect:/login";
+//        }
+//
+//        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
+//       model.addAttribute("collections", collections);
+//       return "front-end/generalmember/myCollections";
+//    }
 
 
 	@InitBinder
