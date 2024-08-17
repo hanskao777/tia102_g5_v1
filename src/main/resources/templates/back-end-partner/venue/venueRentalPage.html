@@ -46,18 +46,14 @@
 
 
 					<div>
-						<label>廠商會員ID：</label> <input type="text"
-							th:field="*{partnerMember.partnerID}"
-							onclick="hideContent('partnerMember.partnerID.errors');" /><br />
-						<span th:if="${#fields.hasErrors('partnerMember.partnerID')}"
-							th:errors="*{partnerMember.partnerID}" class="error"
-							id="partnerMember.partnerID.errors"></span>
+						<label style="display: none;">廠商會員ID：</label> <input type="hidden"
+							th:value="${session.partnerID}" readonly />
 					</div>
 
 					<div>
 						<label>活動名稱：</label> <input type="text" th:field="*{activityName}"
-							onclick="hideContent('activityName.errors');" /><br />
-						<span th:if="${#fields.hasErrors('activityName')}"
+							onclick="hideContent('activityName.errors');" /><br /> <span
+							th:if="${#fields.hasErrors('activityName')}"
 							th:errors="*{activityName}" class="error"
 							id="activityName.errors"></span>
 					</div>
