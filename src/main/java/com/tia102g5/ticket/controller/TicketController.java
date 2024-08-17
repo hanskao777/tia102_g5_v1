@@ -1,5 +1,6 @@
 package com.tia102g5.ticket.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -34,7 +35,8 @@ public class TicketController {
 	//票券結帳
 	@GetMapping("bookTicket")
 	public String bookTicket(HttpSession session, ModelMap model) {
-		
+		List<Ticket> ticketList = (List<Ticket>)session.getAttribute("ticketList");
+		BigDecimal total = new BigDecimal("0");
 		return "front-end/ticket/bookTicket";
 	}
 //////////////// 前台 ////////////////
