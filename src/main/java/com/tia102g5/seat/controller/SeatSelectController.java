@@ -53,10 +53,10 @@ public class SeatSelectController {
 	private ActivityAreaPriceService activityAreaPriceService;
 
 	@GetMapping
-	public String getSeatSelect(ModelMap model) {
+	public String getSeatSelect(@RequestParam("activityTimeSlot") Integer activityTimeSlotId,ModelMap model) {
 		// @RequestParam("activityTimeSlotId") Integer activityTimeSlotId, ModelMap
 		// model//到時候需要加入這參數
-		Integer activityTimeSlotId = 25;
+//		Integer activityTimeSlotId = 30;
 		ActivityTimeSlot activityTimeSlot = activityTimeSlotService.getActivityTimeSlotById(activityTimeSlotId);
 		Integer activityId = activityTimeSlot.getActivity().getActivityID();// 活動ID從活動時段ID抓取
 		Activity activity = activityService.getOneActivity(activityId);
