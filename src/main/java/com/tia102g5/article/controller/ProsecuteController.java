@@ -92,25 +92,25 @@ public class ProsecuteController {
 
     
     //獲取檢舉資料
-    @GetMapping
-    public ResponseEntity<List<Prosecute>> getAllProsecutes() {
-        List<Prosecute> prosecutes = ProsecuteSvc.getAllProsecutes();
-        return ResponseEntity.ok(prosecutes);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Prosecute>> getAllProsecutes() {
+//        List<Prosecute> prosecutes = ProsecuteSvc.getAllProsecutes();
+//        return ResponseEntity.ok(prosecutes);
+//    }
     
-    //更新檢舉
-    @PostMapping("/{id}/process")
-    public ResponseEntity<Prosecute> processProsecute(@PathVariable Integer id) {
-        Prosecute processedProsecute = ProsecuteSvc.processProsecute(id);
-        return ResponseEntity.ok(processedProsecute);
-    }
-    
-    //刪除檢舉
-    @PostMapping("/{id}/delete")
-    public ResponseEntity<Void> deleteProsecute(@PathVariable Integer id) {
-    	ProsecuteSvc.deleteProsecute(id);
-        return ResponseEntity.ok().build();
-    }
+//    //更新檢舉
+//    @PostMapping("/{id}/process")
+//    public ResponseEntity<Prosecute> processProsecute(@PathVariable Integer id) {
+//        Prosecute processedProsecute = ProsecuteSvc.processProsecute(id);
+//        return ResponseEntity.ok(processedProsecute);
+//    }
+//    
+//    //刪除檢舉
+//    @PostMapping("/{id}/delete")
+//    public ResponseEntity<Void> deleteProsecute(@PathVariable Integer id) {
+//    	ProsecuteSvc.deleteProsecute(id);
+//        return ResponseEntity.ok().build();
+//    }
 
     
 // 移到 IndexController
