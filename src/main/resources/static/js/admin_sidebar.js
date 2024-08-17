@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
+    const sidebarPlaceholder = document.getElementById('sidebar-placeholder'); 
     
     if (sidebarPlaceholder) {
 
