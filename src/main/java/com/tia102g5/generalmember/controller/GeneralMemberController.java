@@ -34,9 +34,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tia102g5.article.model.ArticleService;
 import com.tia102g5.articleCollection.model.ArticleCollection;
 import com.tia102g5.articleCollection.model.ArticleCollectionService;
+
+import com.tia102g5.bookticket.model.BookTicket;
+import com.tia102g5.bookticket.model.BookTicketService;
+
+
 import com.tia102g5.email.MailService;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.generalmember.model.GeneralMemberService;
+import com.tia102g5.ticket.model.Ticket;
+import com.tia102g5.ticket.model.TicketService;
 
 @Controller
 @RequestMapping("/generalmember")
@@ -54,6 +61,15 @@ public class GeneralMemberController {
 	
 	@Autowired
 	ArticleCollectionService artCollSvc;
+
+	
+	@Autowired
+    BookTicketService bookTicketService;
+	
+	@Autowired
+	TicketService ticketSvc;
+
+
 
 	/*
 	 * This method will serve as addEmp.html handler.
@@ -324,6 +340,58 @@ public class GeneralMemberController {
 	
 	
 	// 會員收藏文章列表
+
+	@GetMapping("myCollections")
+    public String showMyCollections(Model model, HttpSession session) {
+        // 假設你在session中存儲了用戶ID
+        Integer memberID = (Integer) session.getAttribute("memberID");
+        
+        if (memberID == null) {
+            // 如果用戶未登錄，重定向到登錄頁面
+            return "redirect:/login";
+        }
+
+        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
+        model.addAttribute("collections", collections);
+        return "front-end/generalmember/myCollections";
+    }
+	
+	// 會員票券訂單列表
+	@GetMapping("myTicketOrders")
+    public String showMyTicketOrders(Model model, HttpSession session) {
+        Integer memberID = (Integer) session.getAttribute("memberID");
+        
+        if (memberID == null) {
+            // 如果用戶未登錄，重定向到登錄頁面
+            return "redirect:/login";  // 確保這是正確的登錄頁面路徑
+        }
+
+        List<BookTicket> orders = bookTicketService.getTicketOrdersByMemberId(memberID);
+        model.addAttribute("orders", orders);
+        
+        return "front-end/generalmember/myTicketOrders";  // 返回顯示訂單的視圖名稱
+    }
+	
+//	@GetMapping("/myTickets")
+//	public String getMyTickets(Model model, HttpSession session) {
+//	    Integer memberID = (Integer) session.getAttribute("memberID");
+//	    
+//	    if (memberID == null) {
+//	        return "redirect:/login";
+//	    }
+//
+//	    try {
+//	        List<Ticket> tickets = ticketSvc.getTicketsByMemberID(memberID);
+//	        model.addAttribute("tickets", tickets);
+//	    } catch (Exception e) {
+//	        // 記錄錯誤
+//	        e.printStackTrace();
+//	        model.addAttribute("error", "獲取票券信息時發生錯誤");
+//	    }
+//        return "front-end/generalmember/myTickets"; // 這是顯示我的票券的視圖名稱
+//    }
+	
+
 //	@GetMapping("myCollections")
 //    public String showMyCollections(Model model, HttpSession session) {
 //        // 假設你在session中存儲了用戶ID
@@ -335,9 +403,10 @@ public class GeneralMemberController {
 //        }
 //
 //        List<ArticleCollection> collections = artCollSvc.getCollectionsByMemberID(memberID);
-//        model.addAttribute("collections", collections);
-//        return "front-end/generalmember/myCollections";
+//       model.addAttribute("collections", collections);
+//       return "front-end/generalmember/myCollections";
 //    }
+
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

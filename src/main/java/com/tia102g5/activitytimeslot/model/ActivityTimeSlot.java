@@ -2,6 +2,7 @@ package com.tia102g5.activitytimeslot.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -139,5 +140,24 @@ public class ActivityTimeSlot implements Serializable {
 	public void setTickets(Set<Ticket> tickets) {
 		this.tickets = tickets;
 	}
+	
+	public String getTimeSlotString() {
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(activityTimeSlotDate);
+        String timeStr;
+        switch (activityTimeSlot) {
+            case 1:
+                timeStr = "09:00-12:00";
+                break;
+            case 2:
+                timeStr = "13:00-17:00";
+                break;
+            case 3:
+                timeStr = "18:00-22:00";
+                break;
+            default:
+                timeStr = "未知時段";
+        }
+        return dateStr + " " + timeStr;
+    }
 
 }
