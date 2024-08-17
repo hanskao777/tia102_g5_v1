@@ -92,7 +92,7 @@ public class TicketController {
 			@RequestParam("totalPrice") String totalPrice, HttpSession session, ModelMap model) {
 		//取消
 		if("cancel".equals(action)) {
-			return "redirect:/";
+			return "redirect:/index";
 		}
 		
 		//取得訂單

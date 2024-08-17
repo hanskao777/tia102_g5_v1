@@ -116,9 +116,9 @@ public class ActivityController {
 				activity.getActivityPictures().add(activityPicture);
 			}
 		}
-		if (result.hasErrors()) {
-			return "back-end-partner/activity/activityConfig";
-		}
+//		if (result.hasErrors()) {
+//			return "back-end-partner/activity/activityConfig";
+//		}
 		/*************************** 2.開始修改資料 *****************************************/
 		
 		
