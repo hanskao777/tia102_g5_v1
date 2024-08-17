@@ -119,10 +119,10 @@
                             </td>
                             <td th:text="${ticket.activityTimeSlot.activity.venue.venueName}"></td>
                             <td th:text="${ticket.seatStatus.seat.seatName}"></td>
-                            <td th:text="${ticket.activityAreaPrice.activityAreaPrice}"></td>
+                            <td th:text="${'$' + ticket.activityAreaPrice.activityAreaPrice}"></td>
                             <td style="width: 100px;">
                                 <form method="post" th:action="@{/ticket/deleteOneTicket}" style="margin-bottom: 0px;">
-                                    <button type="submit" class="quantity" value="x">
+                                    <button type="submit" class="quantity">
                                         <img th:src="@{/images/trash.png}" style="width: 50px; height: 50px;"></i>
                                     </button>
                                     <input type="hidden" name="count" th:value="${ticketStat.count}">
@@ -134,7 +134,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="5" style="text-align: right"><b>合計：</b></td>
-                        <td>$7200</td>
+                        <td th:text="${'$' + total}"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -142,14 +142,17 @@
 
         <hr>
 
-        <!-- 會員資料 -->
-        <form method="post" th:action="@{/ticket/}">
+        <!-- 付款資訊 -->
+        <form method="post" th:action="@{/ticket/confirm}">
+            <input type="hidden" name="memberID" th:value="${session.memberID}">
+            <input type="hidden" name="totalPrice" th:value="${total}">
+
             <div class="member-details">
                 <h2 style="margin: 20px 0"><b>購買資料</b></h2>
                 <h6 style="color: red">* 請填入票券持有人</h6>
                 <div th:each="ticket:${session.ticketList}" style="margin: 10px 0">
                     <label>序號 <span th:text="${ticketStat.count}"></span> 
-                        會員帳號：<input type="text"  name="memberID">
+                        會員帳號：<input type="text"  name="ticketMemberIDs">
                         <!--  <span th:text="${ticket.generalMember.memberID}"> -->
                     </label>
                 </div>
@@ -157,7 +160,7 @@
 
             <hr>
 
-            <!-- 付款資訊 -->
+            <!-- 信用卡資訊 -->
             <div class="payment-details">
                 <h2 style="margin: 20px 0"><b>付款資訊</b></h2>
                 <div class="payment-method">
@@ -186,8 +189,9 @@
 
             <!-- 按鈕 -->
             <div class="buttons" id="submit">
-                    <button type="button" th:onclick="|window.location.href='@{/cart}'|">取消訂單</button>
-                    <button type="submit" th:onclick="|window.location.href='@{/order/complete}'|">繼續送出</button>
+                    <button type="button" name="action" value="cancel">取消訂單</button>
+                    <!-- th:onclick="|window.location.href='@{/}'|" -->
+                    <button type="submit" name="action" value="confirm">確認結帳</button>
             </div>
         </form>
     </div>
