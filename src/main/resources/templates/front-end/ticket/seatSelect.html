@@ -447,25 +447,25 @@ h1 {
 			<form id="seatSelectionForm" action="/seatSelect/submitSeats"
 				method="POST">
 				<input type="hidden" id="activityTimeSlotID"
-					name="activityTimeSlotID" value="1"> <input type="hidden"
-					id="seat1" name="seat1" value=""> <input type="hidden"
-					id="seat2" name="seat2" value=""> <input type="hidden"
-					id="seat3" name="seat3" value=""> <input type="hidden"
-					id="seat4" name="seat4" value=""> <input type="hidden"
-					id="seat5" name="seat5" value="">
+					name="activityTimeSlotID" th:value="${activityTimeSlot.activityTimeSlotID}">
+				<input type="hidden" id="seat1" name="seat1" value=""> <input
+					type="hidden" id="seat2" name="seat2" value=""> <input
+					type="hidden" id="seat3" name="seat3" value=""> <input
+					type="hidden" id="seat4" name="seat4" value=""> <input
+					type="hidden" id="seat5" name="seat5" value="">
 				<button type="submit" id="nextButton"
 					class="custom-btn custom-btn-next">下一步</button>
 			</form>
 		</div>
 	</div>
-	
+
 	<script th:inline="javascript">
     /*<![CDATA[*/
     let unavailableSeats = /*[[${unavailableSeats}]]*/ [];
     /*]]>*/
 </script>
 
-<script>
+	<script>
     // 獲取 DOM 元素
     const seatMap = document.getElementById('seatMap');
     const selectedSeatsDiv = document.getElementById('selectedSeats');
