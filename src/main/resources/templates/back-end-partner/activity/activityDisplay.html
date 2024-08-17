@@ -40,13 +40,13 @@
         <table id="example" class="display" style="width: 100%">
             <thead>
                 <tr style="background-color:#CCCCFF">
-                    <th>計數</th>
+                    <th></th>
                     <th>編號</th>
                     <th>名稱</th>
                     <th>場館</th>
-                    <th>排程時間</th>
+                    <!-- <th>排程時間</th> -->
                     <th>類型標籤</th>
-                    <th>起售日</th>
+                    <!-- <th>起售日</th> -->
                     <th>設定狀態</th>
                     <th>設定</th>
                 </tr>
@@ -59,9 +59,9 @@
                         <td th:text="${activity.activityID}"></td>
                         <td th:text="${activity.activityName}"></td>
                         <td th:text="${activity.venue.venueName}"></td>
-                        <td th:text="${activity.activityPostTime}"></td>
+                        <!-- <td th:text="${activity.activityPostTime}"></td> -->
                         <td th:text="${activity.activityTag}"></td>
-                        <td th:text="${activity.sellTime}"></td>
+                        <!-- <td th:text="${activity.sellTime}"></td> -->
                         <td th:switch="${activity.activityStatus}">
                             <div th:case="0">未設定</div>
                             <div th:case="1">已設定</div>
