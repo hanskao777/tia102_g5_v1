@@ -319,8 +319,7 @@ function submitComment() {
             console.error('提交留言失敗:', error);
             console.log('Error details:', xhr.responseText);
             if (xhr.status === 401) {
-                alert('登入已過期，請重新登入');
-                window.location.href = '/login'; // 假設登入頁面的URL是 '/login'
+                alert('請先登入');             
             } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
                 alert('提交失敗: ' + xhr.responseJSON.map(e => e.defaultMessage).join(', '));
             } else if (xhr.responseText) {

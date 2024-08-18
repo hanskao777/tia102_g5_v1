@@ -38,8 +38,7 @@ $(document).ready(function() {
         toolbar: [
             ['style', ['bold', 'italic', 'underline']],
             ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-			['insert', ['picture']], 
+            ['para', ['ul', 'ol', 'paragraph']],			
         ],
         styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
         placeholder: '在這裡輸入內容...',
