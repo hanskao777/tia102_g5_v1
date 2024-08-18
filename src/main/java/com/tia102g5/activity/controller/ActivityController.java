@@ -10,7 +10,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -28,7 +27,6 @@ import com.tia102g5.activityPicture.model.ActivityPicture;
 import com.tia102g5.partnermember.model.PartnerMember;
 import com.tia102g5.partnermember.model.PartnerMemberService;
 import com.tia102g5.venuerental.model.VenueRental;
-import com.tia102g5.venuerental.model.VenueRentalService;
 
 @Controller
 @RequestMapping("/activity")
@@ -172,17 +170,25 @@ public class ActivityController {
     	return venueRentals;
 	}
 	
-	//查廠商全部 Activity，給 activityDisplay 用
+	//查全部 Activity，給 activityInfoAll 用
 	@ModelAttribute("activityListData")
-	protected Set<Activity> activityListData(HttpSession session) {
+	protected List<Activity> activityListData() {
+		List<Activity> activities = activitySvc.getAll();
+		
+		return activities;
+	}
+	
+	//查廠商全部 Activity，給 activityDisplay 用
+	@ModelAttribute("backEndActivityListData")
+	protected Set<Activity> backEndActivityListData(HttpSession session) {
     	//取得登入帳號
 		Integer partnerID = (Integer)session.getAttribute("partnerID");
 		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
 		
 		//取得廠商活動
-		Set<Activity> activities = partner.getActivities();
+		Set<Activity> partnerActivities = partner.getActivities();
 		
-    	return activities;
+    	return partnerActivities;
 	}
 /********************* bean **********************/
 

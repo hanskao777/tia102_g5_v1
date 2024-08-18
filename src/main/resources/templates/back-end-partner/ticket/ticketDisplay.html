@@ -63,9 +63,8 @@
                         <td th:text="${activity.activityTag}"></td>
                         <form method="get" th:action="@{/seatReservationAndPricing}" style="margin-bottom: 0px;">
                             <td>
-                                <select>
+                                <select th:name="${activityTimeSlotID}">
                                     <option th:each="activityTimeSlot : ${activity.activityTimeSlots}" 
-                                            th:name="${activityTimeSlotID}"
                                             th:value="${activityTimeSlot.activityTimeSlotID}">
                                         <th:block th:switch="${activityTimeSlot.activityTimeSlot}">
                                             <span th:case="1" th:text="${activityTimeSlot.activityTimeSlotDate} + '10:00'"></span>
