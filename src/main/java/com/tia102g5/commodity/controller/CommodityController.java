@@ -44,10 +44,7 @@ import com.tia102g5.announcement.model.Announcement;
 @Validated
 public class CommodityController {
 
-//    調整視圖名稱以匹配項目結構。
-//    根據需要添加或修改特定的業務邏輯。
-//    調整錯誤處理和驗證邏輯以適應需求。
-//    可能需要添加更多的方法來處理特定的查詢或操作。
+
 	@Autowired
 	CommodityService commoditySvc;
 
@@ -60,12 +57,7 @@ public class CommodityController {
 	@Autowired
 	ActivityService activitySvc;
 
-//	// 首頁商城活動頁面的Mapping
-//	@GetMapping("/mall_activity")
-//	public String mallActivity(Model model) {
-//		return "/front-end/mall/mallActivity";
-//	}
-//	
+//	 首頁商城活動頁面的Mapping
 	 @GetMapping("/mall_activity")
 	    public String mallActivity(Model model, @RequestParam(defaultValue = "1") int page) {
 		 
@@ -73,12 +65,6 @@ public class CommodityController {
 		 List<Activity> activities = commoditySvc.getAllActivities();
 	        model.addAttribute("activities", activities);
 	        System.out.println("Activities size: " + activities.size());
-//	        
-//	        List<Activity> activity = commoditySvc.getAllActivitiesPicture();
-//	        model.addAttribute("activity", activity);
-//	        System.out.println("Activity size: " + activity.size());
-
-
 		 
 //	        int pageSize = 6; // 每頁顯示的活動數量
 //	        Page<Activity> activityPage = commoditySvc.getAllActivitiesPaginated(PageRequest.of(page - 1, pageSize));
@@ -88,31 +74,26 @@ public class CommodityController {
 		 
 //	        int pageSize = 6; // 每頁顯示的活動數量
 //	        Page<Activity> activityPage = commoditySvc.getActivity(pageSize, PageRequest.of(page - 1, pageSize));
-
 //	        model.addAttribute("activities", activityPage.getContent());
 //	        model.addAttribute("currentPage", page);
 //	        model.addAttribute("totalPages", activityPage.getTotalPages());
-//	        List<Activity> activityList = commoditySvc.getAllactivity();
-//	        model.addAttribute("activityList", activityList);
-//	        System.out.println("Activities size: " + activityList.size());
-
-	        
-
-	 
+	     
 
 	        return "front-end/mall/mallActivity";
 	    }
 
-	// 首頁商城活動商品頁面的Mapping
+	 
+	 
+//  首頁商城活動商品頁面的Mapping
 	@GetMapping("/mall_listActivityCommodities")
 	public String listActivityCommodities(/* @RequestParam(required = false) Integer activityID, */ Model model,
 			@RequestParam(defaultValue = "1") int page) {
 //		List<Commodity> commodities = commoditySvc.getCommoditiesByActivity(activityID);
 //		model.addAttribute("commodities", commodities);
 		
-		int pageSize = 9; // 每頁顯示的商品數量
 		Integer activityID = 1; // 固定的 activityID
-
+		
+		int pageSize = 9; // 每頁顯示的商品數量
 		Page<Commodity> commodityPage = commoditySvc.getCommoditiesByActivityPaginated(activityID,
 				PageRequest.of(page - 1, pageSize));
 
@@ -126,10 +107,7 @@ public class CommodityController {
 	
 	
 
-	
-
-
-	// 首頁商城商品頁面的Mapping
+//  首頁商城商品頁面的Mapping
 	@GetMapping("/mall_listOneCommodity")
 	public String listOneCommodity(@RequestParam("commodityID") String commodityID, ModelMap model) {
 		Commodity commodity = commoditySvc.getOneCommodity(Integer.valueOf(commodityID));
@@ -145,53 +123,30 @@ public class CommodityController {
 	
 	
 
-	// 後台商城活動頁面,根據 partnerID 顯示已申請的活動
-//    @GetMapping("/activityCommodityList")
-//    public String getActivityByPartnerID(ModelMap model) {
-//        Integer partnerID = 1;
-//        List<Activity> list = commoditySvc.getActivitiesByPartnerMember(partnerID);
-//        model.addAttribute("list", list);
-////        List<Activity> list = activitySvc.findByPartnerMemberPartnerID(partnerID);
-////        model.addAttribute("activityListData", list);
-//        return "/back-end-partner/commodity/activityCommodity";
-//    }
+//  後台商城活動頁面,根據 partnerID 顯示已申請的活動
 	@GetMapping("/activityCommodityList")
 	public String getActivityByPartnerID(ModelMap model) {
 		Integer partnerID = 1; // 這裡應該是從session或其他地方獲取當前登錄的partnermember ID
 		List<Activity> activities = commoditySvc.getActivitiesByPartnerMember(partnerID);
-//        List<Commodity> activities = commoditySvc.getActivityByPartner(partnerID);
-//        List<Activity> activityList = activitySvc.getAll();
+
 		model.addAttribute("activities", activities);
 
 		// 添加這行用於調試
 		System.out.println("Activities size: " + activities.size());
 		return "/back-end-partner/commodity/activityCommodity";
 	}
+	
+	
 
-	// 後台商城商品頁面,根據 activityID 顯示該活動的商品
-//    要用這個 @GetMapping("/listAllCommodity/{activityID}")
-//    public String listAllCommodity(@PathVariable Integer activityID, ModelMap model) {
-//        List<Commodity> commodities = commoditySvc.getCommoditiesByActivity(activityID);
-//        model.addAttribute("commodityList", commodities);
-//        model.addAttribute("activityID", activityID);  // 添加這行以便在視圖中使用
-//        return "/back-end-partner/commodity/commodity";
-//    }
+//  後台商城商品頁面,根據 activityID 顯示該活動的商品
+//  要用這個 @GetMapping("/listAllCommodity/{activityID}")
+//  public String listAllCommodity(@PathVariable Integer activityID, ModelMap model) {
 	@GetMapping("/listAllCommodity")
 	public String listAllCommodity(/* @RequestParam(required = false) Integer activityID, */ ModelMap model,
 			@RequestParam(defaultValue = "1") int page) {
-//        Integer activityID = 1;
-//        List<Commodity> commodities = commoditySvc.getCommoditiesByActivity(activityID);
-//        model.addAttribute("commodityList", commodities);
-//        
-//        int pageSize = 5; // 每頁顯示的商品數量
-//        Page<Commodity> commodityPage = commoditySvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
-//
-//        model.addAttribute("commodityList", commodityPage.getContent());
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", commodityPage.getTotalPages());
 
-		int pageSize = 5; // 每頁顯示的商品數量
 		Integer activityID = 1; // 固定的 activityID
+		int pageSize = 5; // 每頁顯示的商品數量
 
 		Page<Commodity> commodityPage = commoditySvc.getCommoditiesByActivityPaginated(activityID,
 				PageRequest.of(page - 1, pageSize));

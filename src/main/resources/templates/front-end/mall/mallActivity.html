@@ -12,6 +12,59 @@
 <link rel="stylesheet" href="/css/style.css">
 
 <style>
+
+.activity-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.activity-image-container {
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.activity-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    color: #999;
+    font-size: 16px;
+}
+
+.image-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    height: auto;
+}
+
+.activity-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
 .activity-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -135,146 +188,54 @@
 <body>
 	<div id="header"></div>
 
-	<!--  
-  <div class="content">
-        <div class="activity-grid">
-            <div th:each="activity : ${activities}" class="activity-card">
-                <a th:href="@{'/commodity/mall_listActivityCommodities?activityID=' + ${commodity.getActivity().getActivityName()}}">
-                    <img th:src="${activity.activityPicture}" th:alt="${activity.activityName}">
-                    <h3 th:text="${activity.activityName}"></h3>
-                </a>
+	<div class="content">
+
+
+		<div class="activity-grid">
+    <div th:each="activity : ${activities}" class="activity-card">
+        <form method="get" th:action="@{/commodity/mall_listActivityCommodities}" style="margin-bottom: 0;">
+            <input type="hidden" name="activityID" th:value="${activity.activityID}">
+            <button type="submit" class="image-button">
+                <div class="activity-image-container">
+                    <img th:if="${not #lists.isEmpty(activity.getActivityPictures())}"
+th:src="@{/activity/DBGifReader(activityPictureID=${activity.getActivityPictures().isEmpty() ? null : activity.getActivityPictures()[0].activityPictureID})}"                         alt="活動圖片" class="activity-image">
+                    <div th:if="${#lists.isEmpty(activity.getActivityPictures())}"
+                         class="placeholder-image">無圖片</div>
+                </div>
+            </button>
+        </form>
+        <div class="activity-info">
+            <h2 th:text="${activity.activityName}">活動名稱</h2>
+            <p th:text="${activity.activityContent}">活動內容</p>
+            <div class="action-cell">
+                <form method="get" th:action="@{/commodity/mall_listActivityCommodities}" class="action-form">
+                    <input type="submit" value="查看相關商品" class="action-button">
+                    <input type="hidden" name="activityID" th:value="${activity.activityID}">
+                </form>
             </div>
         </div>
     </div>
-   -->
-	<div class="content">
-		<div class="activity-grid">
-
-			<div th:each="activity : ${activities}" class="activity-item">
-				<h2 th:text="${activity.activityName}">活動名稱</h2>
-
-
-				<p th:text="${activity.activityContent}">活動內容</p>
-				<!--  
-				<div th:if="${activity?.activityPicture != null}">
-					<img
-						th:src="@{/commodity/activityImage/{id}(id=${activity.activityID})}"
-						alt="活動圖片" class="activity-image" />
-				</div>
-				<div th:if="${activity.activityPicture == null}">
-					<p>無圖片</p>
-				</div>
-				
-				
-				
-				<form method="get" th:action="@{/commodity/mall_listActivityCommodities}"
-					style="margin-bottom: 0px;">
-					<input type="hidden" name="activityID"
-						th:value="${activity.activityID}">
-					<button type="submit"
-						style="background: none; border: none; padding: 0; cursor: pointer; width: 100%; height: 100%;">
-						<div class="product-image-container">
-							<img th:if="${not #lists.isEmpty(activity.getActivityPictures().getActivityPicture())}"
-								th:src="@{/Activity/ActivityDBGifReader(activityPictureID=${activity.getActivityPictures()[0].activityPictureID})}"
-								alt="商品圖片" class="product-image">
-							<div th:if="${#lists.isEmpty(activity.getActivityPictures().getActivityPicture())}"
-								class="placeholder-image">無圖片</div>
-						</div>
-					</button>
-				</form>
-				
-				
-			-->
-				<td class="action-cell">
-					<form method="get"
-						th:action="@{/commodity/mall_listActivityCommodities}"
-						class="action-form">
-						<input type="submit" value="查看相關商品" class="action-button">
-						<input type="hidden" name="activityID"
-							th:value="${activity.activityID}">
-					</form>
-				</td>
-
-				<!--
-
-				<td>
-					<form method="get"
-						th:action="@{/commodity/mall_listActivityCommodities}"
-						style="margin-bottom: 0px;">
-						<input type="submit" value="查看相關商品"> <input type="hidden"
-							name="activityID" th:value="${activity.activityID}">
-					</form>
-				</td> <a
-					th:href="@{/commodity/listByActivity/{id}(id=${activity.activityID})}">查看相關商品</a>
-			</div>
-
-
-
-
-			
-
-			<div class="activity-card" th:each="activity : ${activityList}">
-				<h3 th:text="${activity.activityName}"></h3>
-				<img th:if="${activity.activityPicture != null}"
-					th:src="@{'/activity/picture/' + ${activity.activityID}}"
-					alt="Activity Picture" />
-				<p th:if="${activity.activityPicture == null}">No picture
-					available</p>
-				<a
-					th:href="@{'/commodity/mall_listActivityCommodities?activityID=' + ${activity.activityID}}">View
-					Commodities</a>
-			</div>
-		</div>
+</div>
 	</div>
 
 
-	  
-  <div class="content">
-    <div class="activity-grid">
-      <div class="activity-card">
-        <a href="/templates/front-end/mall/mall-commodity.html">
-          <img src="/static/images/activity1.jpeg" alt="活動1">
-          <h3>IVE MAGAZINE</h3>
-        </a>
-      </div>
-      <div class="activity-card">
-        <a href="activity2.html">
-          <img src="/static/images/activity4.jpg" alt="活動2">
-          <h3>IVE SHOW WHAT I HAVE</h3>
-        </a>
-      </div>
-      <div class="activity-card">
-        <a href="activity2.html">
-          <img src="/static/images/activity2.jpg" alt="活動2">
-          <h3>IVE THE FIRST FAN CONCERT</h3>
-        </a>
-      </div>
-      <div class="activity-card">
-        <a href="activity2.html">
-          <img src="/static/images/activity2.jpg" alt="活動2">
-          <h3>IVE THE FIRST FAN CONCERT</h3>
-        </a>
-      </div>
-    </div>
-  </div>
--->
-
-				<div class="pagination" th:if="${totalPages > 1}">
-					<span
-						th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>
-					<a th:if="${currentPage > 1}"
-						th:href="@{'/commodity/mall_listActivityCommodities?page=' + ${currentPage - 1}}">上一頁</a>
-					<a th:if="${currentPage < totalPages}"
-						th:href="@{'/commodity/mall_listActivityCommodities?page=' + ${currentPage + 1}}">下一頁</a>
-				</div>
-			</div>
-		</div>
 
 
-		<div id="footer"></div>
+	<div class="pagination" th:if="${totalPages > 1}">
+		<span th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>
+		<a th:if="${currentPage > 1}"
+			th:href="@{'/commodity/mall_listActivityCommodities?page=' + ${currentPage - 1}}">上一頁</a>
+		<a th:if="${currentPage < totalPages}"
+			th:href="@{'/commodity/mall_listActivityCommodities?page=' + ${currentPage + 1}}">下一頁</a>
+	</div>
+	</div>
+	</div>
 
 
-		<script th:inline="javascript">
+	<div id="footer"></div>
+
+
+	<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         // 初始化所有的 tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -321,8 +282,8 @@
     });
 </script>
 
-		<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-		<script src="script.js"></script>
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+	<script src="script.js"></script>
 </body>
 
 </html>
