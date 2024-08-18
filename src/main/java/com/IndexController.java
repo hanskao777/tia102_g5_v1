@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tia102g5.activity.model.Activity;
+import com.tia102g5.activity.model.ActivityService;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.generalmember.model.GeneralMemberService;
 import com.tia102g5.partnermember.model.PartnerMember;
@@ -24,7 +26,8 @@ public class IndexController {
 	@Autowired
 	PartnerMemberService partnerSvc;
 	
-    
+    @Autowired
+    ActivityService activitySvc;
 	
 	//導向首頁
     @GetMapping("/")
@@ -138,5 +141,12 @@ public class IndexController {
         return "/back-end-admin/admin_prosecute";
     }
 
+    //查 activity 全部
+  	@ModelAttribute("activityListData")
+  	protected List<Activity> referenceListActivityData(Model model) {
+      	List<Activity> list = activitySvc.getAll();
+      	
+      	return list;
+  	}
 
 }

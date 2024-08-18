@@ -8,9 +8,100 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="index.css">
-    <style>
+    <style> 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-        
+        .content {
+            flex: 1;
+            padding: 20px;
+            padding-bottom: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -10px -10px 40px -10px;
+        }
+
+        .col {
+            padding: 10px;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .row-cols-md-3 > .col {
+                width: calc(33.333% - 20px);
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .image-wrapper {
+            position: relative;
+            padding-top: 75%;
+            overflow: hidden;
+        }
+
+        .image-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .image-slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-title {
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .card-text {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
         .swiper-container {
             width: 100%;
             height: 400px;
@@ -36,75 +127,14 @@
             margin-top: 10px;
         }
 
-/*         .content { */
-/*             padding: 20px; */
-/*         } */
-
-/*         .calendar { */
-/*             background-color: white; */
-/*             padding: 20px; */
-/*             border-radius: 10px; */
-/*             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
-/*             margin-bottom: 20px; */
-/*         } */
-
-/*         .calendar select { */
-/*             margin-bottom: 20px; */
-/*         } */
-
-/*         .calendar table { */
-/*             width: 100%; */
-/*             border-collapse: collapse; */
-/*             text-align: center; */
-/*         } */
-
-/*         .calendar th, */
-/*         .calendar td { */
-/*             padding: 10px; */
-/*             border: 1px solid #ddd; */
-/*             vertical-align: top; */
-/*         } */
-
-        .events {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .event-item {
-            background-color: white;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: calc(35% - 60px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .event-item img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .event-details {
+        #activityDisplay {
             text-align: center;
+            margin: 30px 0 20px 0;
         }
 
-        .event-details h3 {
-            margin: 0;
-            font-size: 1.2em;
+        #footer {
+            margin-top: 40px;
         }
-
-        .event-details p {
-            margin: 5px 0;
-            color: #666;
-        }
-
-
 
         @media (max-width: 768px) {
             .header {
@@ -120,15 +150,6 @@
                 flex-wrap: wrap;
                 gap: 10px;
             }
-
-            .calendar th,
-            .calendar td {
-                padding: 5px;
-            }
-
-            .event-item {
-                width: calc(50% - 20px);
-            }
         }
 
         @media (max-width: 480px) {
@@ -136,27 +157,12 @@
                 padding: 10px 5px;
             }
 
-            .header .top-bar {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .nav-bar {
-                flex-wrap: wrap;
-                gap: 5px;
-            }
-
             .swiper-container {
                 height: 300px;
             }
 
-            .event-item {
-                width: 100%;
-            }
-
             .login-popup {
                 display: none;
-                /* 初始狀態隱藏 */
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -167,7 +173,6 @@
                 border-radius: 10px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
-                /* 確保覆蓋其他內容 */
             }
         }
     </style>
@@ -187,7 +192,6 @@
         </div>
     </div>
     <div class="swiper-pagination"></div>
-    </div>
 <!--     <a> -->
 <!--         <span>活動行事曆</span> -->
 <!--     </a> -->
@@ -213,50 +217,37 @@
 <!--             </table> -->
 <!--         </div> -->
 <!--         <a> -->
-            <span>最新節目資訊</span>
-        </a>
-        <div class="events">
-            <div class="event-item">
-                <img src="images/slide1.jpg" alt="Event Image">
-                <div class="event-details">
-                    <h3>XXX 2024 Tour in Taipei</h3>
-                    <p>2024/XX/XX (一) 18:30</p>
-                    <p>台北XXX體育館</p>
-                </div>
-            </div>
-            <div class="event-item">
-                <img src="images/slide2.jpg" alt="Event Image">
-                <div class="event-details">
-                    <h3>XXX 2024 Tour in Taipei</h3>
-                    <p>2024/XX/XX (一) 18:30</p>
-                    <p>台北XXX體育館</p>
-                </div>
-            </div>
-            <div class="event-item">
-                <img src="images/slide3.jpg" alt="Event Image">
-                <div class="event-details">
-                    <h3>XXX 2024 Tour in Taipei</h3>
-                    <p>2024/XX/XX (一) 18:30</p>
-                    <p>台北XXX體育館</p>
-                </div>
-            </div>
-            <div class="event-item">
-                <img src="images/slide4.jpg" alt="Event Image">
-                <div class="event-details">
-                    <h3>XXX 2024 Tour in Taipei</h3>
-                    <p>2024/XX/XX (一) 18:30</p>
-                    <p>台北XXX體育館</p>
-                </div>
-            </div>
-            <div class="event-item">
-                <img src="images/slide5.jpg" alt="Event Image">
-                <div class="event-details">
-                    <h3>XXX 2024 Tour in Taipei</h3>
-                    <p>2024/XX/XX (一) 18:30</p>
-                    <p>台北XXX體育館</p>
+    <div class="content">
+        <h3 id="activityDisplay"><b>最新節目資訊</b></h3>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- 針對每個活動生成一個卡片 -->
+            <div class="col" th:each="activity : ${activityListData}">
+                <!-- 設定 overflow: hidden; 確保卡片內的內容不會超出卡片範圍 -->
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <a th:href="@{activityInfoOne(activityID=${activity.activityID})}" class="text-decoration-none text-dark flex-grow-1 d-flex flex-column">
+                            <!-- 設定圖片容器的寬度和 overflow: hidden; 來限制圖片顯示範圍 -->
+                            <div class="image-wrapper mb-3" style="height: 200px; overflow: hidden;">
+                                <!-- 輪播圖片的容器，設定為flex布局以顯示多張圖片 -->
+                                <div class="image-slider" style="display: flex; transition: transform 0.5s ease-in-out;">
+                                    <!-- 使用 th:each 遍歷每張圖片並顯示 -->
+                                    <img th:each="activityPicture : ${activity.activityPictures}" 
+                                         th:src="@{|/activity/DBGifReader?activityPictureID=${activityPicture.activityPictureID}|}" 
+                                         class="img-fluid" alt="Activity Image" 
+                                         style="object-fit: cover; width: 100%; height: 200px;"> <!-- 修改部分，設定圖片寬度與填滿樣式 -->
+                                </div>
+                            </div>
+                            <!-- 顯示活動名稱 -->
+                            <h5 class="card-title" th:text="${activity.activityName}"></h5>
+                            <p class="card-text" th:text="'日期：' + ${activity.sellTime}"></p>
+                            <p class="card-text" th:text="'地點：' + ${activity.venue.venueName}"></p>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
         <div id="footer"></div>
 

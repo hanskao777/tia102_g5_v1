@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tia102g5.activity.model.Activity;
 import com.tia102g5.activity.model.ActivityService;
 import com.tia102g5.activityPicture.model.ActivityPicture;
+import com.tia102g5.partnermember.model.PartnerMember;
+import com.tia102g5.partnermember.model.PartnerMemberService;
+import com.tia102g5.venuerental.model.VenueRental;
+import com.tia102g5.venuerental.model.VenueRentalService;
 
 @Controller
 @RequestMapping("/activity")
@@ -32,16 +37,19 @@ public class ActivityController {
 	@Autowired
 	ActivityService activitySvc;
 	
+	@Autowired
+	PartnerMemberService partnerSvc;
+	
 /********************* 跳轉 **********************/	
 //////////////// 前台 ////////////////
 	//活動資訊總攬
-	@GetMapping("/activityInfoAll")
+	@GetMapping("activityInfoAll")
 	public String activityInfo() {
 		return "/front-end/activity/activityInfoAll";
 	}
 	
 	//活動資訊
-	@GetMapping("/activityInfoOne")
+	@GetMapping("activityInfoOne")
 	public String activityInfoOne(@RequestParam("activityID") String activityID, ModelMap model) {
 		Activity activity = activitySvc.getOneActivity(Integer.valueOf(activityID));
 		Set<ActivityPicture> activityPictures = activity.getActivityPictures();
@@ -55,13 +63,19 @@ public class ActivityController {
 	
 //////////////// 後台 ////////////////
 	//活動資訊
-	@GetMapping("/activityDisplay")
+	@GetMapping("activityDisplay")
 	public String activityDisplay() {
 		return "back-end-partner/activity/activityDisplay";
 	}
 	
+	//活動新增
+	@GetMapping("activityAdd")
+	public String activityAdd() {
+		return "back-end-partner/activity/activityAdd";
+	}
+	
 	//活動資訊設定
-	@PostMapping("/activityConfig")
+	@PostMapping("activityConfig")
 	public String activityConfig(@RequestParam("activityID") String activityID, ModelMap model) {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
@@ -76,8 +90,8 @@ public class ActivityController {
 /********************* 跳轉 **********************/
 	
 /********************* action *******************/
-	
-//	@GetMapping("addActivity")
+//	//activityAdd 送出新增
+//	@GetMapping("add")
 //	public String addActivity(ModelMap model) {
 //		
 //	}
@@ -134,12 +148,30 @@ public class ActivityController {
 /********************* action ********************/
 	
 /********************* bean **********************/
-	//查全部，給 activityDisplay 用
+	//查廠商全部 VenueRental ，給 activityAdd 用
+	@ModelAttribute("venueRentalListData")
+	protected Set<VenueRental> venueRentalListData(HttpSession session) {
+    	//取得登入帳號
+		Integer partnerID = (Integer)session.getAttribute("partnerID");
+		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
+		
+		//取得廠商場地申請
+		Set<VenueRental> venueRentals = partner.getVenueRentals();
+		
+    	return venueRentals;
+	}
+	
+	//查廠商全部 Activity，給 activityDisplay 用
 	@ModelAttribute("activityListData")
-	protected List<Activity> referenceListData(Model model) {
-    	List<Activity> list = activitySvc.getAll();
-    	
-    	return list;
+	protected Set<Activity> activityListData(HttpSession session) {
+    	//取得登入帳號
+		Integer partnerID = (Integer)session.getAttribute("partnerID");
+		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
+		
+		//取得廠商活動
+		Set<Activity> activities = partner.getActivities();
+		
+    	return activities;
 	}
 /********************* bean **********************/
 
