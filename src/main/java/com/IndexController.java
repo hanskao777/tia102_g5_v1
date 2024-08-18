@@ -148,5 +148,17 @@ public class IndexController {
       	
       	return list;
   	}
+  	
+  	//票務須知
+ 	@GetMapping("/ticketInfo")
+    public String getTicketInfo() {
+        return "/ticketInfo";
+    }
+ 	
+  	//常見問題
+ 	@GetMapping("/qa")
+    public String getQA() {
+        return "/QA";
+    }
 
 }
