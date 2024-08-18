@@ -102,7 +102,14 @@ body {
 }
 
 .btn:hover {
-	background-color: #ef5350;
+	background-color: #e57373;
+}
+
+.btn-group {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	margin-top: 30px;
 }
 /* 保留原有的 CSS 樣式 */
 /* ... */
@@ -147,29 +154,34 @@ body {
 			<div class="cart-step active">訂單成立</div>
 		</div>
 
-<div class="order-complete-box">
-            <div class="checkmark">✓</div>
-		<div th:if="${order != null}">
-			<h2>訂購完成</h2>
-			<p>
-				訂單編號: <span th:text="${order.orderID}"></span>
-			</p>
-			<p>
-				訂購時間: <span
-					th:text="${#dates.format(order.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
-			</p>
+		<div class="order-complete-box">
+			<div class="checkmark">✓</div>
+			<div th:if="${order != null}">
+				<h2>訂購完成</h2>
+				<p>
+					訂單編號: <span th:text="${order.orderID}"></span>
+				</p>
+				<p>
+					訂購時間: <span
+						th:text="${#dates.format(order.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				</p>
+			</div>
 		</div>
- </div>
 
 		<div th:if="${order == null}">
 			<p>無法找到訂單信息</p>
 		</div>
 
 
+		<div class="btn-group">
 
-		<div class="buttons">
-			<a href="/" class="btn">回首頁</a> <a th:href="@{/orders}" class="btn">查看訂單</a>
+		 <a href="/" class="btn">回首頁</a>
+		 <a th:href="@{/orders}" class="btn">查看訂單</a>
+
+
 		</div>
+
+
 	</div>
 
 

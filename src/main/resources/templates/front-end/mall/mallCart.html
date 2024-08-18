@@ -100,6 +100,13 @@ h3 {
 	margin-top: 20px;
 }
 
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 30px;
+}
+
 .btn {
 	padding: 10px 20px;
 	background-color: #d8515a;
@@ -110,7 +117,7 @@ h3 {
 }
 
 .btn:hover {
-	background-color: #c15a6a;
+	background-color: #e57373;
 }
 
 .cart-notice {
@@ -185,10 +192,12 @@ h3 {
 
 
 		<div class="cart-summary">
-    <p>共 <span th:text="${#lists.size(cart.cartItems)}">0</span> 件商品</p>
+<p>共 <span th:text="${#aggregates.sum(cart.cartItems.![checkedQuantity])}">0</span> 件商品</p>
     <p>商品小計: $<span th:text="${#numbers.formatDecimal(cart.cartTotalPrice, 1, 2)}">0.00</span></p>
-    <a th:href="@{/cart/continue-shopping}" class="btn">繼續購物</a>
-    <a th:href="@{/cart/checkout}" class="btn">前往結帳</a>
+    <div class="btn-group">
+    <a th:href="@{/cart/continue-shopping}" class="btn btn-back">繼續購物</a>
+    <a th:href="@{/cart/checkout}" class="btn btn-next">前往結帳</a>
+</div>
 </div>
 
 		<div class="cart-notice">

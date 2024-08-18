@@ -124,15 +124,21 @@ public class CartController {
 		Integer memberID = 1; // 假設當前登錄的會員 ID
 		Cart cart = cartService.getCartByMemberID(memberID);
 		GeneralMember member = memberService.getOneGeneralMember(memberID);
+		Orders order = new Orders();
 		// 添加日誌
 		System.out.println("Member info: " + member);
 
-		// 這裡可以添加一些結帳前的邏輯，比如檢查庫存等
+		// 檢查購物車是否為空
+	    if (cart == null || cart.getCartItems().isEmpty()) {
+	        model.addAttribute("errorMessage", "您的購物車是空的，請先添加商品。");
+			return "redirect:/commodity/mall_activity";
+	    }else
 		model.addAttribute("cart", cart);
 		model.addAttribute("member", member);
+		model.addAttribute("order", order);
 //        return "cartCheck";
 
-		return "front-end/mall/mallCheckout"; // 假設您有一個名為 checkout 的 Thymeleaf 模板
+		return "front-end/mall/mallCheckout"; 
 	}
 	
 	

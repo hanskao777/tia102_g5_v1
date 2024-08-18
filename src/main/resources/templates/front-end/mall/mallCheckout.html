@@ -9,8 +9,6 @@
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
 	rel="stylesheet">
 <style>
-/* 這裡包含兩個文件的所有 CSS 樣式 */
-/* ... */
 body {
 	font-family: 'Noto Sans TC', sans-serif;
 	background-color: #f5f5f5;
@@ -174,6 +172,7 @@ th {
 .btn-group {
 	display: flex;
 	justify-content: space-between;
+	width: 100%;
 	margin-top: 30px;
 }
 
@@ -184,6 +183,7 @@ th {
 	cursor: pointer;
 	font-size: 16px;
 	transition: background-color 0.3s;
+	text-align: right; /* 使用 float 使按鈕靠右 */
 }
 
 .btn-back {
@@ -197,7 +197,7 @@ th {
 }
 
 .btn:hover {
-	opacity: 0.9;
+	background-color: #e57373;
 }
 
 /* 優惠券 */
@@ -230,6 +230,20 @@ th {
 	color: #4CAF50;
 	margin-top: 5px;
 	font-style: italic;
+}
+
+.checkbox-group {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px; /* 根據需要調整間距 */
+}
+
+.checkbox-group input[type="checkbox"] {
+	margin-right: 5px; /* 調整勾選框和文字之間的間距 */
+}
+
+.checkbox-group label {
+	margin-bottom: 0; /* 移除標籤底部的默認間距 */
 }
 </style>
 </head>
@@ -288,7 +302,10 @@ th {
 			</div>
 
 			<p class="total">
-				合計：<span id="totalAmount" th:text="${'$' + cart.cartTotalPrice}"></span>
+				共 <span
+					th:text="${#aggregates.sum(cart.cartItems.![checkedQuantity])}">0</span>
+				件商品 <br> 合計：<span id="totalAmount"
+					th:text="${'$' + cart.cartTotalPrice}"></span>
 			</p>
 
 
@@ -415,27 +432,29 @@ th {
 			</div>
 
 -->
-				<!--訂購人資料-->
+			<!--訂購人資料-->
 			<div class="form-section">
 				<h3>訂購人資料</h3>
 				<div class="form-group">
 					<label for="orderName">姓名：</label> <input type="text"
-						id="orderName" name="orderName">
+						id="orderName" name="orderName" th:value="${member.memberName}"
+						readonly>
 				</div>
 				<div class="form-group">
 					<label for="orderPhone">電話：</label> <input type="tel"
-						id="orderPhone" name="orderPhone">
+						id="orderPhone" name="orderPhone" th:value="${member.memberPhone}"
+						readonly>
 				</div>
 				<div class="form-group">
 					<label for="orderEmail">E-mail：</label> <input type="email"
-						id="orderEmail" name="orderEmail">
+						id="orderEmail" name="orderEmail"
+						th:value="${member.memberAccount}" readonly>
 				</div>
 			</div>
 
 
 
-
- 					<!--收件人資料--> 
+			<!--收件人資料 
 			
 
 <form th:action="@{/cart/checkout}" method="post">
@@ -443,15 +462,52 @@ th {
     <input type="tel" name="recipientPhone" required>
     <input type="email" name="recipientEmail" required>
     <input type="text" name="recipientAddress" required>
-    <!-- 如果有優惠券，添加以下字段 -->
     <input type="hidden" name="memberCouponId" th:value="${selectedCouponId}">
     <button type="submit">確認付款</button>
 </form>
 
+-->
+
+			<div class="form-section">
+				<h3>收件人資料</h3>
+				<div class="form-group">
+					<label for="recipient">姓名：</label> <input type="text"
+						id="recipient" name="recipient" required
+						th:value="${order.recipient}">
+				</div>
+				<div class="form-group">
+					<label for="recipientPhone">電話：</label> <input type="tel"
+						id="recipientPhone" name="recipientPhone" required
+						th:value="${order.recipientPhone}">
+				</div>
+				<div class="form-group">
+					<label for="recipientEmail">E-mail：</label> <input type="email"
+						id="recipientEmail" name="recipientEmail" required
+						th:value="${order.recipientEmail}">
+				</div>
+				<div class="form-group">
+					<label for="recipientAddress">地址：</label> <input type="text"
+						id="recipientAddress" name="recipientAddress" required
+						th:value="${order.recipientAddress}">
+				</div>
+				<!-- 如果有優惠券，添加以下字段 -->
+				<input type="hidden" id="memberCouponId" name="memberCouponId"
+					th:value="${selectedCouponId}">
+			</div>
 
 
 
-
+			<!-- 隱藏的表單，用於提交數據 -->
+			<form id="checkoutForm" th:action="@{/cart/checkout}" method="post"
+				style="display: none;">
+				<input type="hidden" name="recipient" th:value="${order.recipient}">
+				<input type="hidden" name="recipientPhone"
+					th:value="${order.recipientPhone}"> <input type="hidden"
+					name="recipientEmail" th:value="${order.recipientEmail}"> <input
+					type="hidden" name="recipientAddress"
+					th:value="${order.recipientAddress}"> <input type="hidden"
+					name="memberCouponId" th:value="${selectedCouponId}">
+			</form>
 
 
 
@@ -501,12 +557,9 @@ th {
 
 
 
-
 			<div class="btn-group">
-				<a th:href="@{/cart/view}" class="btn btn-back">返回購物車</a> <a
-					th:href="@{/orders/complete}" class="btn btn-next">確認付款</a>
-
-				<button type="submit" class="btn btn-next">確認付款</button>
+				<a th:href="@{/cart/view}" class="btn btn-back">返回購物車</a>
+				<button type="submit" form="checkoutForm" class="btn btn-next">確認付款</button>
 			</div>
 		</form>
 	</div>
