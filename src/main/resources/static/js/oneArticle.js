@@ -274,6 +274,7 @@ function loadComments() {
 		url: '/messages/list/' + articleID,
 		type: 'GET',
 		success: function(response) {
+			console.log(response); //for test
 			displayComments(response);
 			updateCommentCount(response.length);/*更新留言數量*/
 		},
@@ -337,7 +338,7 @@ function displayComments(comments) {
 	commentsList.empty();
 
 	comments.forEach(function(comment) {
-		var commentDate = new Date(comment.messageCreateTime);
+		var commentDate = new Date(comment.messageCreateTimeRM);
 		var formattedDate = commentDate.getFullYear() + '-' +
 			('0' + (commentDate.getMonth() + 1)).slice(-2) + '-' +
 			('0' + commentDate.getDate()).slice(-2) + ' ' +
@@ -347,7 +348,8 @@ function displayComments(comments) {
 		var formattedContent = comment.messageContent.replace(/\n/g, '<br>');
 
 		/*會員頭像,會員有圖片顯示該會員圖片,沒有則顯示預設圖標*/
-		var memberPictureUrl = '/messages/picture/' + comment.generalMember.memberID;
+		//var memberPictureUrl = '/messages/picture/' + comment.generalMember.memberID;
+		var memberPictureUrl = '/messages/picture/' + comment.memberIDRM;
 		var memberPictureHtml = '<img src="' + memberPictureUrl + '" alt="會員圖片" class="member-picture" onerror="this.onerror=null; this.parentNode.innerHTML=\'<i class=\\\'fas fa-user-circle comment-avatar-icon\\\'></i>\';">';
 
 		var commentHtml = '<div class="card mb-3">' +
@@ -355,7 +357,8 @@ function displayComments(comments) {
 			'<div class="d-flex justify-content-between align-items-center mb-2">' +
 			'<div class="d-flex align-items-center">' +
 			'<div class="avatar-container">' + memberPictureHtml + '</div>' +
-			'<h5 class="card-title mb-0 ml-2">' + comment.generalMember.memberNickName + '</h5>' +
+			//'<h5 class="card-title mb-0 ml-2">' + comment.generalMember.memberNickName + '</h5>' +
+			'<h5 class="card-title mb-0 ml-2">' + comment.memberNameRM + '</h5>' +
 			'</div>' +
 			'<small class="text-muted">' + formattedDate + '</small>' +
 			'</div>' +
