@@ -127,11 +127,12 @@
         <h1 id="title"><strong>活動新增</strong></h1>
         <div id="inputBlock">
             <form th:action="@{/activity/add}" method="post" th:object="${activity}" enctype="multipart/form-data">
-                
+                <input type="hidden" name="venueRentalID" th:value="${venueRental.venueRentalID}">
+
                 <div class="form-group">
                     <strong>名稱:</strong>
                     <div class="form-input">
-                        <input type="text" th:field="*{activityName}" th:value="${venueRental}"/>
+                        <input type="text" th:field="*{activityName}" th:value="${venueRental.activityName}"/>
                     </div>
                 </div>
                 
@@ -192,7 +193,7 @@
 
                 <div class="button-container">
                     <button type="submit" id="submit">送出修改</button>
-                    <a href="activityDisplay">
+                    <a href="activityUnadd">
                         <button type="button" id="back">回上頁</button>
                     </a>
                 </div>
