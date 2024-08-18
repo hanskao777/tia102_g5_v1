@@ -229,11 +229,12 @@ public class AnnouncementController {
         return new ModelAndView("front-end/announcement-news/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
 
     }
-    @GetMapping("/announcement")
-    public String getAnnouncement(Model model) {
-        List<Announcement> announcements = announcementSvc.getAll();
-        model.addAttribute("announcements", announcements);
-        return "back-end-partner/announcement-news/announcement";
-    }
+    
+//    @GetMapping("/announcement")
+//    public String getAnnouncement(Model model) {
+//        List<Announcement> announcements = announcementSvc.getAll();
+//        model.addAttribute("announcements", announcements);
+//        return "back-end-partner/announcement-news/announcement";
+//    }
 
 }

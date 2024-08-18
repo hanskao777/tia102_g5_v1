@@ -20,52 +20,52 @@ public class Orders implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "orderID", updatable = false)
-	private Integer orderID; //訂單ID
+	private Integer orderID; // 訂單ID
 
 	@ManyToOne
 	@JoinColumn(name = "memberID", referencedColumnName = "memberID")
-	private GeneralMember generalMember; //會員ID
+	private GeneralMember generalMember; // 會員ID
 
 	@NotEmpty(message = "收件人姓名不能空白")
 	@Column(name = "recipient")
-	private String recipient; //收件人姓名
+	private String recipient; // 收件人姓名
 
 	@NotEmpty(message = "收件人電話不能空白")
 	@Column(name = "recipientPhone")
-	private String recipientPhone; //連絡電話
+	private String recipientPhone; // 連絡電話
 
 	@NotEmpty(message = "收件人Email不能空白")
 	@Column(name = "recipientEmail")
-	private String recipientEmail; //E-mail
+	private String recipientEmail; // E-mail
 
 	@NotEmpty(message = "收件地址不能空白")
 	@Column(name = "recipientAddress")
-	private String recipientAddress; //收件地址
+	private String recipientAddress; // 收件地址
 
 	@ManyToOne
 	@JoinColumn(name = "memberCouponID", referencedColumnName = "memberCouponID")
-	private MemberCoupon memberCoupon; //會員優惠券ID
+	private MemberCoupon memberCoupon; // 會員優惠券ID
 
 	@NotNull(message = "實付金額不能為空")
 	@Column(name = "actualAmount")
-	private BigDecimal actualAmount; //實付金額
+	private BigDecimal actualAmount; // 實付金額
 
 	@NotNull(message = "訂單狀態不能為空")
 	@Column(name = "orderStatus")
-	private Integer orderStatus; //訂單狀態 0:取消 1:未出貨 2:已出貨 3:完成訂單
+	private Integer orderStatus; // 訂單狀態 0:取消 1:未出貨 2:已出貨 3:完成訂單
 
-	//支付狀態有需要嗎?
+	// 支付狀態有需要嗎?
 	@NotNull(message = "支付狀態不能為空")
 	@Column(name = "payStatus")
-	private Integer payStatus; //支付狀態
+	private Integer payStatus; // 支付狀態
 
-	//時間上的設定有無錯誤
+	// 時間上的設定有無錯誤
 	@Column(name = "payTime", updatable = false, insertable = false)
-	private Timestamp payTime; //付款時間
+	private Timestamp payTime; // 付款時間
 
-	//先以手動更新
+	// 先以手動更新
 	@Column(name = "shipTime")
-	private Timestamp shipTime; //出貨時間
+	private Timestamp shipTime; // 出貨時間
 
 //    需要連動嗎
 	@OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
@@ -77,9 +77,9 @@ public class Orders implements java.io.Serializable {
 		super();
 	}
 
-	public Orders(Integer orderID, GeneralMember generalMember, String recipient, String recipientPhone, String recipientEmail,
-			String recipientAddress, MemberCoupon memberCoupon, BigDecimal actualAmount, Integer orderStatus,
-			Integer payStatus, Timestamp payTime, Timestamp shipTime, Set<OrderItem> orderItems) {
+	public Orders(Integer orderID, GeneralMember generalMember, String recipient, String recipientPhone,
+			String recipientEmail, String recipientAddress, MemberCoupon memberCoupon, BigDecimal actualAmount,
+			Integer orderStatus, Integer payStatus, Timestamp payTime, Timestamp shipTime, Set<OrderItem> orderItems) {
 		super();
 		this.orderID = orderID;
 		this.generalMember = generalMember;
@@ -97,8 +97,6 @@ public class Orders implements java.io.Serializable {
 
 	}
 
-	
-	
 	public Integer getOrderID() {
 		return orderID;
 	}
@@ -202,7 +200,22 @@ public class Orders implements java.io.Serializable {
 	public void setOrderItems(Set<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
-	
+
+	// 在會員中心商品訂單顯示訂單狀態
+	public String getOrderStatusDescription() {
+	        switch (this.orderStatus) {
+	            case 0:
+	                return "取消";
+	            case 1:
+	                return "未出貨";
+	            case 2:
+	                return "已出貨";
+	            case 3:
+	                return "完成訂單";
+	            default:
+	                return "未知狀態";
+	        }
+	}
 
 	@PrePersist
 	protected void onCreate() {
