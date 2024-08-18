@@ -7,173 +7,219 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/partner_sidebar.css">
     <style>
-        * {
-            box-sizing: border-box;
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
-        /* 本文區塊 */
-        #main{
-            /* border: 1px solid red; */
-            position: fixed; /* 固定位置，隨著螢幕滾動 */
-            top: 20px; /* 距離螢幕頂部 0px */
-            right: 0; /* 距離螢幕右邊 0px */
-            height: 100vh; /* 高度佔滿整個螢幕視窗 */
-            width: calc(100% - 250px); /* 區塊寬度為 200px */
+        body {
+            display: flex;
+            overflow: hidden;
         }
-        
-        /* 本文標題 */
-        #title{
+
+        #sidebar-placeholder {
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        #main-container {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        #main {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        #title {
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        #inputBlock{
-            border: 1px solid red;
-            margin-right: 20px;
-            margin-left: 50px;
-        }
-       
-        #example_wrapper {
-            margin: 1rem 2rem 2rem 2rem;
+        #inputBlock {
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 50px;
         }
 
-        button {
-		padding: 5px;
+        .form-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
         }
 
-        form {
-            display: table;
+        .form-group > strong,
+        .form-group > label > strong {
+            width: 100px;
+            text-align: right;
+            padding-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .form-input {
+            flex-grow: 1;
+            max-width: calc(100% - 100px);
+        }
+
+        .form-input input[type="text"],
+        .form-input input[type="date"] {
+            width: 100%;
+            max-width: 200px;
         }
 
         textarea {
-            width: 600px;
+            width: 100%;
             height: 100px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-            resize: none /* Allows users to resize the textarea vertically */
+            resize: vertical;
         }
 
-        #submit{
-            width: 100px;
+        #blob_holder {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            margin-top: 10px;
         }
 
-        #back{
-            width: 100px;
-        } 
+        #blob_holder img {
+            margin: 5px;
+            object-fit: cover;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .button-container button,
+        .button-container a {
+            margin: 0 10px;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .error {
+            display: block;
+            margin-top: 5px;
+            color: red;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
     <div id="sidebar-placeholder"></div>
     
-    <div id="main">
+    <div id="main-container">
         <h1 id="title"><strong>活動資訊設定</strong></h1>
-        <br>
-        <div id=inputBlock>
-            <!-- <h6 font-color="red"><b>所有欄位皆為必填欄位</b></h6> -->
-            
-            <form th:action="@{update}" method="post" th:object="${activity}" enctype="multipart/form-data">
+        <div id="inputBlock">
+            <form th:action="@{/activity/update}" method="post" th:object="${activity}" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{activityID}">
                 
-                <div>
+                <div class="form-group">
                     <strong>名稱:</strong>
-                    <input type="text" th:field="*{activityName}" style="border:1px" /><br/>
-                </div>
-                
-                <!-- <div>
-                    <label>時段選擇:</label>
-                    <input type="date" th:field="*{}" onclick="hideContent('hiredate.errors');" /><br/>
-                    <span  th:if="${#fields.hasErrors('hiredate')}" th:errors="*{hiredate}" class="error" id="hiredate.errors"></span>
-                </div> -->
-                
-                <div>
-                    <label><strong>排程發佈時間:</strong></label>
-                    <input type="date" th:field="*{activityPostTime}" onclick="hideContent('activityPostTime.errors');" /><br/>
-                    <span  th:if="${#fields.hasErrors('activityPostTime')}" th:errors="*{activityPostTime}" class="error" id="activityPostTime.errors"></span>
-                </div>
-                
-                <div>
-                    <strong>類型:</strong>
-                    <label>
-                        <input type="radio" th:field="*{activityTag}" value="演唱會" onclick="hideContent('activityTag.errors');" />
-                        演唱會
-                    </label>
-                    <label>
-                        <input type="radio" th:field="*{activityTag}" value="音樂劇" onclick="hideContent('activityTag.errors');" />
-                        音樂劇
-                    </label>
-                    <label>
-                        <input type="radio" th:field="*{activityTag}" value="戲劇" onclick="hideContent('activityTag.errors');" />
-                        戲劇
-                    </label>
-                    <label>
-                        <input type="radio" th:field="*{activityTag}" value="舞蹈" onclick="hideContent('activityTag.errors');" />
-                        舞蹈
-                    </label>
-                    <label>
-                        <input type="radio" th:field="*{activityTag}" value="講座" onclick="hideContent('activityTag.errors');" />
-                        講座
-                    </label>
-                    <label>
-                        <input type="radio" th:field="*{activityTag}" value="其他" onclick="hideContent('activityTag.errors');" />
-                        其他
-                    </label>
-                    <br/>
-                    <span  th:if="${#fields.hasErrors('activityTag')}" th:errors="*{activityTag}" class="error" id="activityTag.errors"></span>
-                </div>
-    
-                <div>
-                    <strong>圖片:</strong>
-                    <input type="file" th:field="*{activityPictures}" onclick="previewImage()" multiple="multiple" />
-                    <!--可以不修改圖片--> 
-                    <!-- <span  th:if="${#fields.hasErrors('activity.activityPictures')}" th:errors="*{activity.activityPictures}" class="error" id="activityPictures.errors"></span> -->
-                    <div id="blob_holder">
-                        <img th:src="@{/activity/DBGifReader} + '?activityID=' + ${activity.activityID}" width="100px">
+                    <div class="form-input">
+                        <input type="text" th:field="*{activityName}" />
                     </div>
                 </div>
                 
-                <div>
-                    <div id="introTitle">介紹:</div>
-                    <textarea th:field="*{activityContent}" onclick="hideContent('activityContent.errors');"></textarea><br/>
-                    <span  th:if="${#fields.hasErrors('activityContent')}" th:errors="*{activityContent}" class="error" id="activityConetent.errors"></span>
+                <div class="form-group">
+                    <strong>類型:</strong>
+                    <div class="form-input">
+                        <label>
+                            <input type="radio" th:field="*{activityTag}" value="演唱會" onclick="hideContent('activityTag.errors');" th:checked="*{activityTag == null or activityTag == '演唱會'}"/>
+                            演唱會
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{activityTag}" value="音樂劇" onclick="hideContent('activityTag.errors');" />
+                            音樂劇
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{activityTag}" value="戲劇" onclick="hideContent('activityTag.errors');" />
+                            戲劇
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{activityTag}" value="舞蹈" onclick="hideContent('activityTag.errors');" />
+                            舞蹈
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{activityTag}" value="講座" onclick="hideContent('activityTag.errors');" />
+                            講座
+                        </label>
+                        <label>
+                            <input type="radio" th:field="*{activityTag}" value="其他" onclick="hideContent('activityTag.errors');" />
+                            其他
+                        </label>
+                        <span th:if="${#fields.hasErrors('activityTag')}" th:errors="*{activityTag}" class="error" id="activityTag.errors"></span>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <strong>圖片:</strong>
+                    <div class="form-input">
+                        <input type="file" th:field="*{activityPictures}" onclick="previewImage()" multiple="multiple" />
+                        <div id="blob_holder">
+                            <img th:each="activityPicture:*{activityPictures}" 
+                                 th:src="@{'/activity/DBGifReader/' + '?activityPictureID=' + ${activityPicture.activityPictureID}}"
+                                 width="100px" height="75px" style="object-fit: cover; margin: 5px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <strong>介紹:</strong>
+                    <div class="form-input">
+                        <textarea th:field="*{activityContent}" onclick="hideContent('activityContent.errors');"></textarea>
+                        <span th:if="${#fields.hasErrors('activityContent')}"
+                               th:errors="*{activityContent}" 
+                               class="error" 
+                               id="activityContent.errors">
+                        </span>
+                    </div>
                 </div>
 
-                <div>
-                    <label><strong>起售日:</strong></label>
-                    <input type="date" th:field="*{sellTime}" onclick="hideContent('sellTime.errors');" /><br/>
-                    <span  th:if="${#fields.hasErrors('sellTime')}" th:errors="*{sellTime}" class="error" id="sellTime.errors"></span>
+                <div class="button-container">
+                    <button type="submit" id="submit">送出修改</button>
+                    <a href="activityDisplay">
+                        <button type="button" id="back">回上頁</button>
+                    </a>
                 </div>
-
-                <div>
-                    <button type="submit" id="submit"> 送出修改 </button>
-                </div>	
             </form>
-            
-            <a href="activityDisplay">
-                <button type="submit" id="back"> 回上頁 </button>
-            </a>
         </div>
-        
     </div>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/partner.js"></script>
     <script src="/js/partner_sidebar.js"></script>
     <script type="text/javascript">
-        //清除提示信息
         function hideContent(d) {
              document.getElementById(d).style.display = "none";
         }
         
-        //照片上傳-預覽用
         var filereader_support = typeof FileReader != 'undefined';
         if (!filereader_support) {
             alert("No FileReader support");
         }
+
         acceptedTypes = {
                 'image/png' : true,
                 'image/jpeg' : true,
                 'image/gif' : true
         };
+
         function previewImage() {
             var upfile1 = document.getElementById("activityPictures");
             upfile1.addEventListener("change", function(event) {
@@ -183,6 +229,7 @@
                 }
             }, false);
         }
+
         function previewfile(file) {
             if (filereader_support === true && acceptedTypes[file.type] === true) {
                 var reader = new FileReader();
@@ -191,20 +238,14 @@
                     image.src = event.target.result;
                     image.width = 100;
                     image.height = 75;
-                    image.border = 2;
-                    if (blob_holder.hasChildNodes()) {
-                        blob_holder.removeChild(blob_holder.childNodes[0]);
-                    }
+                    image.style.objectFit = 'cover';
+                    image.style.margin = '5px';
                     blob_holder.appendChild(image);
                 };
                 reader.readAsDataURL(file);
                 document.getElementById('submit').disabled = false;
             } else {
-                blob_holder.innerHTML = "<div  style='text-align: left;'>" + "● filename: " + file.name
-                        + "<br>" + "● ContentTyp: " + file.type
-                        + "<br>" + "● size: " + file.size + "bytes"
-                        + "<br>" + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
-                document.getElementById('submit').disabled = true;
+                // 錯誤處理邏輯
             }
         }
     </script>

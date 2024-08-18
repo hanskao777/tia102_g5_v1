@@ -173,11 +173,11 @@ CREATE TABLE Activity(
 		                                       DEFAULT CURRENT_TIMESTAMP 
                                                ON UPDATE CURRENT_TIMESTAMP
 								                                  COMMENT "建立時間",
-    activityPostTime             DATE          NOT NULL           COMMENT "排程時間",
+    activityPostTime             DATE                             COMMENT "排程時間",
     activityTag                  VARCHAR(255)  NOT NULL           COMMENT "類型標籤",
     activityStatus               INT           NOT NULL           COMMENT "活動設定狀態 0:未設定 1:已設定",
     ticketSetStatus              INT           NOT NULL           COMMENT "票券設定狀態 0:未設定 1:已設定",
-    sellTime                     DATE          NOT NULL           COMMENT "起售日",
+    sellTime                     DATE                             COMMENT "起售日",
     
     CONSTRAINT pk_Activity PRIMARY KEY (activityID)
 ) COMMENT "活動";
@@ -219,7 +219,7 @@ CREATE TABLE BookTicket(
     memberID                     INT            NOT NULL           COMMENT "會員ID(買家)",
     activityID                   INT            NOT NULL           COMMENT "活動ID",
     activityTimeSlotID           INT            NOT NULL           COMMENT "時段ID",
-    memberCouponID               INT            NOT NULL           COMMENT "會員優惠券ID",
+    memberCouponID               INT                               COMMENT "會員優惠券ID",
     bookTime                     DATETIME 
                                                 DEFAULT CURRENT_TIMESTAMP 
 						                        ON UPDATE CURRENT_TIMESTAMP 

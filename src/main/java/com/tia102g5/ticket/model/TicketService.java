@@ -50,4 +50,8 @@ public class TicketService {
 //			return HibernateUtil_CompositeQuery_Ticket.getAllC(map,sessionFactory.openSession());
 //		}
 		
+		public List<Ticket> getTicketsByMemberID(Integer memberID) {
+	        return repository.findByGeneralMemberMemberID(memberID);
+	    }
+		
 }

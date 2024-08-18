@@ -1,5 +1,7 @@
 package com.tia102g5.article.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tia102g5.articleCollection.model.ArticleCollectionService;
+import com.tia102g5.generalmember.model.GeneralMember;
+import com.tia102g5.generalmember.model.GeneralMemberService;
 
 @Controller
 @RequestMapping("/articleCollection")
@@ -20,22 +24,45 @@ public class ArticleCollectionController {
 	
 	@Autowired
 	ArticleCollectionService articleCollectionSvc;	
+	
+	@Autowired
+	GeneralMemberService generalMemberSvc;
 		
 	
 	/*檢查會員是否收藏此文章*/
-   @GetMapping("/status/{articleID}/{memberID}")
-    public ResponseEntity<Boolean> getCollectionStatus(
+   @GetMapping("/status/{articleID}")
+    public ResponseEntity<?> getCollectionStatus(
             @PathVariable Integer articleID,
-            @PathVariable Integer memberID) {
-        boolean isCollected = articleCollectionSvc.isArticleCollectedByMember(articleID, memberID);
+            HttpSession session) {
+		String memberAccount = (String) session.getAttribute("memberAccount");
+        if (memberAccount == null || memberAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("請先登入");
+        }
+        GeneralMember member = generalMemberSvc.getByMemberAccount(memberAccount);
+        if (member == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("無法找到會員信息");
+        }
+        boolean isCollected = articleCollectionSvc.isArticleCollectedByMember(articleID, member.getMemberID());
         return ResponseEntity.ok(isCollected);
     }
 	
 	//切換文章的收藏狀態
     @PostMapping("/toggle")
-    public ResponseEntity<Boolean> toggleArticleCollection(@RequestParam Integer memberID, @RequestParam Integer articleID) {
-    	// 這裡添加身份驗證檢查
-    	boolean isCollected = articleCollectionSvc.toggleArticleCollection(memberID, articleID);
+    public ResponseEntity<?> toggleArticleCollection( @RequestParam Integer articleID,
+    		HttpSession session) {
+    	
+    	// 獲取當前登入的會員信息
+        String memberAccount = (String) session.getAttribute("memberAccount");
+        if (memberAccount == null || memberAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("登入已過期，請重新登入");
+        }
+
+        GeneralMember member  = generalMemberSvc.getByMemberAccount(memberAccount);
+        if (member  == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("無法找到會員信息，請重新登入");
+        }    	
+    	
+    	boolean isCollected = articleCollectionSvc.toggleArticleCollection(member .getMemberID(), articleID);
         return ResponseEntity.ok(isCollected);
     }
     

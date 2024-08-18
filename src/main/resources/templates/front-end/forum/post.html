@@ -38,13 +38,13 @@
 			</div>
 			
 			<!-- 先用直接輸入會員去測試 -->	
-			<div>
-				<label>會員名稱:</label>
-				<select th:field="*{generalMember.memberID}">
-					<option th:each="generalMember : ${generalMemberListData}" th:value="${generalMember.memberID}" th:text="${generalMember.memberName}" />
-				</select>
-				<span th:if="${#fields.hasErrors('generalMember.memberID')}" th:errors="*{generalMember.memberID}" class="error" id="generalMember.memberID.errors"></span>
-			</div>
+<!-- 			<div> -->
+<!-- 				<label>會員名稱:</label> -->
+<!-- 				<select th:field="*{generalMember.memberID}"> -->
+<!-- 					<option th:each="generalMember : ${generalMemberListData}" th:value="${generalMember.memberID}" th:text="${generalMember.memberName}" /> -->
+<!-- 				</select> -->
+<!-- 				<span th:if="${#fields.hasErrors('generalMember.memberID')}" th:errors="*{generalMember.memberID}" class="error" id="generalMember.memberID.errors"></span> -->
+<!-- 			</div> -->
 			
 			<div>
 			    <label for="articleTitle">文章標題:</label>

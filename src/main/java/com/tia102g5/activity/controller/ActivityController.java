@@ -34,10 +34,22 @@ public class ActivityController {
 	
 /********************* 跳轉 **********************/	
 //////////////// 前台 ////////////////
-	//活動資訊
-	@GetMapping("/activityInfo")
+	//活動資訊總攬
+	@GetMapping("/activityInfoAll")
 	public String activityInfo() {
-		return "/front-end/activity/activityInfo";
+		return "/front-end/activity/activityInfoAll";
+	}
+	
+	//活動資訊
+	@GetMapping("/activityInfoOne")
+	public String activityInfoOne(@RequestParam("activityID") String activityID, ModelMap model) {
+		Activity activity = activitySvc.getOneActivity(Integer.valueOf(activityID));
+		Set<ActivityPicture> activityPictures = activity.getActivityPictures();
+		
+		model.addAttribute("activityPictures", activityPictures);
+		model.addAttribute("activity", activity);
+		
+		return "/front-end/activity/activityInfoOne";
 	}
 //////////////// 前台 ////////////////
 	
@@ -104,9 +116,9 @@ public class ActivityController {
 				activity.getActivityPictures().add(activityPicture);
 			}
 		}
-		if (result.hasErrors()) {
-			return "back-end-partner/activity/activityConfig";
-		}
+//		if (result.hasErrors()) {
+//			return "back-end-partner/activity/activityConfig";
+//		}
 		/*************************** 2.開始修改資料 *****************************************/
 		
 		

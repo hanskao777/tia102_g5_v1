@@ -55,7 +55,7 @@ public class IndexController {
     public String getPartnerSidebar() {
         return "/back-end-partner/partner_sidebar";
     }
-    
+
     @GetMapping("/generalmember/select_page")
 	public String select_page(Model model) {
 		return "back-end/generalmember/select_page";
@@ -89,10 +89,16 @@ public class IndexController {
     	return list;
     }
     
- // 導向登入成功登入
+ // 導向登入成功會員
  	@GetMapping("/success")
  	public String getsuccess() {
  		return "success";
+ 	}
+ 	
+ 	// 導向登入成功廠商
+ 	@GetMapping("/successpartner")
+ 	public String getSuccessPartner() {
+ 		return "successpartner";
  	}
  	
  	// 導向註冊成功
@@ -125,5 +131,12 @@ public class IndexController {
         return "index"; //view
     }
 	
+    //管理員檢舉管理
+    @GetMapping("/adminProsecute")
+    public String getAdminProsecute(Model model) {
+        model.addAttribute("message", "Welcome to Admin Prosecute Page");
+        return "/back-end-admin/admin_prosecute";
+    }
+
 
 }

@@ -1,0 +1,48 @@
+.report-table {
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+}
+
+.report-table th {
+	background-color: #57616a;
+	color: #fff;
+	text-align: center;
+	padding: 10px;
+}
+
+.report-table td {
+	text-align: center;
+	padding: 10px;
+	vertical-align: middle;
+}
+
+.report-table tr:hover {
+	background-color: #f8f9fa;
+}
+
+.report-table .btn {
+	border-radius: 20px;
+	padding: 5px 10px;
+	font-size: 14px;
+}
+
+/* 額外的標題和容器樣式 */
+.container {
+	max-width: 1200px;
+}
+
+.page-title {
+	font-size: 28px;
+	font-weight: 600;
+	color: #343a40;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.table-container {
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #f4f4f4;
+}

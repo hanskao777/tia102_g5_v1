@@ -66,8 +66,8 @@ public class Activity implements Serializable {
 	private Timestamp activityCreateTime; // 建立時間
 
 	@Column(name = "activityPostTime")
-	@Future(message="日期必須是在今日(不含)之後")
-	@NotNull(message = "請選擇排程時間")
+//	@Future(message="日期必須是在今日(不含)之後")
+//	@NotNull(message = "請選擇排程時間")
 	private Date activityPostTime; // 排程時間
 
 	@Column(name = "activityTag")
@@ -81,8 +81,8 @@ public class Activity implements Serializable {
 	private Integer ticketSetStatus = 0; // 票券設定狀態 0:未設定 1:已設定
 
 	@Column(name = "sellTime")
-	@Future(message="日期必須是在今日(不含)之後")
-	@NotNull(message = "請選擇起售日")
+//	@Future(message="日期必須是在今日(不含)之後")
+//	@NotNull(message = "請選擇起售日")
 	private Date sellTime; // 起售日
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)

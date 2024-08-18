@@ -2,14 +2,21 @@ package com.tia102g5.prosecute.model;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import com.tia102g5.article.model.Article;
+import com.tia102g5.article.model.ArticleService;
+import com.tia102g5.message.model.Message;
+import com.tia102g5.message.model.MessageService;
 
 @Service("prosecuteService")
 public class ProsecuteService {
@@ -22,6 +29,14 @@ public class ProsecuteService {
 
 	@Autowired
 	private StringRedisTemplate redisTemplate;
+	
+	@Autowired
+	ArticleService articleSvc;
+	
+	@Autowired
+	MessageService messageSvc;
+	
+
 
 	@Transactional
 	public void prosecuteContent(Prosecute prosecute) {
@@ -61,6 +76,8 @@ public class ProsecuteService {
 		} catch (DataIntegrityViolationException e) {
 			throw new RuntimeException("檢舉保存失敗", e);
 		}
+		syncProsecuteToRedis(prosecute); 
+		
 
 		String prosecuteKey = PROSECUTE_HASH_KEY + prosecute.getProsecuteID();
 		redisTemplate.opsForHash().putAll(prosecuteKey, convertProsecuteToMap(prosecute));
@@ -99,32 +116,62 @@ public class ProsecuteService {
 		return map;
 	}
 
-//	public void addProsecute(Prosecute prosecute) {
-//		repository.save(prosecute);
+	// 同步單個檢舉到 Redis
+	private void syncProsecuteToRedis(Prosecute prosecute) {
+	    String prosecuteKey = PROSECUTE_HASH_KEY + prosecute.getProsecuteID();
+	    redisTemplate.opsForHash().putAll(prosecuteKey, convertProsecuteToMap(prosecute));
+
+	    if (prosecute.getArticle() != null) {
+	        redisTemplate.opsForSet().add(REPORTED_ARTICLES_SET, prosecute.getArticle().getArticleID().toString());
+	    } else if (prosecute.getMessage() != null) {
+	        redisTemplate.opsForSet().add(REPORTED_MESSAGES_SET, prosecute.getMessage().getMessageID().toString());
+	    }
+	}
+	
+	//獲得所有檢舉
+    public List<Prosecute> getAllProsecutes() {
+        return repository.findAll();
+    }
+    
+    //處理被檢舉文章或留言
+    @Transactional
+    public Prosecute processProsecute(Integer prosecuteID) {
+        Prosecute prosecute = repository.findById(prosecuteID)
+            .orElseThrow(() -> new EntityNotFoundException("檢舉不存在"));
+        
+        if (prosecute.getArticle() != null) {
+            Article article = prosecute.getArticle();
+            article.setArticleStatus(2); // 將文章狀態設為2
+            articleSvc.updateArticle(article);
+        } else if (prosecute.getMessage() != null) {
+            Message message = prosecute.getMessage();
+            message.setMessageStatus(2); // 將留言狀態設為2
+            messageSvc.updateMessage(message);
+        }else {
+            throw new IllegalStateException("檢舉既不是針對文章也不是針對留言，ID: " + prosecuteID);
+        }
+
+        syncProsecuteToRedis(prosecute); 
+        return repository.save(prosecute);
+    }
+    
+    //刪除單筆檢舉資料
+    @Transactional
+    public void deleteProsecute(Integer prosecuteID) {
+        Prosecute prosecute = repository.findById(prosecuteID)
+            .orElseThrow(() -> new EntityNotFoundException("檢舉不存在，ID: " + prosecuteID));
+
+        repository.delete(prosecute);
+        syncProsecuteToRedis(prosecute);
+    }
+
+	// 同步所有檢舉到 Redis
+//	public void syncAllProsecutesToRedis() {
+//	    List<Prosecute> allProsecutes = repository.findAll();
+//	    for (Prosecute prosecute : allProsecutes) {
+//	        syncProsecuteToRedis(prosecute);
+//	    }
+//	    System.out.println("所有檢舉同步完成");
 //	}
-//
-//	public void updateProsecute(Prosecute prosecute) {
-//		repository.save(prosecute);
-//	}
-//
-//	public void deleteProsecute(Integer prosecute) {
-//		if (repository.existsById(prosecute))
-//			repository.deleteByProsecuteID(prosecute);
-////		    repository.deleteById(prosecute);
-//	}
-//
-//	public Prosecute getOneProsecute(Integer prosecuteID) {
-//		Optional<Prosecute> optional = repository.findById(prosecuteID);
-////		return optional.get();
-//		return optional.orElse(null);  // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
-//	}
-//
-//	public List<Prosecute> getAll() {
-//		return repository.findAll();
-//	}
-//
-////	public List<Prosecute> getAll(Map<String, String[]> map) {
-////		return HibernateUtil_CompositeQuery_Prosecute3.getAllC(map,sessionFactory.openSession());
-////	}
 
 }

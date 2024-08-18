@@ -49,6 +49,35 @@
         hr{
             background-color: gray;
         }
+
+        #submit{
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .quantity{
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 0;
+            margin: 0 5px;
+        }
+
+        .quantity:hover {
+            background-color: #e0e0e0;
+        }
+
+        .quantity:active {
+            background-color: #d0d0d0;
+        }
+
     </style>
 </head>
 <body>
@@ -79,24 +108,25 @@
                 </thead>
                     
                 <tbody>
-                    <th:block th:each="ticket : ${ticketListData}">
+                    <th:block th:each="ticket : ${session.ticketList}">
                         <tr>
                             <td th:text="${ticketStat.count}"></td>
-                            <td th:text="${ticket.bookTicket.activity.activityName}"></td>
+                            <td th:text="${ticket.activityTimeSlot.activity.activityName}"></td>
                             <td th:switch="${ticket.activityTimeSlot.activityTimeSlot}">
                                 <span th:case="1" th:text="${ticket.activityTimeSlot.activityTimeSlotDate} + ' 10:00'"></span>
                                 <span th:case="2" th:text="${ticket.activityTimeSlot.activityTimeSlotDate} + ' 14:00'"></span>
                                 <span th:case="3" th:text="${ticket.activityTimeSlot.activityTimeSlotDate} + ' 18:00'"></span>
                             </td>
-                            <td th:text="${ticket.bookTicket.activity.venue.venueName}"></td>
+                            <td th:text="${ticket.activityTimeSlot.activity.venue.venueName}"></td>
                             <td th:text="${ticket.seatStatus.seat.seatName}"></td>
-                            <td th:text="${ticket.activityAreaPrice.activityAreaPrice}"></td>
-                            <td>
-                                <!-- <form method="post" th:action="@{/ticket/bookTicketConfig}" style="margin-bottom: 0px;">
-                                    <input type="submit" value="+">
-                                    <input type="submit" value="-">
-                                    <input type="hidden" name="ticketID" th:value="${ticket.ticketID}">
-                                </form> -->
+                            <td th:text="${'$' + ticket.activityAreaPrice.activityAreaPrice}"></td>
+                            <td style="width: 100px;">
+                                <form method="post" th:action="@{/ticket/deleteOneTicket}" style="margin-bottom: 0px;">
+                                    <button type="submit" class="quantity">
+                                        <img th:src="@{/images/trash.png}" style="width: 50px; height: 50px;"></i>
+                                    </button>
+                                    <input type="hidden" name="count" th:value="${ticketStat.count}">
+                                </form>
                             </td>
                         </tr>
                     </th:block>
@@ -104,7 +134,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="5" style="text-align: right"><b>合計：</b></td>
-                        <td>$7,200</td>
+                        <td th:text="${'$' + total}"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -112,43 +142,55 @@
 
         <hr>
 
-        <!-- 會員資料 -->
-        <form method="post" th:action="@{/ticket/}" th:object="${bookTicket}">
+        <!-- 付款資訊 -->
+        <form method="post" th:action="@{/ticket/confirm}">
+            <input type="hidden" name="memberID" th:value="${session.memberID}">
+            <input type="hidden" name="totalPrice" th:value="${total}">
+
             <div class="member-details">
                 <h2 style="margin: 20px 0"><b>購買資料</b></h2>
                 <h6 style="color: red">* 請填入票券持有人</h6>
-                <div th:each="ticket, ticketStat : ${ticketListData}" style="margin: 10px 0">
+                <div th:each="ticket:${session.ticketList}" style="margin: 10px 0">
                     <label>序號 <span th:text="${ticketStat.count}"></span> 
-                        會員帳號：<input type="text" th:field="${ticketListData[__${ticketStat.index}__].member.account}">
-                        <!-- th:field="*{member}" -->
+                        會員帳號：<input type="text"  name="ticketMemberIDs">
+                        <!--  <span th:text="${ticket.generalMember.memberID}"> -->
                     </label>
                 </div>
             </div>
 
             <hr>
 
-            <!-- 付款資訊 -->
+            <!-- 信用卡資訊 -->
             <div class="payment-details">
                 <h2 style="margin: 20px 0"><b>付款資訊</b></h2>
                 <div class="payment-method">
-                    <label>
-                        持卡人：<input type="text" name="cardholder-name">
-                    </label>
-                    <label>信用卡卡號：</label>
-                    <input type="text" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
-
-                    <label>信用卡到期日：</label>
-                    <input type="text" name="expiry-date" placeholder="MM/YY">
-
-                    <label>信用卡背面碼：</label>
-                    <input type="text" name="cvv" placeholder="XXX">
+                    <div>
+                        <label>
+                            持卡人：<input type="text" name="cardholder-name">
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            信用卡卡號：<input type="text" name="card-number" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            信用卡到期日：<input type="text" name="expiry-date" placeholder="MM/YY">
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            信用卡背面碼：<input type="text" name="cvv" placeholder="XXX">
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- 按鈕 -->
-            <div class="buttons">
-                <button type="button" th:onclick="|window.location.href='@{/cart}'|">取消訂單</button>
-                <button type="submit" th:onclick="|window.location.href='@{/order/complete}'|">繼續送出</button>
+            <div class="buttons" id="submit">
+                <button type="submit" name="action" value="cancel">取消訂單</button>
+                <button type="submit" name="action" value="confirm">確認結帳</button>
             </div>
         </form>
     </div>

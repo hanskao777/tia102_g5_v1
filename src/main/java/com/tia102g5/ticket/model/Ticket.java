@@ -114,4 +114,13 @@ public class Ticket implements Serializable {
 		this.activityTimeSlot = activityTimeSlot;
 	}
 
+	@Override
+	public String toString() {
+		return "Ticket [ticketID=" + ticketID + ", generalMember.getMemberID()=" + generalMember.getMemberID() + ", seatStatus=" + seatStatus
+				+ ", activityAreaPrice=" + activityAreaPrice + ", bookTicket=" + bookTicket + ", activityTimeSlot="
+				+ activityTimeSlot + "]";
+	}
+
+	
+
 }

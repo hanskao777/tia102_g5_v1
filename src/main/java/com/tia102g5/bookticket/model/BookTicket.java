@@ -3,6 +3,7 @@ package com.tia102g5.bookticket.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -61,7 +62,7 @@ public class BookTicket implements Serializable {
 	
 	@OneToMany(mappedBy = "bookTicket", cascade = CascadeType.ALL)
 	@OrderBy("ticketID asc")
-	private Set<Ticket> tickets; // 票券
+	private Set<Ticket> tickets = new HashSet<Ticket>(); // 票券
 
 	// 建構子
 	public BookTicket() {
