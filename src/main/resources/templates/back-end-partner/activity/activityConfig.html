@@ -83,7 +83,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
-            resize: vertical;
+            resize: none;
         }
 
         #blob_holder {
@@ -105,10 +105,11 @@
             width: 100%;
         }
 
-        .button-container button,
-        .button-container a {
+        .button-container button {
             margin: 0 10px;
             padding: 5px 15px;
+            width: 100px;
+            height: auto;
             border-radius: 20px;
         }
 
@@ -192,9 +193,9 @@
                 </div>
 
                 <div class="button-container">
-                    <button type="submit" id="submit">送出修改</button>
+                    <button type="submit" class="submit">送出修改</button>
                     <a href="activityDisplay">
-                        <button type="button" id="back">回上頁</button>
+                        <button type="button" class="submit">回上頁</button>
                     </a>
                 </div>
             </form>
