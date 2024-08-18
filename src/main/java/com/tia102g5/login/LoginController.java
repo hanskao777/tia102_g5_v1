@@ -1,5 +1,7 @@
 package com.tia102g5.login;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -49,33 +51,43 @@ public class LoginController {
 	// 會員登入
 	@PostMapping("login")
 	public String login(@RequestParam("memberAccount") String memberAccountStr,
-			@RequestParam("memberPassword") String memberPasswordStr, HttpSession session, Model model) {
+	                    @RequestParam("memberPassword") String memberPasswordStr,
+	                    @RequestParam(value = "rememberMe", required = false) boolean rememberMe,
+	                    HttpSession session, HttpServletResponse response, Model model) {
 
-		// 驗證帳號格式
-		if (isInvalidEmail(memberAccountStr)) {
-			model.addAttribute("errorMessage", "請輸入有效的帳號(email)");
-			return "login";
-		}
+	    // 驗證帳號格式
+	    if (isInvalidEmail(memberAccountStr)) {
+	        model.addAttribute("errorMessage", "請輸入有效的帳號(email)");
+	        return "login";
+	    }
 
-		// 根據帳號獲取會員資料
-		GeneralMember generalMember = gmemberSvc.getByMemberAccount(memberAccountStr);
+	    // 根據帳號獲取會員資料
+	    GeneralMember generalMember = gmemberSvc.getByMemberAccount(memberAccountStr);
 
-		// 檢查會員是否存在
-		if (generalMember == null) {
-			model.addAttribute("errorMessage", "會員不存在");
-			return "login"; // 直接返回登入頁
-		}
+	    // 檢查會員是否存在
+	    if (generalMember == null) {
+	        model.addAttribute("errorMessage", "會員不存在");
+	        return "login"; // 直接返回登入頁
+	    }
 
-		// 檢查密碼
-		if (isPasswordCorrect(memberPasswordStr, generalMember.getMemberPassword())) {
-			session.setAttribute("memberID", generalMember.getMemberID());
-			session.setAttribute("memberName", generalMember.getMemberName());
-			session.setAttribute("memberAccount", generalMember.getMemberAccount());
-			return "success"; // 登入成功
-		} else {
-			model.addAttribute("errorMessage", "密碼錯誤，登入失敗!!!");
-			return "login"; // 返回登入頁
-		}
+	    // 檢查密碼
+	    if (isPasswordCorrect(memberPasswordStr, generalMember.getMemberPassword())) {
+	        session.setAttribute("memberID", generalMember.getMemberID());
+	        session.setAttribute("memberName", generalMember.getMemberName());
+	        session.setAttribute("memberAccount", generalMember.getMemberAccount());
+
+	        // 登入成功後，處理「記住帳號」
+	        if (rememberMe) {
+	            Cookie cookie = new Cookie("memberAccount", memberAccountStr);
+	            cookie.setMaxAge(60 * 60 * 24 * 30); // 30 天
+	            response.addCookie(cookie);
+	        }
+
+	        return "success"; // 登入成功
+	    } else {
+	        model.addAttribute("errorMessage", "密碼錯誤，登入失敗!!!");
+	        return "login"; // 返回登入頁
+	    }
 	}
 
 	// 會員中心

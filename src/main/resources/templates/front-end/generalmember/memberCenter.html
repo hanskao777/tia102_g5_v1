@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="/css/header_footer.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,7 +81,7 @@
         .nav-links a {
             display: inline-block;
             padding: 8px 15px;
-            background-color: #007BFF;
+            background-color: #E18D96;
             color: white;
             border-radius: 5px;
             text-decoration: none;
@@ -87,7 +89,7 @@
             font-size: 0.9em;
         }
         .nav-links a:hover {
-            background-color: #0056b3;
+            background-color: rgb(255, 187, 187);
         }
         @media (max-width: 600px) {
             .nav-links {
@@ -110,10 +112,10 @@
         <div class="nav-links">
             <a th:href="@{/generalmember/editMember/{memberID}(memberID=${generalMember.memberID})}">修改會員資料</a>
             <a th:href="@{/generalmember/myCollections}">我的收藏文章</a>
-            <a href="#">商品訂單</a>
+            <a th:href="@{/generalmember/myOrders}">我的商品訂單</a>
             <a th:href="@{/generalmember/myTicketOrders}">我的票券訂單</a>
             <a th:href="@{/generalmember/myTickets}">我的票券</a>
-            <a href="#">修改密碼</a>
+            <a th:href="@{/generalmember/changePassword}">修改密碼</a>
             <a th:href="@{/}">返回首頁</a>
         </div>
         
@@ -173,6 +175,22 @@
                 console.error('Error loading footer:', error);
                 document.getElementById('footer').innerHTML = '<p>Error loading footer</p>';
             });
+    </script>
+    
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        var passwordChangeSuccess = /*[[${passwordChangeSuccess}]]*/ false;
+        if (passwordChangeSuccess) {
+            Swal.fire({
+                title: '成功！',
+                text: '密碼修改成功！',
+                icon: 'success',
+                confirmButtonText: '確定'
+            });
+        }
+    });
+    /*]]>*/
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
