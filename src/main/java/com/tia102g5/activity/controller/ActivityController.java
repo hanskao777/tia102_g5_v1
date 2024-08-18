@@ -42,7 +42,11 @@ public class ActivityController {
 //////////////// 前台 ////////////////
 	//活動資訊總攬
 	@GetMapping("activityInfoAll")
-	public String activityInfo() {
+	public String activityInfo(ModelMap model) {
+		List<Activity> activities = activitySvc.getAll();
+		
+		model.addAttribute("activityListData", activities);
+		
 		return "/front-end/activity/activityInfoAll";
 	}
 	
@@ -62,13 +66,31 @@ public class ActivityController {
 //////////////// 後台 ////////////////
 	//活動資訊
 	@GetMapping("activityDisplay")
-	public String activityDisplay() {
+	public String activityDisplay(HttpSession session, ModelMap model) {
+		//取得登入帳號
+		Integer partnerID = (Integer)session.getAttribute("partnerID");
+		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
+		
+		//取得廠商活動
+		Set<Activity> partnerActivities = partner.getActivities();
+		
+		model.addAttribute("backEndActivityListData", partnerActivities);
+		
 		return "back-end-partner/activity/activityDisplay";
 	}
 	
 	//活動未新增
 	@GetMapping("activityUnadd")
-	public String activityUnadd() {
+	public String activityUnadd(HttpSession session, ModelMap model) {
+		//取得登入帳號
+		Integer partnerID = (Integer)session.getAttribute("partnerID");
+		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
+		
+		//取得廠商場地申請
+		Set<VenueRental> venueRentals = partner.getVenueRentals();
+		
+		model.addAttribute("venueRentalListData", venueRentals);
+		
 		return "back-end-partner/activity/activityUnadd";
 	}
 	
@@ -144,7 +166,6 @@ public class ActivityController {
 //		}
 		/*************************** 2.開始修改資料 *****************************************/
 		
-		
 		activitySvc.updateActivity(activity);
 		
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
@@ -155,42 +176,6 @@ public class ActivityController {
 		return "back-end-partner/activity/activityDisplay"; // 修改成功後轉交activityDispaly.html
 	}
 /********************* action ********************/
-	
-/********************* bean **********************/
-	//查廠商全部 VenueRental ，給 activityAdd 用
-	@ModelAttribute("venueRentalListData")
-	protected Set<VenueRental> venueRentalListData(HttpSession session) {
-    	//取得登入帳號
-		Integer partnerID = (Integer)session.getAttribute("partnerID");
-		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
-		
-		//取得廠商場地申請
-		Set<VenueRental> venueRentals = partner.getVenueRentals();
-		
-    	return venueRentals;
-	}
-	
-	//查全部 Activity，給 activityInfoAll 用
-	@ModelAttribute("activityListData")
-	protected List<Activity> activityListData() {
-		List<Activity> activities = activitySvc.getAll();
-		
-		return activities;
-	}
-	
-	//查廠商全部 Activity，給 activityDisplay 用
-	@ModelAttribute("backEndActivityListData")
-	protected Set<Activity> backEndActivityListData(HttpSession session) {
-    	//取得登入帳號
-		Integer partnerID = (Integer)session.getAttribute("partnerID");
-		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
-		
-		//取得廠商活動
-		Set<Activity> partnerActivities = partner.getActivities();
-		
-    	return partnerActivities;
-	}
-/********************* bean **********************/
 
 /*************** ExceptionHandler ****************/
 	// 去除BindingResult中某個欄位的FieldError紀錄
