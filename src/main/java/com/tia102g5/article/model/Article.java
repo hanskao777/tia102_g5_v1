@@ -56,7 +56,7 @@ public class Article implements java.io.Serializable {
 	private String articleTitle;
 
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "memberID", referencedColumnName = "memberID") //會員ID
 	private GeneralMember generalMember; 
 
