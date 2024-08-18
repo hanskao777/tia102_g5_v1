@@ -46,7 +46,7 @@ import com.tia102g5.email.MailService;
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.generalmember.model.GeneralMemberService;
 import com.tia102g5.orders.model.Orders;
-//import com.tia102g5.orders.model.OrdersService;
+import com.tia102g5.orders.model.OrdersService;
 import com.tia102g5.passwordchangeform.PasswordChangeForm;
 import com.tia102g5.ticket.model.Ticket;
 import com.tia102g5.ticket.model.TicketService;
@@ -73,8 +73,8 @@ public class GeneralMemberController {
 	@Autowired
 	TicketService ticketSvc;
 	
-//	@Autowired
-//	OrdersService ordersSvc;
+	@Autowired
+	OrdersService ordersSvc;
 
 	/*
 	 * This method will serve as addEmp.html handler.
@@ -383,16 +383,16 @@ public class GeneralMemberController {
 	}
 	
 	// 會員中心商品訂單
-//	@GetMapping("/myOrders")
-//    public String myOrders(Model model, HttpSession session) {
-//        Integer memberID = (Integer) session.getAttribute("memberID");
-//        if (memberID == null) {
-//            return "redirect:/generalmember/login";
-//        }
-//        List<Orders> orders = ordersSvc.getOrdersByMemberID(memberID);
-//        model.addAttribute("orders", orders);
-//        return "front-end/generalmember/myOrders";
-//    }
+	@GetMapping("/myOrders")
+    public String myOrders(Model model, HttpSession session) {
+        Integer memberID = (Integer) session.getAttribute("memberID");
+        if (memberID == null) {
+            return "redirect:/generalmember/login";
+        }
+        List<Orders> orders = ordersSvc.getOrdersByMemberID(memberID);
+        model.addAttribute("orders", orders);
+        return "front-end/generalmember/myOrders";
+    }
 	
 	
 	
