@@ -9,8 +9,6 @@
 	href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
 	rel="stylesheet">
 <style>
-/* 這裡包含兩個文件的所有 CSS 樣式 */
-/* ... */
 body {
 	font-family: 'Noto Sans TC', sans-serif;
 	background-color: #f5f5f5;
@@ -174,6 +172,7 @@ th {
 .btn-group {
 	display: flex;
 	justify-content: space-between;
+	width: 100%;
 	margin-top: 30px;
 }
 
@@ -184,6 +183,7 @@ th {
 	cursor: pointer;
 	font-size: 16px;
 	transition: background-color 0.3s;
+	text-align: right; /* 使用 float 使按鈕靠右 */
 }
 
 .btn-back {
@@ -197,7 +197,7 @@ th {
 }
 
 .btn:hover {
-	opacity: 0.9;
+	background-color: #e57373;
 }
 
 /* 優惠券 */
@@ -302,7 +302,10 @@ th {
 			</div>
 
 			<p class="total">
-				合計：<span id="totalAmount" th:text="${'$' + cart.cartTotalPrice}"></span>
+				共 <span
+					th:text="${#aggregates.sum(cart.cartItems.![checkedQuantity])}">0</span>
+				件商品 <br> 合計：<span id="totalAmount"
+					th:text="${'$' + cart.cartTotalPrice}"></span>
 			</p>
 
 
@@ -467,31 +470,29 @@ th {
 
 			<div class="form-section">
 				<h3>收件人資料</h3>
-
-			<div class="checkbox-group">
-        <input type="checkbox" id="sameAsOrder" name="sameAsOrder" checked>
-        <label for="sameAsOrder">同訂購人</label>
-    </div>
 				<div class="form-group">
-					<label for="recipientName">姓名：</label> <input type="text"
-						id="recipientName" name="recipientName"
-						th:value="${member.memberName}">
+					<label for="recipient">姓名：</label> <input type="text"
+						id="recipient" name="recipient" required
+						th:value="${order.recipient}">
 				</div>
 				<div class="form-group">
 					<label for="recipientPhone">電話：</label> <input type="tel"
-						id="recipientPhone" name="recipientPhone"
-						th:value="${member.memberPhone}">
+						id="recipientPhone" name="recipientPhone" required
+						th:value="${order.recipientPhone}">
 				</div>
 				<div class="form-group">
 					<label for="recipientEmail">E-mail：</label> <input type="email"
-						id="recipientEmail" name="recipientEmail"
-						th:value="${member.memberAccount}">
+						id="recipientEmail" name="recipientEmail" required
+						th:value="${order.recipientEmail}">
 				</div>
 				<div class="form-group">
 					<label for="recipientAddress">地址：</label> <input type="text"
-						id="recipientAddress" name="recipientAddress"
-						th:value="${member.memberAddress}">
+						id="recipientAddress" name="recipientAddress" required
+						th:value="${order.recipientAddress}">
 				</div>
+				<!-- 如果有優惠券，添加以下字段 -->
+				<input type="hidden" id="memberCouponId" name="memberCouponId"
+					th:value="${selectedCouponId}">
 			</div>
 
 
