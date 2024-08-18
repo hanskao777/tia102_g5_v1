@@ -89,8 +89,9 @@ public class SeatReservationAndPricingController {
 
 		ActivityTimeSlot activityTimeSlot = activityTimeSlotService.getActivityTimeSlotById(activityTimeSlotID);
 		Activity activity = activityService.getOneActivity(activityID);
+		activity.setTicketSetStatus(1);//把活動狀態設定為1
+		activityService.updateActivity(activity);
 		Integer venueId = activity.getVenue().getVenueID();
-
 		Map<String, Object> response = new HashMap<>();
 
 		try {
