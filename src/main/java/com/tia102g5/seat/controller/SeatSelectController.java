@@ -58,10 +58,9 @@ public class SeatSelectController {
 		// model//到時候需要加入這參數
 //		Integer activityTimeSlotId = 30;
 		ActivityTimeSlot activityTimeSlot = activityTimeSlotService.getActivityTimeSlotById(activityTimeSlotId);
-		Integer activityId = activityTimeSlot.getActivity().getActivityID();// 活動ID從活動時段ID抓取
-		Activity activity = activityService.getOneActivity(activityId);
-		activity.setActivityID(activityId);
-		Integer venueId = activity.getVenue().getVenueID();// 場館ID從活動ID抓取
+        Integer activityId = activityTimeSlot.getActivity().getActivityID();
+        Activity activity = activityService.getOneActivity(activityId);
+        Integer venueId = activity.getVenue().getVenueID();
 		
 		String venueAreaName1 = "VIP";
 		Integer venueAreaId1 = venueAreaService.findVenueAreaIdByVenueIdAndVenueAreaName(venueId, venueAreaName1);
@@ -130,6 +129,8 @@ public class SeatSelectController {
 
 				// 使用 VenueAreaService 找出 venueAreaId
 				Integer venueAreaId = venueAreaService.findVenueAreaIdByVenueIdAndVenueAreaName(venueId, venueAreaName);
+				
+				
 				if (venueAreaId == null) {
 					System.out.println("未找到區域: " + venueAreaName);
 					redirectAttributes.addFlashAttribute("error", "未找到區域: " + venueAreaName);

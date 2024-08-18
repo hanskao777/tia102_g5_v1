@@ -61,9 +61,9 @@
                         <!-- <td th:text="${activity.sellTime}"></td> -->
                         <td th:text="${activity.venue.venueName}"></td>
                         <td th:text="${activity.activityTag}"></td>
-                        <form method="get" th:action="@{/seatReservationAndPricing}" style="margin-bottom: 0px;">
+                        <form method="post" th:action="@{/seatReservationAndPricing}" style="margin-bottom: 0px;">
                             <td>
-                                <select th:name="${activityTimeSlotID}">
+                                <select name="activityTimeSlotID">
                                     <option th:each="activityTimeSlot : ${activity.activityTimeSlots}" 
                                             th:value="${activityTimeSlot.activityTimeSlotID}">
                                         <th:block th:switch="${activityTimeSlot.activityTimeSlot}">
