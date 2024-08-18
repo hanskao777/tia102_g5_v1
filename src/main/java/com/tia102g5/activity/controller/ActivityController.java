@@ -68,9 +68,20 @@ public class ActivityController {
 		return "back-end-partner/activity/activityDisplay";
 	}
 	
+	//活動未新增
+	@GetMapping("activityUnadd")
+	public String activityUnadd() {
+		return "back-end-partner/activity/activityUnadd";
+	}
+	
 	//活動新增
 	@GetMapping("activityAdd")
-	public String activityAdd() {
+	public String activityAdd(@RequestParam("venueRental") VenueRental venueRental, ModelMap model) {
+		Activity activity = new Activity();
+		
+		model.addAttribute("venueRental", venueRental);
+		model.addAttribute("activity", activity);
+		
 		return "back-end-partner/activity/activityAdd";
 	}
 	
