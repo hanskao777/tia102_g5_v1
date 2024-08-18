@@ -1,6 +1,7 @@
 package com.tia102g5.seat.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,7 +258,7 @@ public class SeatReservationAndPricingController {
 		if (venueAreaId != null) {
 			ActivityAreaPrice price = activityAreaPriceService.findActivityAreaPrice(venueAreaId, activityID);
 			if (price != null) {
-				return price.getActivityAreaPrice();
+				return price.getActivityAreaPrice().setScale(0, RoundingMode.HALF_UP);
 			}
 		}
 		return BigDecimal.ZERO; // 如果沒有找到價格，返回 0
