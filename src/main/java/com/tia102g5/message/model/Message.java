@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -43,7 +44,7 @@ public class Message implements java.io.Serializable {
 
 
 	@JsonBackReference //解決循環引用問題,不序列化父端
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "articleID", referencedColumnName = "articleID") //文章ID
 	private Article article; 
 	
@@ -67,7 +68,24 @@ public class Message implements java.io.Serializable {
 
 	@OneToOne(mappedBy = "message",cascade = CascadeType.ALL, fetch = FetchType.LAZY) //檢舉
 	@JsonIgnore
-	private Prosecute prosecute; 
+	private Prosecute prosecute;
+	
+	//RowMapper中的相關擴充欄位
+	//會員id(無關聯的)
+	@Transient
+	private Integer memberIDRM;
+	
+	//文章id(無關聯的)
+	@Transient
+	private Integer articleIDRM;
+	
+	//會員暱稱(無關聯的)
+	@Transient
+	private String memberNameRM;
+	
+	//留言時間(無關聯的)
+	@Transient
+	private Date messageCreateTimeRM;
 	
 	
 	public Message() { 
@@ -141,6 +159,47 @@ public class Message implements java.io.Serializable {
 		this.prosecute = prosecute;
 	}
 
+
+	public Integer getMemberIDRM() {
+		return memberIDRM;
+	}
+
+
+	public void setMemberIDRM(Integer memberIDRM) {
+		this.memberIDRM = memberIDRM;
+	}
+
+
+	public Integer getArticleIDRM() {
+		return articleIDRM;
+	}
+
+
+	public void setArticleIDRM(Integer articleIDRM) {
+		this.articleIDRM = articleIDRM;
+	}
+
+
+	public String getMemberNameRM() {
+		return memberNameRM;
+	}
+
+
+	public void setMemberNameRM(String memberNameRM) {
+		this.memberNameRM = memberNameRM;
+	}
+
+
+	public Date getMessageCreateTimeRM() {
+		return messageCreateTimeRM;
+	}
+
+
+	public void setMessageCreateTimeRM(Date messageCreateTimeRM) {
+		this.messageCreateTimeRM = messageCreateTimeRM;
+	}
+
+	
 
 	
 //	@Override

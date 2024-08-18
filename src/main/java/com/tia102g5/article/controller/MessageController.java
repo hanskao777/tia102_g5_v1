@@ -181,7 +181,8 @@ public class MessageController {
     @GetMapping("list/{articleID}")
     public ResponseEntity<?> getMessagesByArticle(@PathVariable Integer articleID) {
         try {
-            List<Message> messages = messageSvc.getMessagesByArticleID(articleID);
+            //List<Message> messages = messageSvc.getMessagesByArticleID(articleID); //original
+        	List<Message> messages = messageSvc.getMessagesByArticleIdDao(articleID); //JDBC
             return ResponseEntity.ok()
                                  .contentType(MediaType.APPLICATION_JSON)
                                  .body(messages);

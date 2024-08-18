@@ -19,6 +19,9 @@ public class MessageService {
 	
 	@Autowired
     private SessionFactory sessionFactory;
+	
+	@Autowired
+	private MessageDao messageDao;
 
 	public Message addMessage(Message message) {
         String formattedContent = formatMessageContent(message.getMessageContent());// 在保存之前處理換行符
@@ -49,6 +52,12 @@ public class MessageService {
     public List<Message> getMessagesByArticleID(Integer articleID) {
         List<Message> messages = repository.findByArticle_ArticleID(articleID);
         return messages;
+    }
+    
+    //chris-JDBC
+    public List<Message> getMessagesByArticleIdDao(Integer articleID) {
+    	List<Message> messages = messageDao.getMessagesByArticleIdDao(articleID);
+    	return messages;
     }
 
 
