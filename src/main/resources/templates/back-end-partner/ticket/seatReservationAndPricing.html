@@ -326,15 +326,21 @@ input[type="number"]:focus {
 					th:object="${priceForm}" method="post">
 					<div class="form-group">
 						<label for="vipPrice">VIP區價格：</label> <input type="number"
-							id="vipPrice" th:field="*{vipPrice}" min="500" step="1">
+							id="vipPrice" th:field="*{vipPrice}"
+							th:value="${#numbers.formatDecimal(priceForm.vipPrice, 0, '1')}"
+							min="500" step="1">
 					</div>
 					<div class="form-group">
 						<label for="aPrice">A區價格：</label> <input type="number" id="aPrice"
-							th:field="*{aPrice}" min="500" step="1">
+							th:field="*{aPrice}"
+							th:value="${#numbers.formatDecimal(priceForm.aPrice, 0, '1')}"
+							min="500" step="1">
 					</div>
 					<div class="form-group">
 						<label for="bPrice">B區價格：</label> <input type="number" id="bPrice"
-							th:field="*{bPrice}" min="500" step="1">
+							th:field="*{bPrice}"
+							th:value="${#numbers.formatDecimal(priceForm.bPrice, 0, '1')}"
+							min="500" step="1">
 					</div>
 				</form>
 				<div class="btn-container">
@@ -492,20 +498,20 @@ input[type="number"]:focus {
 	    // 收集所有保留位資訊
 	    const reservedSeats = Array.from(document.querySelectorAll('.seat.reserved')).map(seat => seat.dataset.id);
 
-	    // 收集票價資訊
+	 // 收集票價資訊，將價格轉換為整數
 	    const prices = {
-	        VIP: document.getElementById('vipPrice').value,
-	        A: document.getElementById('aPrice').value,
-	        B: document.getElementById('bPrice').value
+	        VIP: Math.round(parseFloat(document.getElementById('vipPrice').value)),
+	        A: Math.round(parseFloat(document.getElementById('aPrice').value)),
+	        B: Math.round(parseFloat(document.getElementById('bPrice').value))
 	    };
 
-	    // 創建要發送的數據對象
+	 // 創建要發送的數據對象
 	    const data = {
 	        reservedSeats: reservedSeats,
 	        prices: prices
 	    };
 
-	    // 發送 POST 請求到後端
+	 // 發送 POST 請求到後端
 	    fetch(`/seatReservationAndPricing/setSeatsAndPrices?activityID=${activityID}&activityTimeSlotID=${activityTimeSlotID}`, {
 	        method: 'POST',
 	        headers: {
@@ -523,6 +529,15 @@ input[type="number"]:focus {
 	        alert('保存設定時發生錯誤，請稍後再試。');
 	    });
 	}
+	
+	document.querySelectorAll('input[type="number"]').forEach(input => {
+	    input.addEventListener('input', function () {
+	        if (this.value < 500) {
+	            this.value = 500;
+	        }
+	    });
+	});
+	
 
 	// 頁面加載時初始化座位圖
 	document.addEventListener('DOMContentLoaded', initializeSeatMap);
