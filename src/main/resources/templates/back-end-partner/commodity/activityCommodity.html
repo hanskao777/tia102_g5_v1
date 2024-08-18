@@ -29,6 +29,7 @@
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      
     }
 
     h1 {
@@ -100,6 +101,16 @@
     .pagination button {
       margin: 0 5px;
     }
+    
+    
+    select, button, input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4a69bd;
+    color: white;
+    cursor: pointer;
+}
   </style>
 </head>
 
@@ -129,12 +140,24 @@
               <td th:text="${activity.activityID}"></td>
               <td th:text="${activity.activityName}"></td>
               <td th:text="${#dates.format(activity.activityPostTime, 'yyyy-MM-dd')}"></td>
+              
+ <!--             
               <td>
-<!--               使用這個 <a th:href="@{'/commodity/listByActivity/' + ${activity.activityID}}">查看商品</a>-->
+               使用這個 <a th:href="@{'/commodity/listByActivity/' + ${activity.activityID}}">查看商品</a>
                 <a th:href="@{/commodity/listAllCommodity}">查看商品</a>
-<!--                <a type="submit" th:value="${activity.activityID}">t86</a>-->
+               <a type="submit" th:value="${activity.activityID}">t86</a>
 
               </td>
+ -->             
+              <td class="action-cell">
+					<form method="get"
+						th:action="@{/commodity/listAllCommodity}"
+						class="action-form">
+						<input type="submit" value="查看商品" class="action-button">
+						<input type="hidden" name="activityID"
+							th:value="${activity.activityID}">
+					</form>
+				</td>
 
 <!--                <td>-->
 <!--                    <form method="post" th:action="@{/commodity/listAllCommodity}"-->

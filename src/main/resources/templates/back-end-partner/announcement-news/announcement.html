@@ -170,41 +170,41 @@ to {
 	color: #4a4a4a;
 }
 
-/* 分頁 */
-.pagination {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 30px;
-}
+/*	分頁*/
+		.pagination {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: 20px;
+			font-family: Arial, sans-serif;
+		}
 
-.pagination button {
-	background-color: #4e54c8;
-	color: white;
-	border: none;
-	padding: 10px 15px;
-	margin: 0 5px;
-	cursor: pointer;
-	border-radius: 5px;
-	font-size: 1em;
-	transition: background-color 0.3s;
-}
+		.pagination a, .pagination span {
+			color: #333;
+			padding: 8px 16px;
+			text-decoration: none;
+			transition: background-color 0.3s, color 0.3s;
+			border: 1px solid #ddd;
+			margin: 0 4px;
+			border-radius: 5px;
+		}
 
-.pagination button:hover {
-	background-color: #3c4299;
-}
+		.pagination a:hover:not(.disabled) {
+			background-color: #4a69bd;
+			color: white;
+		}
 
-.pagination button:disabled {
-	background-color: #cccccc;
-	cursor: not-allowed;
-}
+		.pagination .active {
+			background-color: #4a69bd;
+			color: white;
+			border: 1px solid #4a69bd;
+		}
 
-.pagination span {
-	margin: 0 10px;
-	font-size: 1em;
-	color: #4a4a4a;
-}
-/*  */
+		.pagination .disabled {
+			color: #ddd;
+			pointer-events: none;
+			background-color: #f8f8f8;
+		}
 @media ( max-width : 768px) {
 	.container {
 		padding: 20px;
@@ -252,7 +252,7 @@ to {
 						<div th:text="${announcement.announcementContent}" class="announcement-content" style="display: none;"></div>
 					</div>
 
-
+					<!--
 					<div class="pagination">
 						<button id="prevBtn" onclick="changePage(-1)">
 							<i class="fas fa-chevron-left"></i> 上一頁
@@ -261,6 +261,12 @@ to {
 						<button id="nextBtn" onclick="changePage(1)">
 							下一頁 <i class="fas fa-chevron-right"></i>
 						</button>
+					</div>
+					-->
+					<div class="pagination" th:if="${totalPages > 1}">
+						<span th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>
+						<a th:if="${currentPage > 1}" th:href="@{'/announcement/allAnnouncement?page=' + ${currentPage - 1}}">上一頁</a>
+						<a th:if="${currentPage < totalPages}" th:href="@{'/announcement/allAnnouncement?page=' + ${currentPage + 1}}">下一頁</a>
 					</div>
 <!--					<div class="pagination" th:if="${totalPages > 1}">-->
 <!--						<a th:if="${currentPage > 1}" th:href="@{'/announcement/list?page=' + ${currentPage - 1}}">上一頁</a>-->

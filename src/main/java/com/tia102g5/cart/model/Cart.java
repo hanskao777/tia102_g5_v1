@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import com.tia102g5.generalmember.model.GeneralMember;
 import com.tia102g5.cartitem.model.CartItem;
+import com.tia102g5.commodity.model.Commodity;
 
 @Entity
 @Table(name = "cart")
@@ -31,7 +32,7 @@ public class Cart implements java.io.Serializable {
 	@Column(name = "cartCreateTime")
 	private Timestamp cartCreateTime; // 建立時間
 
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("cartItemID asc")
 	private Set<CartItem> cartItems;
 
@@ -72,6 +73,47 @@ public class Cart implements java.io.Serializable {
 
 	public void setCartTotalPrice(BigDecimal cartTotalPrice) {
 		this.cartTotalPrice = cartTotalPrice;
+	}
+	
+	public void addItem(Commodity commodity, int quantity) {
+        CartItem item = cartItems.stream()
+                .filter(i -> i.getCommodity().getCommodityID().equals(commodity.getCommodityID()))
+                .findFirst()
+                .orElse(null);
+
+        if (item != null) {
+            item.setCheckedQuantity(item.getCheckedQuantity() + quantity);
+        } else {
+            item = new CartItem();
+            item.setCommodity(commodity);
+            item.setCheckedQuantity(quantity);
+            item.setCart(this);
+            cartItems.add(item);
+        }
+    }
+
+    public void removeItem(Commodity commodity) {
+        cartItems.removeIf(item -> item.getCommodity().getCommodityID().equals(commodity.getCommodityID()));
+    }
+
+//    public double getTotalPrice() {
+//        return cartItems.stream()
+//                .mapToDouble(item -> item.getCommodity().getCommodityPrice() * item.getQuantity())
+//                .sum();
+//    }
+
+	public void calculateTotalPrice() {
+		BigDecimal total = BigDecimal.ZERO;
+		for (CartItem item : this.cartItems) {
+			BigDecimal itemPrice = item.getCommodity().getCommodityPrice();
+			BigDecimal itemQuantity = new BigDecimal(item.getCheckedQuantity());
+			total = total.add(itemPrice.multiply(itemQuantity));
+		}
+		this.setCartTotalPrice(total);
+	}
+
+	public void updateTotalPrice() {
+		calculateTotalPrice();
 	}
 
 	public Timestamp getCartCreateTime() {
