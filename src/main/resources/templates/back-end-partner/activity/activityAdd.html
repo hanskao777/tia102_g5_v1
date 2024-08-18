@@ -105,10 +105,11 @@
             width: 100%;
         }
 
-        .button-container button,
-        .button-container a {
+        .button-container button {
             margin: 0 10px;
             padding: 5px 15px;
+            width: 100px;
+            height: auto;
             border-radius: 20px;
         }
 
@@ -171,11 +172,6 @@
                     <strong>圖片:</strong>
                     <div class="form-input">
                         <input type="file" th:field="*{activityPictures}" onclick="previewImage()" multiple="multiple" />
-                        <div id="blob_holder">
-                            <img th:each="activityPicture:*{activityPictures}" 
-                                 th:src="@{'/activity/DBGifReader/' + '?activityPictureID=' + ${activityPicture.activityPictureID}}"
-                                 width="100px" height="75px" style="object-fit: cover; margin: 5px;">
-                        </div>
                     </div>
                 </div>
                 
