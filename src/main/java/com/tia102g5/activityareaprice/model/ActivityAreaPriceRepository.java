@@ -18,4 +18,12 @@ public interface ActivityAreaPriceRepository extends JpaRepository<ActivityAreaP
 	@Query(value = "SELECT * FROM activityAreaPrice "
 			+ "WHERE venueAreaID = ?1 AND activityID = ?2", nativeQuery = true)
 	ActivityAreaPrice findActivityAreaPrice(Integer venueAreaID, Integer activityID);
+
+	
+	// 新增更新價格的方法
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE activityAreaPrice SET activityAreaPrice = ?3 "
+			+ "WHERE venueAreaID = ?1 AND activityID = ?2", nativeQuery = true)
+	int updateActivityAreaPrice(Integer venueAreaID, Integer activityID, BigDecimal newPrice);
 }
