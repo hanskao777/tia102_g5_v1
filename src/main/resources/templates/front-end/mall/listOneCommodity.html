@@ -23,9 +23,37 @@ body {
 	gap: 40px;
 }
 
+.product-image-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.product-image-container img,
+.product-image-container .placeholder-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.product-image img, .placeholder-image {
+   max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
 .product-image {
 	flex: 1;
 	text-align: center;
+	position:absolute;
 }
 
 .product-image img {
@@ -52,6 +80,25 @@ body {
 .product-info {
 	margin-bottom: 20px;
 }
+
+h1{
+	text-align: center;
+}
+h2{
+	text-align: center;
+	color: chocolate;
+}
+.price {
+    text-align: center;
+}
+
+.quantity {
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center; /* 垂直置中 */
+}
+
+
 
 .product-description h3 {
 	margin-bottom: 20px;
@@ -185,13 +232,13 @@ body {
 	<div id="cartModal" class="modal">
 		<div class="modal-content">
 			<span class="close">&times;</span>
-			<p>商品已成功加入購物車！</p>
+			<p id="modalMessage">商品已成功加入購物車！</p>
 		</div>
 	</div>
 
 
 	<div class="container">
-		<div class="product-image">
+		<div class="product-image-container">
 
 			<img th:if="${not #lists.isEmpty(commodity.commodityPictures)}"
 				th:src="@{/commodity/CommodityDBGifReader(commodityPictureID=${commodity.commodityPictures[0].commodityPictureID})}"
@@ -201,48 +248,34 @@ body {
 		</div>
 
 
+    <!-- 其他商品信息 -->
+    <div class="product-details">
+            <br>
+            <br>
+    
+        <h1 class="product-title" th:text="${commodity.getActivity().getActivityName()}">活動名稱</h1>
+        <br>
+        <h2 class="product-subtitle" th:text="${commodity.commodityName}">商品名稱</h2>
+        <br>
+        <br>
+   
+        <br>
+        <br>
+        <br>
+        <div class="price" th:text="'$' + ${commodity.commodityPrice}">價格</div>
+        <div class="quantity">
+            <button onclick="decreaseQuantity()">-</button>
+            <input type="number" id="quantity" value="1" min="1">
+            <button onclick="increaseQuantity()">+</button>
+        </div>
+        <div class="button-group">
+            <button onclick="addToCart()" class="add-to-cart">加入購物車</button>
+            <a th:href="@{'/cart/add?commodityID=' + ${commodity.commodityID} + '&quantity=1&redirect=checkout'}" class="buy-now" onclick="this.href = this.href.replace('quantity=1', 'quantity=' + document.getElementById('quantity').value)">直接購買</a>
+        </div>
+    </div>
+</div>
 
 
-		<div class="product-details">
-
-
-
-
-
-			<h1 class="product-title"
-				th:text="${commodity.getActivity().getActivityName()}">活動名稱</h1>
-			<h2 class="product-subtitle" th:text="${commodity.commodityName}">商品名稱</h2>
-			<div class="product-info">
-				<p th:text="'商品編號：' + ${commodity.commodityID}">商品編號</p>
-				<p
-					th:text="'上架日期：' + ${#dates.format(commodity.commodityPostTime, 'yyyy.MM.dd')}">上架日期</p>
-			</div>
-			<div class="price" th:text="'$' + ${commodity.commodityPrice}">價格</div>
-			<div class="quantity">
-				<button onclick="decreaseQuantity()">-</button>
-				<input type="number" id="quantity" value="1" min="1">
-				<button onclick="increaseQuantity()">+</button>
-			</div>
-
-
-
-			<!-- <div class="button-group">
-        <a href="checkout.html">
-          <button class="buy-now">直接購買</button>
-        </a>
-        <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> 加入購物車</button>
-      </div> -->
-
-
-	
-
-			<div class="button-group">
-				<button class="buy-now" onclick="proceedToCheckout()">前往結帳</button>
-				<button class="add-to-cart"
-					th:attr="data-commodity-id=${commodity.commodityID}">
-					<i class="fas fa-shopping-cart"></i> 加入購物車
-				</button>
-			</div>
 
 
 
@@ -265,81 +298,74 @@ body {
 	<div id="footer"></div>
 
 
+<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById("cartModal");
+    const addToCartBtn = document.querySelector('.add-to-cart');
+    const closeBtn = document.querySelector('.close');
+    const commodityID = /*[[${commodity.commodityID}]]*/ '';
 
-
-
-	<script>
-    // 獲取模態框元素
-    var modal = document.getElementById("cartModal");
-
-    // 獲取所有"加入購物車"按鈕
-    var btns = document.getElementsByClassName("add-to-cart");
-
-    // 獲取 <span> 元素，用於關閉模態框
-    var span = document.getElementsByClassName("close")[0];
-
-    // 為每個"加入購物車"按鈕添加點擊事件
-    Array.from(btns).forEach(function (btn) {
-      btn.onclick = function (event) {
-        event.preventDefault(); // 阻止默認行為（如果按鈕在 <a> 標籤內）
-        modal.style.display = "block";
-      }
-    });
-
-    // 當用戶點擊 <span> (x)，關閉模態框
-    span.onclick = function () {
-      modal.style.display = "none";
+    // 加入購物車功能
+    function addToCart() {
+        const quantity = document.getElementById('quantity').value;
+        fetch('/cart/addAjax', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'commodityID=' + commodityID + '&quantity=' + quantity
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('modalMessage').innerText = data;
+            modal.style.display = "block";
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     }
 
-    // 當用戶點擊模態框外的任何地方，關閉它
-    window.onclick = function (event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script>
-
-	<script>
-    function decreaseQuantity() {
-      var quantity = document.getElementById('quantity');
-      if (quantity.value > 1) {
-        quantity.value = parseInt(quantity.value) - 1;
-      }
+    // 添加點擊事件監聽器
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            addToCart();
+        });
     }
 
-    function increaseQuantity() {
-      var quantity = document.getElementById('quantity');
-      quantity.value = parseInt(quantity.value) + 1;
+    // 關閉模態框
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
     }
 
-    function proceedToCheckout() {
-      // 跳轉到結帳頁面
-      // alert('前往結帳頁面');
-      // window.location.href = '/templates/front-end/mall/mall-checkout.html';
-      window.location.href = 'mall-cart.html';
-
-
+    // 點擊模態框外關閉
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
-  </script>
 
-	<script th:inline="javascript">
-    // 保留原有的 JavaScript 代碼
-    
-    // 更新加入購物車按鈕的點擊事件
-    document.querySelector('.add-to-cart').addEventListener('click', function() {
-      const commodityId = this.getAttribute('data-commodity-id');
-      // 這裡添加將商品添加到購物車的 Ajax 請求
-      // ...
-
-      // 顯示模態框
-      document.getElementById('cartModal').style.display = 'block';
-    });
-
-    function proceedToCheckout() {
-      const commodityId = /*[[${commodity.commodityID}]]*/ '';
-      window.location.href = '/mall/checkout?commodityID=' + commodityId;
+    // 數量調整功能
+    window.decreaseQuantity = function() {
+        const quantity = document.getElementById('quantity');
+        if (quantity.value > 1) {
+            quantity.value = parseInt(quantity.value) - 1;
+        }
     }
-  </script>
+
+    window.increaseQuantity = function() {
+        const quantity = document.getElementById('quantity');
+        quantity.value = parseInt(quantity.value) + 1;
+    }
+
+    // 前往結帳
+    window.proceedToCheckout = function() {
+        window.location.href = '/mall/checkout?commodityID=' + commodityID;
+    }
+});
+</script>
 
 
 

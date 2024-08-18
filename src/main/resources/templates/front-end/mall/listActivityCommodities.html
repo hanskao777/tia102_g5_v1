@@ -18,8 +18,14 @@ body {
 	font-family: 'Noto Sans TC', sans-serif;
 }
 
+
+	
 .content {
 	padding: 20px;
+}
+
+.button-container {
+	margin-top: 10px;
 }
 
 .product-grid {
@@ -43,6 +49,7 @@ body {
 	padding-top: 100%; /* 創建一個正方形容器 */
 	overflow: hidden;
 	margin-bottom: 10px;
+	
 }
 
 .product-image, .placeholder-image {
@@ -54,6 +61,7 @@ body {
 	object-fit: cover;
 }
 
+
 .product-info {
 	flex-grow: 1;
 	display: flex;
@@ -78,9 +86,7 @@ body {
 	margin: 5px 0;
 }
 
-.button-container {
-	margin-top: 10px;
-}
+
 
 .product-card button {
 	width: 100%;
@@ -88,78 +94,6 @@ body {
 	padding: 8px 0;
 }
 
-/*
-.product-card {
-	display: flex;
-	flex-direction: column;
-	background-color: #fff;
-	border: 1px solid #ddd;
-	padding: 20px;
-	text-align: center;
-	transition: transform 0.3s ease-in-out;
-	height: 400px;  設置固定高度 
-}
-
-.product-image-container {
-
-	width: 100%;
-	height: 500px;  設置固定高度 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	overflow: hidden;
-	margin-bottom: 15px;
-}
-
-.product-image, .placeholder-image {
-	width: 100%;
-	height: 100%;
-	object-fit: none;  確保圖片填滿容器 
-}
-
-.placeholder-image {
-	background-color: #e9ecef;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #6c757d;
-	font-size: 14px;
-}
-
-.product-info {
-	flex-grow: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.product-card h3 {
-	font-size: 18px;
-	margin: 10px 0;
-}
-
-.product-card .price {
-	font-size: 16px;
-	color: #e74c3c;
-	margin-bottom: 10px;
-}
-
-.product-card .description {
-	font-size: 14px;
-	color: #555;
-	margin-bottom: 15px;
-}
-
-.button-container {
-	margin-top: auto;
-}
-
-.product-card button {
-	width: 100%;
-	margin-bottom: 10px;
-	padding: 10px 0;
-}
-*/
 .product-card .buy-now {
 	background-color: #2ecc71;
 	color: #fff;
@@ -188,6 +122,20 @@ body {
 
 .product-card:hover {
 	transform: scale(1.05);
+}
+
+.placeholder-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* 可選：設置背景顏色 */
+    color: #999; /* 可選：設置文字顏色 */
+    font-size: 16px; /* 可選：設置文字大小 */
 }
 
 /* 加入購物車 */
@@ -227,40 +175,46 @@ body {
 }
 
 /*	分頁*/
-		.pagination {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			margin-top: 20px;
-			font-family: Arial, sans-serif;
-		}
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	font-family: Arial, sans-serif;
+}
 
-		.pagination a, .pagination span {
-			color: #333;
-			padding: 8px 16px;
-			text-decoration: none;
-			transition: background-color 0.3s, color 0.3s;
-			border: 1px solid #ddd;
-			margin: 0 4px;
-			border-radius: 5px;
-		}
+.pagination a, .pagination span {
+	color: #333;
+	padding: 8px 16px;
+	text-decoration: none;
+	transition: background-color 0.3s, color 0.3s;
+	border: 1px solid #ddd;
+	margin: 0 4px;
+	border-radius: 5px;
+}
 
-		.pagination a:hover:not(.disabled) {
-			background-color: #e57373;
-			color: white;
-		}
+.pagination a:hover:not(.disabled) {
+	background-color: #e57373;
+	color: white;
+}
 
-		.pagination .active {
-			background-color: #e57373;
-			color: white;
-			border: 1px solid #4a69bd;
-		}
+.pagination .active {
+	background-color: #e57373;
+	color: white;
+	border: 1px solid #4a69bd;
+}
 
-		.pagination .disabled {
-			color: #ddd;
-			pointer-events: none;
-			background-color: #f8f8f8;
-		}
+.pagination .disabled {
+	color: #ddd;
+	pointer-events: none;
+	background-color: #f8f8f8;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 </style>
 </head>
 
@@ -293,148 +247,37 @@ body {
 						</div>
 					</button>
 				</form>
-<!--
-				<a
-					th:href="@{/commodity/mall_listOneCommodity/{id}(id=${commodity.commodityID})}"
-					class="product-link">
-					<div class="product-image-container">
-						<img th:if="${not #lists.isEmpty(commodity.commodityPictures)}"
-							th:src="@{/commodity/CommodityDBGifReader(commodityPictureID=${commodity.commodityPictures[0].commodityPictureID})}"
-							alt="商品圖片" class="product-image">
-						<div th:if="${#lists.isEmpty(commodity.commodityPictures)}"
-							class="placeholder-image">無圖片</div>
-					</div>
-				</a>
-				
-				<div class="product-image-container">
-					<img th:if="${not #lists.isEmpty(commodity.commodityPictures)}"
-						th:src="@{/commodity/CommodityDBGifReader(commodityPictureID=${commodity.commodityPictures[0].commodityPictureID})}"
-						alt="商品圖片" class="product-image">
-					<div th:if="${#lists.isEmpty(commodity.commodityPictures)}"
-						class="placeholder-image">無圖片</div>
-				</div>
-				
-				-->
-				<div class="product-info">
-					<h3 th:text="${commodity.getActivity().getActivityName()}">活動名稱</h3>
-					<p class="price" th:text="${commodity.commodityPrice}">價格</p>
-					<p class="description" th:text="${commodity.commodityName}">商品名稱</p>
-					<div class="button-container">
-						<a
-							th:href="@{'/mall/checkout?commodityID=' + ${commodity.commodityID}}">
-							<button class="buy-now">直接購買</button>
-						</a>
-						<button th:attr="data-commodity-id=${commodity.commodityID}"
-							class="add-to-cart">
-							<i class="fas fa-shopping-cart"></i> 加入購物車
-						</button>
+
+
+
+					<div class="product-info">
+						<h3 th:text="${commodity.getActivity().getActivityName()}">活動名稱</h3>
+						<p class="price" th:text="${'$' + commodity.commodityPrice}">價格</p>
+						<p class="description" th:text="${commodity.commodityName}">商品名稱</p>
+						<div class="button-container">
+							<button onclick="addToCart(this)"
+								th:data-id="${commodity.commodityID}" class="add-to-cart">加入購物車</button>
+							<a
+								th:href="@{'/cart/add?commodityID=' + ${commodity.commodityID} + '&quantity=1&redirect=checkout'}"
+								class="buy-now">直接購買</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-		<!--
-		<div class="product-grid">
-		 使用 Thymeleaf 迭代顯示商品 
-			<div th:each="commodity : ${commodityList}" class="product-card">
-			
-				<a
-					th:href="@{'/commodity/mall_listOneCommodity?commodityID=' + ${commodity.commodityID}}">
-					<img th:if="${not #lists.isEmpty(commodity.commodityPicture)}"
-					th:src="@{'/commodity/getPicture/' + ${commodity.commodityPictures[0].commodityPictureID}}"
-					alt="商品圖片" /> <img
-					th:unless="${not #lists.isEmpty(commodity.commodityPictures)}"
-					src="/static/images/default.jpg" alt="默認圖片" />
-				</a>
-			
-				<div th:if="${not #lists.isEmpty(commodity.commodityPictures)}">
-					<img
-						th:src="@{/commodity/CommodityDBGifReader(commodityPictureID=${commodity.commodityPictures[0].commodityPictureID})}"
-						alt="商品圖片" class="product-image">
-				</div>
-				<div th:if="${#lists.isEmpty(commodity.commodityPictures)}"
-					class="placeholder-image">無圖片</div>
 
-
-				<h3 th:text="${activityID}">活動名稱</h3>
-				<p th:text="${commodity.commodityPrice}">價格</p>
-				<p th:text="${commodity.commodityName}">商品名稱</p>
-					
-					<a href="@{'/mall/checkout?commodityID=' + ${commodity.commodityID}}">
-					<button class="buy-now">直接購買</button>
-				</a> <a>
-					<button th:attr="data-commodity-id=${commodity.commodityID}" id="addToCartBtn" class="add-to-cart">
-						<i class="fas fa-shopping-cart"></i> 加入購物車
-					</button>
-				</a>
+		<!-- 添加彈跳窗口 -->
+		<div id="cartModal" class="modal">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<p id="modalMessage"></p>
 			</div>
 		</div>
-		-->
-		<!--  
-		<div class="product-grid">
-			<div class="product-card">
-				<a href="commodity1.html"> <img src="/static/images/yujin1.jpg"
-					alt="商品1">
-					<h3>IVE SWITCH</h3>
-					<p class="price">$580</p>
-					<p class="description">安兪真單封</p>
-				</a> <a href="/templates/front-end/mall/mall-checkout.html">
-					<button class="buy-now">直接購買</button>
-				</a> <a>
-					<button id="addToCartBtn" class="add-to-cart">
-						<i class="fas fa-shopping-cart"></i> 加入購物車
-					</button>
-				</a>
-			</div>
 
-			<div class="product-card">
-				<a href="commodity1.html"> <img src="/static/images/yujin1.jpg"
-					alt="商品1">
-					<h3>IVE SWITCH</h3>
-				</a>
-				<p class="price">$580</p>
-				<p class="description">安兪真單封</p>
-				<a href="/templates/front-end/mall/mall-checkout.html"
-					class="buy-now">直接購買</a> <a id="addToCartBtn" class="add-to-cart"><i
-					class="fas fa-shopping-cart"></i> 加入購物車</a>
-			</div>
 
-			<div class="product-card">
-				<a href="commodity2.html"> <img src="/static/images/ive1.jpg"
-					alt="商品2">
-					<h3>IVE MAGAZINE</h3>
-				</a>
-				<p class="price">$980</p>
-				<p class="description">IVE手燈</p>
-				<a href="/templates/front-end/mall/mall-checkout.html">
-					<button class="buy-now">直接購買</button>
-				</a>
-				<button id="addToCartBtn" class="add-to-cart">
-					<i class="fas fa-shopping-cart"></i> 加入購物車
-				</button>
-
-			</div>
-			<div class="product-card">
-				<a href="/templates/front-end/mall/commodity.html"> <img
-					src="/static/images/yujin2.jpg" alt="商品3">
-					<h3>IVE MAGAZINE</h3>
-				</a>
-				<p class="price">$980</p>
-				<p class="description">安兪真設計保溫瓶</p>
-				<a href="/templates/front-end/mall/mall-checkout.html">
-					<button class="buy-now">直接購買</button>
-				</a>
-				<button id="addToCartBtn" class="add-to-cart">
-					<i class="fas fa-shopping-cart"></i> 加入購物車
-				</button>
-
-			</div>
-		
-		</div>
-			-->
 	</div>
-	
-	
+
+
 	<div class="pagination" th:if="${totalPages > 1}">
 		<span th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>
 		<a th:if="${currentPage > 1}"
@@ -442,60 +285,54 @@ body {
 		<a th:if="${currentPage < totalPages}"
 			th:href="@{'/commodity/mall_listActivityCommodities?page=' + ${currentPage + 1}}">下一頁</a>
 	</div>
-	
-	
+
+
 
 	<div id="footer"></div>
-
+	
 	<script th:inline="javascript">
-        // 處理加入購物車的邏輯
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const commodityId = this.getAttribute('data-commodity-id');
-                // 這裡添加將商品添加到購物車的Ajax請求
-                // ...
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById("cartModal");
+    var closeBtn = document.querySelector('.close');
 
-                // 顯示模態框
-                document.getElementById('cartModal').style.display = 'block';
+    // 處理加入購物車的邏輯
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            var commodityID = this.getAttribute('data-id');
+            
+            fetch('/cart/addAjax', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'commodityID=' + commodityID + '&quantity=1'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('modalMessage').innerText = data;
+                modal.style.display = "block";
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
         });
+    });
 
-        // 關閉模態框的邏輯
-        document.querySelector('.close').addEventListener('click', function() {
-            document.getElementById('cartModal').style.display = 'none';
-        });
-    </script>
+    // 關閉模態框的邏輯
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = "none";
+    });
 
-	<script>
-        // 獲取模態框元素
-        var modal = document.getElementById("cartModal");
-
-        // 獲取所有"加入購物車"按鈕
-        var btns = document.getElementsByClassName("add-to-cart");
-
-        // 獲取 <span> 元素，用於關閉模態框
-        var span = document.getElementsByClassName("close")[0];
-
-        // 為每個"加入購物車"按鈕添加點擊事件
-        Array.from(btns).forEach(function (btn) {
-            btn.onclick = function (event) {
-                event.preventDefault(); // 阻止默認行為（如果按鈕在 <a> 標籤內）
-                modal.style.display = "block";
-            }
-        });
-
-        // 當用戶點擊 <span> (x)，關閉模態框
-        span.onclick = function () {
+    // 當用戶點擊模態框外的任何地方，關閉它
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
             modal.style.display = "none";
         }
-
-        // 當用戶點擊模態框外的任何地方，關閉它
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
+    });
+});
+</script>
+	
 	<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         // 初始化所有的 tooltips

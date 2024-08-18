@@ -53,11 +53,40 @@ public class CartController {
 	}
 
 	@PostMapping("/add")
-	public String addToCart(@RequestParam Integer commodityID, @RequestParam Integer quantity) {
-		Integer generalMember = 1; // 假定會員ID為1
+	public String addToCart(@RequestParam Integer commodityID, 
+            @RequestParam Integer quantity,
+            @RequestParam(required = false) String redirect) {
+			Integer generalMember = 1; // 假定會員ID為1
 		cartService.addToCart(generalMember, commodityID, quantity);
-		return "redirect:/cart/view"; // 回到購物車視圖
+		
+		if ("checkout".equals(redirect)) {
+            return "redirect:/cart/checkout";
+        }
+        return "redirect:/cart/view";
 	}
+	
+	@GetMapping("/add")
+    public String addToCartAndRedirect(@RequestParam Integer commodityID, 
+                                       @RequestParam Integer quantity,
+                                       @RequestParam(required = false) String redirect) {
+        return addToCart(commodityID, quantity, redirect);
+    }
+	
+	@PostMapping("/addAjax")
+    @ResponseBody
+    public ResponseEntity<?> addToCartAjax(@RequestParam Integer commodityID, 
+                                           @RequestParam Integer quantity) {
+        try {
+            Integer memberId = 1; // 假設會員ID為1
+            cartService.addToCart(memberId, commodityID, quantity);
+            return ResponseEntity.ok().body("商品已成功加入購物車！");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("添加商品到購物車失敗：" + e.getMessage());
+        }
+    }
+	
+	
+	
 
 	@PostMapping("/update/{cartItemId}")
 	public String updateCartItem(@PathVariable Integer cartItemId, @RequestParam(required = false) Integer change,

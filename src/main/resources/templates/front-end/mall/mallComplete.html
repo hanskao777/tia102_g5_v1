@@ -138,74 +138,41 @@ body {
 
 <body>
 	<div id="header"></div>
-	
-    <div class="container">
-    <!--
-        <div class="cart-steps">
-            <div class="cart-step">購物車</div>
-            <div class="cart-step">填寫資料</div>
-            <div class="cart-step active">訂單成立</div>
-        </div>
-        
 
-        <div class="order-complete-box">
+	<div class="container">
+
+		<div class="cart-steps">
+			<div class="cart-step">購物車</div>
+			<div class="cart-step">填寫資料</div>
+			<div class="cart-step active">訂單成立</div>
+		</div>
+
+<div class="order-complete-box">
             <div class="checkmark">✓</div>
-            <h2>訂購完成</h2>
-            <div class="order-info">
-                <p>訂單時間: <span th:text="${#temporals.format(orders.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-                <p>訂單編號: <span th:text="${orders.orderID}"></span></p>
-            </div>
-        </div>
+		<div th:if="${order != null}">
+			<h2>訂購完成</h2>
+			<p>
+				訂單編號: <span th:text="${order.orderID}"></span>
+			</p>
+			<p>
+				訂購時間: <span
+					th:text="${#dates.format(order.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+			</p>
+		</div>
+ </div>
 
-         <div class="order-details">
-            <h3>訂單明細</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>商品名稱</th>
-                        <th>數量</th>
-                        <th>單價</th>
-                        <th>小計</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item : ${order.orderItems}">
-                        <td th:text="${item.commodity.commodityName}"></td>
-                        <td th:text="${item.orderItemQuantity}"></td>
-                        <td th:text="${'$' + item.orderItemPrice}"></td>
-                        <td th:text="${'$' + item.orderItemPrice * item.orderItemQuantity}"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p><strong>總計：</strong> <span th:text="${'$' + order.orderTotalPrice}"></span></p>
-        </div> 
-        
-            
-        -->
+		<div th:if="${order == null}">
+			<p>無法找到訂單信息</p>
+		</div>
 
 
 
-
-	<div th:if="${order != null}">
-    <h2>訂購完成</h2>
-    <p>訂單編號: <span th:text="${order.orderID}"></span></p>
-    <p>訂購時間: <span th:text="${#temporals.format(order.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-    <!-- 其他訂單詳情 -->
+		<div class="buttons">
+			<a href="/" class="btn">回首頁</a> <a th:href="@{/orders}" class="btn">查看訂單</a>
+		</div>
 	</div>
 
 
-<div th:if="${order == null}">
-        <p>無法找到訂單信息</p>
-    </div>
-
-
-
-	<div class="buttons">
-		<a href="/" class="btn">回首頁</a> <a th:href="@{/orders}" class="btn">查看訂單</a>
-	</div>
-</div> 
-	
-	
 
 	<div id="footer"></div>
 

@@ -59,34 +59,68 @@ public class CartService {
     public void addToCart(Integer memberID, Integer commodityID, Integer quantity) {
         // 獲取購物車，或創建一個新的
         Cart cart = getOrCreateCart(memberID);  // 獲取或創建購物車
-        // 找到商品
-        Commodity commodity = commodityService.getOneCommodity(commodityID);
+//        // 找到商品
+//        Commodity commodity = commodityService.getOneCommodity(commodityID);
+//
+//        // 查找已有的購物車項目
+//        // 更新購物車中的項目
+//        Optional<CartItem> existingItem = cart.getCartItems().stream()
+//                .filter(item -> item.getCommodity().getCommodityID().equals(commodityID))
+//                .findFirst();
+//
+//        if (existingItem.isPresent()) {
+//            // 增加已存在項目的數量
+//            CartItem item = existingItem.get();
+//            item.setCheckedQuantity(item.getCheckedQuantity() + quantity);
+//        } else {
+//            // 創建新購物車項目
+//            CartItem newItem = new CartItem();
+//            newItem.setCart(cart);
+//            newItem.setCommodity(commodity);
+//            newItem.setCheckedQuantity(quantity);
+//            cart.getCartItems().add(newItem);
+//        }
+//
+//        // 更新購物車總價
+////        updateCartTotalPrice(cart);
+//        calculateTotalPrice(cart);
+//        cartRepository.save(cart);
+//    	
+//    	 Cart cart = cartRepository.findByGeneralMember_MemberID(memberId);
+//         if (cart == null) {
+//             // 如果購物車不存在，創建新的購物車
+//             cart = new Cart();
+//             cart.setGeneralMember(/* 獲取會員對象 */);
+//             cart = cartRepository.save(cart);
+//         }
 
-        // 查找已有的購物車項目
-        // 更新購物車中的項目
-        Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getCommodity().getCommodityID().equals(commodityID))
-                .findFirst();
+         Commodity commodity = commodityService.getOneCommodity(commodityID);
+         CartItem cartItem = cart.getCartItems().stream()
+                 .filter(item -> item.getCommodity().getCommodityID().equals(commodityID))
+                 .findFirst()
+                 .orElse(null);
 
-        if (existingItem.isPresent()) {
-            // 增加已存在項目的數量
-            CartItem item = existingItem.get();
-            item.setCheckedQuantity(item.getCheckedQuantity() + quantity);
-        } else {
-            // 創建新購物車項目
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            newItem.setCommodity(commodity);
-            newItem.setCheckedQuantity(quantity);
-            cart.getCartItems().add(newItem);
-        }
+         if (cartItem == null) {
+             // 如果購物車中沒有該商品，創建新的購物車項目
+             cartItem = new CartItem();
+             cartItem.setCart(cart);
+             cartItem.setCommodity(commodity);
+             cartItem.setCheckedQuantity(quantity);
+             cart.getCartItems().add(cartItem);
+         } else {
+             // 如果購物車中已有該商品，更新數量
+             cartItem.setCheckedQuantity(cartItem.getCheckedQuantity() + quantity);
+         }
 
-        // 更新購物車總價
-//        updateCartTotalPrice(cart);
-        calculateTotalPrice(cart);
-        cartRepository.save(cart);
+         // 更新購物車總價
+         updateCartTotalPrice(cart);
+         cartRepository.save(cart);
+    	
+    	
+    	
     }
 
+    //購物車總金額
     @Transactional
     public void calculateTotalPrice(Cart cart) {
         BigDecimal total = cart.getCartItems().stream()
@@ -99,26 +133,45 @@ public class CartService {
     // 更新購物車總價
     @Transactional
     public void updateCartTotalPrice(Cart cart) {
-        BigDecimal total = BigDecimal.ZERO;
-        for (CartItem item : cart.getCartItems()) {
-            BigDecimal itemPrice = item.getCommodity().getCommodityPrice();
-            BigDecimal quantity = BigDecimal.valueOf(item.getCheckedQuantity());
-            total = total.add(itemPrice.multiply(quantity));
-        }
-        cart.setCartTotalPrice(total);
+//        BigDecimal total = BigDecimal.ZERO;
+//        for (CartItem item : cart.getCartItems()) {
+//            BigDecimal itemPrice = item.getCommodity().getCommodityPrice();
+//            BigDecimal quantity = BigDecimal.valueOf(item.getCheckedQuantity());
+//            total = total.add(itemPrice.multiply(quantity));
+//        }
+//        cart.setCartTotalPrice(total);
+    	
+    	BigDecimal totalPrice = cart.getCartItems().stream()
+                .map(item -> item.getCommodity().getCommodityPrice().multiply(new BigDecimal(item.getCheckedQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        cart.setCartTotalPrice(totalPrice);
     }
     
     
     // 獲取或創建購物車
+//    @Transactional
+//    public Cart getOrCreateCart(Integer memberID) {
+//        Cart cart = cartRepository.findByGeneralMember_MemberID(memberID);
+//        if (cart == null) {
+//            cart = new Cart();
+//            cart.setGeneralMember(generalMemberService.getOneGeneralMember(memberID));
+//            cart.setCartTotalPrice(BigDecimal.ZERO);
+//            cart.setCartCreateTime(new Timestamp(System.currentTimeMillis()));
+//            return cartRepository.save(cart);
+//        }
+//        return cart;
+//    }
+    
     @Transactional
     public Cart getOrCreateCart(Integer memberID) {
         Cart cart = cartRepository.findByGeneralMember_MemberID(memberID);
         if (cart == null) {
             cart = new Cart();
-            cart.setGeneralMember(generalMemberService.getOneGeneralMember(memberID));
+            GeneralMember member = generalMemberService.getOneGeneralMember(memberID);
+            cart.setGeneralMember(member);
             cart.setCartTotalPrice(BigDecimal.ZERO);
             cart.setCartCreateTime(new Timestamp(System.currentTimeMillis()));
-            return cartRepository.save(cart);
+            cart = cartRepository.save(cart);
         }
         return cart;
     }
