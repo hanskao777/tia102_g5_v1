@@ -15,7 +15,6 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +25,10 @@ import com.tia102g5.activity.model.ActivityService;
 import com.tia102g5.activityPicture.model.ActivityPicture;
 import com.tia102g5.partnermember.model.PartnerMember;
 import com.tia102g5.partnermember.model.PartnerMemberService;
+import com.tia102g5.venue.model.Venue;
+import com.tia102g5.venue.model.VenueService;
 import com.tia102g5.venuerental.model.VenueRental;
+import com.tia102g5.venuerental.model.VenueRentalService;
 
 @Controller
 @RequestMapping("/activity")
@@ -37,6 +39,12 @@ public class ActivityController {
 	
 	@Autowired
 	PartnerMemberService partnerSvc;
+	
+	@Autowired
+	VenueRentalService venueRentalSvc;
+	
+	@Autowired
+	VenueService venueSvc;
 	
 /********************* 跳轉 **********************/	
 //////////////// 前台 ////////////////
@@ -96,11 +104,12 @@ public class ActivityController {
 	
 	//活動新增
 	@GetMapping("activityAdd")
-	public String activityAdd(@RequestParam("venueRental") VenueRental venueRental, ModelMap model) {
+	public String activityAdd(@RequestParam("venueRentalID") String venueRentalID, ModelMap model) {
 		Activity activity = new Activity();
+		VenueRental venueRental = venueRentalSvc.getOneVenueRental(Integer.valueOf(venueRentalID));
 		
-		model.addAttribute("venueRental", venueRental);
 		model.addAttribute("activity", activity);
+		model.addAttribute("venueRental", venueRental);
 		
 		return "back-end-partner/activity/activityAdd";
 	}
@@ -121,11 +130,31 @@ public class ActivityController {
 /********************* 跳轉 **********************/
 	
 /********************* action *******************/
-//	//activityAdd 送出新增
-//	@GetMapping("add")
-//	public String addActivity(ModelMap model) {
-//		
-//	}
+	//activityAdd 送出新增
+	@GetMapping("add")
+	public String addActivity(@Valid Activity activity, @RequestParam("venueRentalID") String venueRentalID, HttpSession session, ModelMap model) {
+		//取得 Partner
+		Integer partnerID = (Integer)session.getAttribute("partnerID");
+		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
+		
+		//取得 VenueRental
+		VenueRental venueRental = venueRentalSvc.getOneVenueRental(Integer.valueOf(venueRentalID));
+		
+		//取得 Venue
+		Venue venue = venueRental.getVenue();
+		
+		////////設置未在表單中的資訊 ////////////
+		activity.setPartnerMember(partner);
+		activity.setVenue(venue);
+		activity.setVenueRental(venueRental);
+		////////設置未在表單中的資訊 ////////////
+		
+		//新增 activity
+		activitySvc.addActivity(activity);
+		
+		//跳轉至 activityDisplay
+		return "redirect:/activity/activityDisplay";
+	}
 	
 	//activityConfig 送出更新
 	@PostMapping("update")
