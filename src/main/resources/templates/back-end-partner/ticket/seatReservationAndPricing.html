@@ -481,9 +481,9 @@ input[type="number"]:focus {
 
 	// 防止輸入負數
 	document.querySelectorAll('input[type="number"]').forEach(input => {
-	    input.addEventListener('input', function () {
-	        if (this.value < 0) {
-	            this.value = 0;
+	    input.addEventListener('change', function () {
+	        if (this.value < 500) {
+	            this.value = 500;
 	        }
 	    });
 	});
@@ -495,16 +495,17 @@ input[type="number"]:focus {
 
 	// 確認設定功能
 	function submitSettings() {
-	    // 收集所有保留位資訊
-	    const reservedSeats = Array.from(document.querySelectorAll('.seat.reserved')).map(seat => seat.dataset.id);
-
-	 // 收集票價資訊，將價格轉換為整數
+		const reservedSeats = Array.from(document.querySelectorAll('.seat.reserved')).map(seat => seat.dataset.id);
 	    const prices = {
 	        VIP: Math.round(parseFloat(document.getElementById('vipPrice').value)),
 	        A: Math.round(parseFloat(document.getElementById('aPrice').value)),
 	        B: Math.round(parseFloat(document.getElementById('bPrice').value))
 	    };
 
+	    const confirmMessage = `確認提交以下設定？\n\nVIP區: ${prices.VIP} 元\nA區: ${prices.A} 元\nB區: ${prices.B} 元\n保留座位: ${reservedSeats.join(', ')}`;
+		
+	    
+	    if (confirm(confirmMessage)) {
 	 // 創建要發送的數據對象
 	    const data = {
 	        reservedSeats: reservedSeats,
@@ -528,12 +529,13 @@ input[type="number"]:focus {
 	        console.error('Error:', error);
 	        alert('保存設定時發生錯誤，請稍後再試。');
 	    });
+	    }
 	}
 	
 	document.querySelectorAll('input[type="number"]').forEach(input => {
 	    input.addEventListener('input', function () {
-	        if (this.value < 500) {
-	            this.value = 500;
+	        if (this.value < 0) {
+	            this.value = 0;
 	        }
 	    });
 	});

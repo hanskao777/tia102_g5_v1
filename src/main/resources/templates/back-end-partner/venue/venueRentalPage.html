@@ -68,7 +68,7 @@
 
 					<div>
 						<label>租用開始日期：</label> <input type="date"
-							th:field="*{venueRentalStartDate}"
+							th:field="*{venueRentalStartDate}" id="venueRentalStartDate"
 							onclick="hideContent('venueRentalStartDate.errors');" /><br />
 						<span th:if="${#fields.hasErrors('venueRentalStartDate')}"
 							th:errors="*{venueRentalStartDate}" class="error"
@@ -77,9 +77,9 @@
 
 					<div>
 						<label>租用結束日期：</label> <input type="date"
-							th:field="*{venueRentalEndDate}"
-							onclick="hideContent('venueRentalEndDate.errors');" /><br /> <span
-							th:if="${#fields.hasErrors('venueRentalEndDate')}"
+							th:field="*{venueRentalEndDate}" id="venueRentalEndDate"
+							onclick="hideContent('venueRentalEndDate.errors');" /><br /> <br />
+						<span th:if="${#fields.hasErrors('venueRentalEndDate')}"
 							th:errors="*{venueRentalEndDate}" class="error"
 							id="venueRentalEndDate.errors"></span>
 					</div>
@@ -110,6 +110,28 @@
 		<!-- form-content div 結束 -->
 	</div>
 	<!-- form-container div 結束 -->
+	<script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const startDateInput = document.getElementById('venueRentalStartDate');
+            const endDateInput = document.getElementById('venueRentalEndDate');
+
+            const today = new Date();
+            const minDate = new Date(today.setDate(today.getDate() + 30));
+            const minDateString = minDate.toISOString().split('T')[0];
+
+            startDateInput.min = minDateString;
+            endDateInput.min = minDateString;
+
+            startDateInput.addEventListener('change', function() {
+                const selectedStartDate = new Date(this.value);
+                endDateInput.min = this.value; // Allow same day selection
+
+                if (endDateInput.value && new Date(endDateInput.value) < selectedStartDate) {
+                    endDateInput.value = this.value; // Set end date to start date if it's earlier
+                }
+            });
+        });
+    </script>
 
 	<script src="/js/venueRentalPage.js"></script>
 	<script src="/js/partner_sidebar.js"></script>

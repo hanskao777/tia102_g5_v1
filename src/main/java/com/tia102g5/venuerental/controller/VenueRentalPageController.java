@@ -42,8 +42,8 @@ public class VenueRentalPageController {
 		venueRental.setVenue(venue);
 		venueRental.setActivityName("IVE演唱會");
 		venueRental.setVenueRentalStatus(2);
-		venueRental.setVenueRentalStartDate(java.sql.Date.valueOf("2024-08-30"));
-		venueRental.setVenueRentalEndDate(java.sql.Date.valueOf("2024-09-05"));
+		venueRental.setVenueRentalStartDate(java.sql.Date.valueOf("2024-09-18"));
+		venueRental.setVenueRentalEndDate(java.sql.Date.valueOf("2024-09-18"));
 
 		model.addAttribute("venueRental", venueRental);
 		return "/back-end-partner/venue/venueRentalPage";
