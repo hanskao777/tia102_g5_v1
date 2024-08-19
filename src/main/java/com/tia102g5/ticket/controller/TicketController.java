@@ -136,15 +136,27 @@ public class TicketController {
 		//取得選購票券
 		List<Ticket> ticketList = (List<Ticket>)session.getAttribute("ticketList");
 		
+		//無輸入分票帳號，跳轉回首頁
+		if(ticketMemberIDs.length == 0) {
+			return "redirect:/";
+		}
 		//設定持有人給票券
 		for(int i = 0; i < ticketMemberIDs.length; i++) {
+			//該序號未輸入帳號，跳轉回首頁
+			if(ticketMemberIDs[i] == null) {
+				return "redirect:/";
+			}
 			//取得第 i 個持有人
+			try {
 			GeneralMember ticketMember = memberSvc.getOneGeneralMember(Integer.valueOf(ticketMemberIDs[i]));
 			//取得第 i 張票券
 			Ticket ticket = ticketList.get(i);
 			
 			ticket.setGeneralMember(ticketMember);
 			ticket.setBookTicket(bookTicket);
+			}catch (Exception e) {
+				return "redirect:/";
+			}
 		}
 		
 		//將票券設置至訂單
