@@ -8,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tia102g5.activity.model.Activity;
+
 import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_Article3;
 
 @Service("venueRentalService")
