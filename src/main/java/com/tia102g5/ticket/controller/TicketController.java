@@ -102,11 +102,13 @@ public class TicketController {
 		}
 		
 		List<Ticket> ticketList = (List<Ticket>)session.getAttribute("ticketList");
+		Integer id = ticketList.get(0).getActivityTimeSlot().getActivityTimeSlotID();
+		
 		ticketList.remove(count - 1);
 		
 		//若移除至 0 票券，重導至 seatSelect.html
 		if(ticketList.isEmpty()) {
-			return "redirect:/seatSelect";
+			return "redirect:/seatSelect?activityTimeSlot=" + id;
 		}
 		
 		session.setAttribute("ticketList", ticketList);
