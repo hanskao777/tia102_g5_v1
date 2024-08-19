@@ -127,7 +127,7 @@ public class CommodityController {
 	
 	
 	
-
+//  測試修改廠商後臺顯示ID為1的商品PR
 //  後台商城活動頁面,根據 partnerID 顯示已申請的活動
 	@GetMapping("/activityCommodityList")
 	public String getActivityByPartnerID(ModelMap model, HttpSession session) {
