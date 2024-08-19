@@ -240,7 +240,7 @@
                             </div>
                             <!-- 顯示活動名稱 -->
                             <h5 class="card-title" th:text="${activity.activityName}"></h5>
-                            <p class="card-text" th:text="'日期：' + ${activity.sellTime}"></p>
+                            <p class="card-text" th:text="'日期：' + ${activity.venueRental.venueRentalStartDate}"></p>
                             <p class="card-text" th:text="'地點：' + ${activity.venue.venueName}"></p>
                         </a>
                     </div>
