@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -86,12 +87,16 @@ public class CommodityController {
 	 
 //  首頁商城活動商品頁面的Mapping
 	@GetMapping("/mall_listActivityCommodities")
-	public String listActivityCommodities(/* @RequestParam(required = false) Integer activityID, */ Model model,
+	public String listActivityCommodities(@RequestParam(required = false) Integer activityID, Model model,
 			@RequestParam(defaultValue = "1") int page) {
 //		List<Commodity> commodities = commoditySvc.getCommoditiesByActivity(activityID);
 //		model.addAttribute("commodities", commodities);
 		
-		Integer activityID = 1; // 固定的 activityID
+//		Integer activityID = 1; // 固定的 activityID
+		 if (activityID == null) {
+		        // 如果沒有提供 activityID，可以重定向到一個錯誤頁面或者首頁
+		        return "redirect:/error";  // 或者 "redirect:/"
+		    }
 		
 		int pageSize = 9; // 每頁顯示的商品數量
 		Page<Commodity> commodityPage = commoditySvc.getCommoditiesByActivityPaginated(activityID,
@@ -125,8 +130,14 @@ public class CommodityController {
 
 //  後台商城活動頁面,根據 partnerID 顯示已申請的活動
 	@GetMapping("/activityCommodityList")
-	public String getActivityByPartnerID(ModelMap model) {
-		Integer partnerID = 1; // 這裡應該是從session或其他地方獲取當前登錄的partnermember ID
+	public String getActivityByPartnerID(ModelMap model, HttpSession session) {
+		
+	    Integer partnerID = (Integer) session.getAttribute("partnerID");
+	    if (partnerID == null) {
+	        // 如果 session 中沒有 partnerID，可能用戶未登錄
+	        return "redirect:/login"; // 重定向到登錄頁面
+	    }
+//		Integer partnerID = 1; // 這裡應該是從session或其他地方獲取當前登錄的partnermember ID
 		List<Activity> activities = commoditySvc.getActivitiesByPartnerMember(partnerID);
 
 		model.addAttribute("activities", activities);
@@ -142,8 +153,13 @@ public class CommodityController {
 //  要用這個 @GetMapping("/listAllCommodity/{activityID}")
 //  public String listAllCommodity(@PathVariable Integer activityID, ModelMap model) {
 	@GetMapping("/listAllCommodity")
-	public String listAllCommodity(/* @RequestParam(required = false) Integer activityID, */ ModelMap model,
+	public String listAllCommodity(/*@RequestParam(required = false) Integer activityID,*/ ModelMap model,
 			@RequestParam(defaultValue = "1") int page) {
+		
+//		if (activityID == null) {
+//	        // 如果沒有提供 activityID，可以重定向到一個錯誤頁面或者首頁
+//	        return "redirect:/error";  // 或者 "redirect:/"
+//	    }
 
 		Integer activityID = 1; // 固定的 activityID
 		int pageSize = 5; // 每頁顯示的商品數量

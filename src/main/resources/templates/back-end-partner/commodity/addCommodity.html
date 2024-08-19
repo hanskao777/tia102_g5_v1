@@ -90,6 +90,7 @@
       <h1>新增商品</h1>
       <form th:action="@{/commodity/insert}" th:object="${commodity}" method="post" enctype="multipart/form-data">
 
+<!--  -->
         <div class="form-group">
           <label for="partnerID">廠商ID：</label>
           <select id="partnerID" th:field="*{partnerMember.partnerID}">
