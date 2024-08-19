@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tia102g5.news.model.News;
 import com.tia102g5.news.model.NewsService;
+import com.tia102g5.partnermember.model.PartnerMember;
 import com.tia102g5.administrator.model.AdministratorService;
 
 @Controller
@@ -49,7 +51,15 @@ public class NewsController {
 
     // 管理員消息頁面 沒有側邊攔
     @GetMapping("/listAllNews")
-    public String listAllNews(Model model, @RequestParam(defaultValue = "1") int page) {
+    public String listAllNews(/*HttpSession session,*/ Model model, @RequestParam(defaultValue = "1") int page) {
+    	
+//    	if(session.getAttribute("adminID") == null) {
+//    		return "redirect:/adminLogin";
+//    	}
+//    	
+//    	Integer adminID = (Integer)session.getAttribute("adminID");
+//    	Administrator admin = AdministratorService.getOneAdministrator(adminID);
+    	
         int pageSize = 10; // 每頁顯示的公告數量
         Page<News> newsPage = newsSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
 

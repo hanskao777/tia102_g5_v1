@@ -276,8 +276,21 @@ body {
 
 
 	</div>
+	
+	
+	<div class="pagination" th:if="${totalPages > 1}">
+    <span th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>
+    <a th:if="${currentPage > 1}"
+       th:href="@{'/commodity/mall_listActivityCommodities'(page=${currentPage - 1}, activityID=${activityID})}">
+       上一頁
+    </a>
+    <a th:if="${currentPage < totalPages}"
+       th:href="@{'/commodity/mall_listActivityCommodities'(page=${currentPage + 1}, activityID=${activityID})}">
+       下一頁
+    </a>
+</div>
 
-
+<!--  
 	<div class="pagination" th:if="${totalPages > 1}">
 		<span th:text="'第 ' + ${currentPage} + ' 頁，共 ' + ${totalPages} + ' 頁'"></span>
 		<a th:if="${currentPage > 1}"
@@ -285,7 +298,7 @@ body {
 		<a th:if="${currentPage < totalPages}"
 			th:href="@{'/commodity/mall_listActivityCommodities?page=' + ${currentPage + 1}}">下一頁</a>
 	</div>
-
+-->
 
 
 	<div id="footer"></div>

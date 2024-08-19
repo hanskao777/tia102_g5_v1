@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -41,24 +42,15 @@ public class AnnouncementController {
     @Autowired
     AdministratorService administratorSvc;
 
-//    @GetMapping("/select_page")
-//    public String select_page(Model model) {
-////        return "back-end/announcement-news/select_page";
-//        return "front-end/announcement-news/select_page";
-//
-//    }
 
-//    @GetMapping("/listAllAnnouncement")
-//    public String listAllAnnouncement(Model model) {
-//        List<Announcement> announcements = announcementSvc.getAll();
-//        model.addAttribute("announcements", announcements);
-//        return "back-end-partner/announcement-news/announcement";
-////        return "front-end/announcement-news/listAllAnnouncement";
-//
-//    }
     // 管理員公告頁面 沒有側邊攔
     @GetMapping("/listAllAnnouncement")
-    public String listAllAnnouncement(Model model, @RequestParam(defaultValue = "1") int page) {
+    public String listAllAnnouncement(/*HttpSession session,*/ Model model, @RequestParam(defaultValue = "1") int page) {
+    	
+//    	if(session.getAttribute("adminID") == null) {
+//    		return "redirect:/adminLogin";
+//    	}
+    	
         int pageSize = 10; // 每頁顯示的公告數量
         Page<Announcement> announcementPage = announcementSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
 
@@ -71,7 +63,12 @@ public class AnnouncementController {
 
     // 廠商公告頁面
     @GetMapping("/allAnnouncement")
-    public String allAnnouncement(Model model, @RequestParam(defaultValue = "1") int page) {
+    public String allAnnouncement(HttpSession session, Model model, @RequestParam(defaultValue = "1") int page) {
+    	
+    	if(session.getAttribute("partnerID") == null) {
+    		return "redirect:/partnermember/partnerLogin";
+    	}
+    	
         List<Announcement> announcementList = announcementSvc.getAll();
         model.addAttribute("announcements", announcementList);
 
@@ -86,11 +83,7 @@ public class AnnouncementController {
     }
     
 
-    @ModelAttribute("announcementListData")
-    protected List<Announcement> referenceListData(Model model) {
-        List<Announcement> list = announcementSvc.getAll();
-        return list;
-    }
+   
 
     // 新增公告
     @GetMapping("addAnnouncement")
@@ -139,6 +132,8 @@ public class AnnouncementController {
         return "back-end-admin/announcement-news/updateAnnouncement";
 
     }
+    
+    
 
     @PostMapping("update")
     public String update(@Valid Announcement announcement, BindingResult result, ModelMap model) throws IOException {
@@ -172,7 +167,11 @@ public class AnnouncementController {
 
 
 
-
+    @ModelAttribute("announcementListData")
+    protected List<Announcement> referenceListData(Model model) {
+        List<Announcement> list = announcementSvc.getAll();
+        return list;
+    }
 
 
 
@@ -230,11 +229,5 @@ public class AnnouncementController {
 
     }
     
-//    @GetMapping("/announcement")
-//    public String getAnnouncement(Model model) {
-//        List<Announcement> announcements = announcementSvc.getAll();
-//        model.addAttribute("announcements", announcements);
-//        return "back-end-partner/announcement-news/announcement";
-//    }
 
 }
