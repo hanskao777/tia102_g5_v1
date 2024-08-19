@@ -40,7 +40,7 @@ public class VenueRentalPageController {
 //        partnerMember.setPartnerID(1);
 //        venueRental.setPartnerMember(partnerMember);
 		venueRental.setVenue(venue);
-		venueRental.setActivityName("IVE演唱會");
+		venueRental.setActivityName("2024宇多田光演唱會");
 		venueRental.setVenueRentalStatus(2);
 		venueRental.setVenueRentalStartDate(java.sql.Date.valueOf("2024-09-18"));
 		venueRental.setVenueRentalEndDate(java.sql.Date.valueOf("2024-09-18"));
