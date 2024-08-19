@@ -60,6 +60,7 @@ public class Activity implements Serializable {
 	private String activityName; // 名稱
 
 	@Column(name = "activityContent", columnDefinition = "text")
+	@NotEmpty(message = "請輸入活動內容")
 	private String activityContent; // 內容
 
 	@Column(name = "activityCreateTime", updatable = false, insertable = false)
@@ -89,8 +90,9 @@ public class Activity implements Serializable {
 	@OrderBy("activityAreaPriceID asc")
 	private Set<ActivityAreaPrice> activityAreaPrices; // 活動區域價格
 
-	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@OrderBy("activityPictureID asc")
+	@NotEmpty(message="活動圖片: 請上傳圖片")
 	private Set<ActivityPicture> activityPictures = new HashSet<ActivityPicture>(); // 活動圖片
 
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)

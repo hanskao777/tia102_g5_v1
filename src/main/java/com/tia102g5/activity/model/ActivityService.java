@@ -8,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_Activity;
+
 @Service("activityService")
 public class ActivityService {
 
@@ -46,9 +48,9 @@ public class ActivityService {
 		return repository.findAll();
 	}
 	
-//	//查詢 (複合)
-//	public List<Activity> getAll(Map<String, String[]> map) {
-//		return HibernateUtil_CompositeQuery_Activity.getAllC(map,sessionFactory.openSession());
-//	}
+	//查詢 (複合)
+	public List<Activity> getAll(Map<String, String[]> map) {
+		return HibernateUtil_CompositeQuery_Activity.getAllC(map,sessionFactory.openSession());
+	}
 	
 }

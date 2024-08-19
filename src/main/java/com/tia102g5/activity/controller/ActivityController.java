@@ -2,14 +2,17 @@ package com.tia102g5.activity.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -53,7 +56,7 @@ public class ActivityController {
 	public String activityInfo(ModelMap model) {
 		List<Activity> activities = activitySvc.getAll();
 		
-		model.addAttribute("activityListData", activities);
+		model.addAttribute("activitySearchList", activities);
 		
 		return "front-end/activity/activityInfoAll";
 	}
@@ -160,6 +163,11 @@ public class ActivityController {
 			return "redirect:/partnermember/partnerLogin";
 		}
 		
+		//錯誤驗證
+		if (result.hasErrors()) {
+			return "back-end-partner/activity/activityAdd";
+		}
+		
 		//取得 Partner
 		Integer partnerID = (Integer)session.getAttribute("partnerID");
 		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
@@ -205,20 +213,10 @@ public class ActivityController {
 		}
 		
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
+		// 去除BindingResult中upFiles欄位的FieldError紀錄
 		result = removeFieldError(activity, result, "activityPictures");
 
-		//////// 設置未在表單中的資訊 ////////////
-		
 		Activity activityORI = activitySvc.getOneActivity(activity.getActivityID());
-		
-		activity.setPartnerMember(activityORI.getPartnerMember());
-		activity.setVenue(activityORI.getVenue());
-		activity.setVenueRental(activityORI.getVenueRental());
-		activity.setActivityStatus(1);
-		activity.setTicketSetStatus(activityORI.getTicketSetStatus());
-		
-		////////設置未在表單中的資訊 ////////////
 		
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
 				Set<ActivityPicture> activityPictures = activityORI.getActivityPictures();
@@ -233,10 +231,20 @@ public class ActivityController {
 				activity.getActivityPictures().add(activityPicture);
 			}
 		}
-//		if (result.hasErrors()) {
-//			return "back-end-partner/activity/activityConfig";
-//		}
+		
+		if (result.hasErrors()) {
+			return "back-end-partner/activity/activityConfig";
+		}
 		/*************************** 2.開始修改資料 *****************************************/
+		//////// 設置未在表單中的資訊 ////////////
+		
+		activity.setPartnerMember(activityORI.getPartnerMember());
+		activity.setVenue(activityORI.getVenue());
+		activity.setVenueRental(activityORI.getVenueRental());
+		activity.setActivityStatus(1);
+		activity.setTicketSetStatus(activityORI.getTicketSetStatus());
+		
+		////////設置未在表單中的資訊 ////////////
 		
 		activitySvc.updateActivity(activity);
 		
@@ -246,6 +254,16 @@ public class ActivityController {
 		model.addAttribute("activity", activity);
 		
 		return "back-end-partner/activity/activityDisplay"; // 修改成功後轉交activityDispaly.html
+	}
+	
+	//activityInfoAll 搜尋
+	@PostMapping("activitySearch")
+	public String activitySearch(HttpServletRequest req, Model model) {
+		Map<String, String[]> map = req.getParameterMap();
+		List<Activity> activities = activitySvc.getAll(map);
+		model.addAttribute("activitySearchList", activities);
+		
+		return "front-end/activity/activityInfoAll";
 	}
 /********************* action ********************/
 
