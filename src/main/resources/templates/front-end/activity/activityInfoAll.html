@@ -209,10 +209,10 @@
                             <label>
                                 <input type="checkbox" id="others" name="activityTag" value="其它"> 其它
                             </label>
-                            <label>
+                            <!-- <label>
                                 <span id="searchBar">關鍵字搜尋: <input type="text" name="searchBar" placeholder="例如: IVE"></span>
                                 <button type="submit" id="search">搜尋</button>
-                            </label>
+                            </label> -->
                         </div>
                     </div>
                 </form>
@@ -240,7 +240,7 @@
                             </div>
                             <!-- 顯示活動名稱 -->
                             <h5 class="card-title" th:text="${activity.activityName}"></h5>
-                            <p class="card-text" th:text="'日期：' + ${activity.sellTime}"></p>
+                            <p class="card-text" th:text="'日期：' + ${activity.venueRental.venueRentalStartDate}"></p>
                             <p class="card-text" th:text="'地點：' + ${activity.venue.venueName}"></p>
                         </a>
                     </div>
