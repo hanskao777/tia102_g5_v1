@@ -3,6 +3,8 @@ package com.tia102g5.announcement.model;
 import com.tia102g5.announcement.model.Announcement;
 import com.tia102g5.announcement.model.AnnouncementRepository;
 import org.hibernate.Session;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,14 +50,20 @@ public class AnnouncementService {
         return optional.orElse(null);
     }
 
-    // 獲取所有公告
+ // 獲取所有公告，按創建時間降序排序
     public List<Announcement> getAll() {
-        return repository.findAll();
+        return repository.findAll(Sort.by(Sort.Direction.DESC, "announcementCreateTime"));
     }
 
-    // 分頁查詢
+    // 分頁查詢，按創建時間降序排序
     public Page<Announcement> getAllPaginated(Pageable pageable) {
-        return repository.findAll(pageable);
+        // 創建一個新的 Pageable 對象，加入排序條件
+        Pageable sortedPageable = PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            Sort.by(Sort.Direction.DESC, "announcementCreateTime")
+        );
+        return repository.findAll(sortedPageable);
     }
 
     // 按狀態分頁查詢公告

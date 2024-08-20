@@ -64,13 +64,7 @@ public class CommodityService {
 //        return activityRepository.findAll();
 //    }
 
-    public Page<Commodity> getCommoditiesByActivityPaginated(Integer activityID, Pageable pageable) {
-        return repository.findByActivity_ActivityID(activityID, pageable);
-    }
-    
-    public Page<Activity> getAllActivitiesPaginated(Pageable pageable) {
-        return activityRepository.findAll(pageable);
-    }
+   
     
   public List<Commodity> getCommoditiesByActivity(Integer activityID) {
   return repository.findByActivity_ActivityID(activityID);
@@ -121,7 +115,21 @@ public class CommodityService {
 //        return repository.findActivitiesByPartnerMemberID(partnerMemberID);
     }
 
+    public boolean isActivityOwnedByPartner(Integer activityID, Integer partnerID) {
+        return activityRepository.existsByActivityIDAndPartnerMemberPartnerID(activityID, partnerID);
+    }
 
+//    public Page<Commodity> getCommoditiesByActivityPaginated(Integer activityID, Pageable pageable) {
+//        return repository.findByActivityActivityID(activityID, pageable);
+//    }
+    
+    public Page<Commodity> getCommoditiesByActivityPaginated(Integer activityID, Pageable pageable) {
+        return repository.findByActivity_ActivityID(activityID, pageable);
+    }
+    
+    public Page<Activity> getAllActivitiesPaginated(Pageable pageable) {
+        return activityRepository.findAll(pageable);
+    }
 
 
 //    public List<Activity> getActivitiesByPartnerMember(Integer partnerID) {

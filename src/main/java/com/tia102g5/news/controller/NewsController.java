@@ -51,11 +51,11 @@ public class NewsController {
 
     // 管理員消息頁面 沒有側邊攔
     @GetMapping("/listAllNews")
-    public String listAllNews(/*HttpSession session,*/ Model model, @RequestParam(defaultValue = "1") int page) {
+    public String listAllNews(HttpSession session, Model model, @RequestParam(defaultValue = "1") int page) {
     	
-//    	if(session.getAttribute("adminID") == null) {
-//    		return "redirect:/adminLogin";
-//    	}
+    	if(session.getAttribute("administratorID") == null) {
+    		return "redirect:/adminLogin";
+    	}
 //    	
 //    	Integer adminID = (Integer)session.getAttribute("adminID");
 //    	Administrator admin = AdministratorService.getOneAdministrator(adminID);
@@ -73,8 +73,8 @@ public class NewsController {
     // 首頁消息頁面
     @GetMapping("/allNews")
     public String allNews(Model model, @RequestParam(defaultValue = "1") int page) {
-        List<News> newsList = newsSvc.getAll();  // 或者使用分頁版本
-        model.addAttribute("newsList", newsList);
+//        List<News> newsList = newsSvc.getAll();  // 或者使用分頁版本
+//        model.addAttribute("newsList", newsList);
 
         int pageSize = 5; // 每頁顯示的公告數量
         Page<News> newsPage = newsSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
@@ -92,60 +92,87 @@ public class NewsController {
         return list;
     }
 
-    // 新增消息
+ // 新增消息頁面
     @GetMapping("addNews")
-    public String addNews(ModelMap model) {
+    public String addNews(HttpSession session, ModelMap model) {
+        // 檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
+        }
+
         News news = new News();
-        news.setAdministrator(new Administrator()); // 初始化 Administrator 對象
+        Administrator admin = new Administrator();
+        admin.setAdministratorID(administratorID);
+        news.setAdministrator(admin);
         model.addAttribute("news", news);
+
         return "back-end-admin/announcement-news/addNews";
     }
 
+    // 處理新增消息
     @PostMapping("insert")
-    public String insert(@Valid News news, BindingResult result, ModelMap model) throws IOException {
+    public String insert(@Valid News news, BindingResult result, HttpSession session, ModelMap model) throws IOException {
+        // 再次檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
+        }
+
         if (result.hasErrors()) {
             return "back-end-admin/announcement-news/addNews";
         }
 
+        // 設置管理員ID
+        news.getAdministrator().setAdministratorID(administratorID);
+
         newsSvc.addNews(news);
 
-        List<News> list = newsSvc.getAll();
-        model.addAttribute("newsListData", list);
         model.addAttribute("success", "- (新增成功)");
         return "redirect:/news/listAllNews";
     }
 
-    // ... （更新、刪除、查詢）"news"
+ // 獲取要更新的消息
     @PostMapping("getOne_For_Update")
-    public String getOne_For_Update(@RequestParam("newsID") String newsIDStr, ModelMap model) {
+    public String getOne_For_Update(@RequestParam("newsID") String newsIDStr, HttpSession session, ModelMap model) {
+        // 檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
+        }
+
         Integer newsID = Integer.valueOf(newsIDStr);
         News news = newsSvc.getOneNews(newsID);
 
-//        List<Administrator> administratorList = administratorSvc.getAll();
-//        model.addAttribute("administratorListData", administratorList);
+        if (!news.getAdministrator().getAdministratorID().equals(administratorID)) {
+            model.addAttribute("error", "您沒有權限更新這個公告");
+            return "back-end-admin/announcement-news/news"; // 返回列表頁面
+        }
 
         model.addAttribute("news", news);
-//        return "back-end/news/update_news_input";
         return "back-end-admin/announcement-news/updateNews";
-
     }
 
+ // 處理消息更新
     @PostMapping("update")
-    public String update(@Valid News news, BindingResult result, ModelMap model) throws IOException {
-        if (result.hasErrors()) {
-//            return "back-end/news/update_news_input";
-            return "back-end-admin/announcement-news/updateNews";
-
+    public String update(@Valid News news, BindingResult result, HttpSession session, ModelMap model) throws IOException {
+        // 檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
         }
+
+        if (result.hasErrors()) {
+            return "back-end-admin/announcement-news/updateNews";
+        }
+
+        // 設置當前登入的管理員ID
+        news.getAdministrator().setAdministratorID(administratorID);
 
         newsSvc.updateNews(news);
 
         model.addAttribute("success", "- (修改成功)");
-        news = newsSvc.getOneNews(news.getNewsID());
-        model.addAttribute("news", news);
-//        return "back-end/news/listOneNews";
         return "redirect:/news/listAllNews";
-
     }
 
     @PostMapping("delete")

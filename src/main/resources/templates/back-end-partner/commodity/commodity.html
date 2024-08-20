@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>商品管理 - IVE MAGAZINE</title>
+<title>商品管理</title>
 <link
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -192,8 +192,23 @@ tr:hover {
 		<div id="dynamic-content">
 			<section id="product-management" class="section">
 				<div class="container">
-					<h1 th:text="'商品管理 - 活動ID: ' + ${activityID}"></h1>
-					<!--       要加這個   <h1 th:text="'商品管理 - 活動ID: ' + ${activityID}"></h1>-->
+				
+<!-- 首先檢查 activity 是否存在 -->
+<h1 th:if="${activity != null}" th:text="'商品管理 - ' + ${activityName}"></h1>
+<h1 th:if="${activity == null}" th:text="'商品管理 - 活動ID: ' + ${activityID}"></h1>
+
+<!-- 如果你需要顯示錯誤信息 -->
+<p th:if="${error != null}" th:text="${error}" style="color: red;"></p>
+
+<!-- 如果你確實有一個活動列表，可以這樣顯示 -->
+<table th:if="${activities != null and not #lists.isEmpty(activities)}">
+    <tr th:each="act : ${activities}">
+        <td th:text="${act.activityName}"></td>
+        <!-- 其他列... -->
+    </tr>
+</table>
+
+<!-- 如果沒有活動，顯示一個消息 -->
 					<div class="controls">
 
 						<!--            <div>-->
@@ -210,8 +225,7 @@ tr:hover {
 						<!--              </form>-->
 						<!--            </div>-->
 						<!--   要加這個         <a th:href="@{'/commodity/addCommodity/' + ${activityID}}" class="btn btn-primary">+ 新增商品</a>-->
-						<a th:href="@{/commodity/addCommodity}" class="btn btn-primary">+
-							新增商品</a>
+				<a th:href="@{/commodity/addCommodity(activityID=${activityID})}" class="btn btn-primary">+ 新增商品</a>
 						<!--            <a th:href="@{/commodity/addCommodity(activityID=${activityID}, partnerID=${partnerID})}" class="btn btn-primary">+ 新增商品</a>-->
 					</div>
 					<table>
@@ -264,12 +278,14 @@ tr:hover {
 										class="placeholder-image">無圖片</div>
 								</td>
 								<td>
-									<form method="post" th:action="@{/commodity/updateCommodity}"
-										style="margin-bottom: 0px;">
-										<input type="submit" value="修改"> <input type="hidden"
-											name="commodityID" th:value="${commodity.commodityID}">
-									</form>
-								</td>
+    <form method="post" th:action="@{/commodity/updateCommodity}">
+        <input type="submit" value="修改">
+        <input type="hidden" name="commodityID" th:value="${commodity.commodityID}">
+        <input type="hidden" name="activityID" th:value="${activityID}">
+    </form>
+</td>
+								
+								
 								<!--           要加這個     </td>-->
 								<!--                <td>-->
 								<!--                  <a th:href="@{'/commodity/updateCommodity/' + ${commodity.commodityID}}">修改</a>-->
@@ -297,7 +313,9 @@ tr:hover {
 			</section>
 		</div>
 	</div>
-
+	
+	
+	
 	<script>
 		// 模擬的商品資料
 		// const commodities = [
