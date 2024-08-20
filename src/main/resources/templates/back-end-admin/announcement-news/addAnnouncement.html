@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新增公告</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<!--  -->  <link rel="stylesheet" href="/css/admin.css">
+<!--    <link rel="stylesheet" href="/css/admin.css">-->
   <link rel="stylesheet" href="/css/admin_sidebar.css">
 
   <style>
@@ -17,6 +17,11 @@
       padding: 20px;
       min-height: 100vh;
     }
+    
+        .content {
+    margin-left: 250px; /* 調整這個值使其與側邊欄寬度匹配 */
+    padding: 20px;
+}
 
     .container {
       /* background-color: rgba(255, 255, 255, 0.9);
@@ -254,10 +259,19 @@
           <textarea id="announcementContent" th:field="*{announcementContent}" required></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="administrator">管理員ID:</label>
-          <input type="number" id="administrator" th:field="*{administrator.administratorID}" required>
-        </div>
+        
+
+<!-- 選項2：只顯示當前ID的固定欄位 -->
+<div class="form-group">
+    <label for="administrator">管理員ID:</label>
+    <input type="text" id="administrator" th:value="*{administrator.administratorID}" 
+           class="form-control" readonly>
+    <input type="hidden" th:field="*{administrator.administratorID}">
+</div>
+        
+        
+        
+        
 
         <div class="form-group">
           <label>狀態:</label>

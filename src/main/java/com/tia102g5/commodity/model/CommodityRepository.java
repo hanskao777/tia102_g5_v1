@@ -39,6 +39,10 @@ public interface CommodityRepository extends JpaRepository<Commodity, Integer>{
 	@Query("SELECT DISTINCT c.activity FROM Commodity c")
     List<Activity> findAllDistinctActivities();
 	
+	
+//    Page<Commodity> findByActivityActivityID(Integer activityID, Pageable pageable);
+
+	
 //	@Query("SELECT DISTINCT d.activityPicture FROM activity d")
 //    List<Activity> findAllDistinctActivitiesPicture();
 	

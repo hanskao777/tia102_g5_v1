@@ -311,127 +311,7 @@ th {
 
 
 
-			<!--
-			
-			<div th:if="${member != null}">
-    <p>Debug: Member ID: <span th:text="${member.memberID}"></span></p>
-    <p>Debug: Member Name: <span th:text="${member.memberName}"></span></p>
-    <p>Debug: Member Phone: <span th:text="${member.memberPhone}"></span></p>
-    <p>Debug: Member Email: <span th:text="${member.memberAccount}"></span></p>
-</div>
-<div th:if="${member == null}">
-    <p>Debug: Member object is null</p>
-</div>
 
-<div class="form-section" id="orderInfo">
-    <h3>訂購人資料</h3>
-    <div class="form-group">
-        <label for="orderName">姓名：</label>
-        <input type="text" id="orderName" name="orderName" th:value="${member.memberName}" readonly>
-    </div>
-    <div class="form-group">
-        <label for="orderPhone">電話：</label>
-        <input type="tel" id="orderPhone" name="orderPhone" th:value="${member.memberPhone}" readonly>
-    </div>
-    <div class="form-group">
-        <label for="orderEmail">E-mail：</label>
-        <input type="email" id="orderEmail" name="orderEmail" th:value="${member.memberAccount}" readonly>
-    </div>
-</div>
-
-
-				<div  id="orderInfo"
-				data-member-name="[[${member.memberName}]]"
-				data-member-phone="[[${member.memberPhone}]]"
-				data-member-email="[[${member.memberAccount}]]"></div>
-				readonly
-
-
-
-			
-						一版
-<form th:action="@{/cart/checkout}" method="post" id="checkoutForm">
-     訂購人資料 
-    <input type="hidden" id="orderName" name="recipient" th:value="${member.memberName}">
-    <input type="hidden" id="orderPhone" name="recipientPhone" th:value="${member.memberPhone}">
-    <input type="hidden" id="orderEmail" name="recipientEmail" th:value="${member.memberAccount}">
-
-     收件人資料 
-    <div class="form-group">
-        <label for="recipientName">姓名：</label>
-        <input type="text" id="recipientName" name="recipient">
-    </div>
-    <div class="form-group">
-        <label for="recipientPhone">電話：</label>
-        <input type="tel" id="recipientPhone" name="recipientPhone">
-    </div>
-    <div class="form-group">
-        <label for="recipientEmail">E-mail：</label>
-        <input type="email" id="recipientEmail" name="recipientEmail">
-    </div>
-    <div class="form-group">
-        <label for="address">地址：</label>
-        <input type="text" id="address" name="recipientAddress">
-    </div>
-
-    
-
-    <button type="submit" class="btn btn-next">確認付款</button>
-</form>
-
-
-
-							二版
-<form th:action="@{/cart/checkout}" method="post">
-    <input type="text" name="recipient" required>
-    <input type="tel" name="recipientPhone" required>
-    <input type="email" name="recipientEmail" required>
-    <input type="text" name="recipientAddress" required>
-    <!-- 如果有優惠券，添加以下字段 
-    <input type="hidden" name="memberCouponId" th:value="${selectedCouponId}">
-    <button type="submit">確認付款</button>
-</form>
-
-
-
-		三板前一版可以正常使用的
-		<div class="form-section">
-				<h3>收件人資料</h3>
-
-
-				<div id="recipientInfo" data-member-name="[[${member.memberName}]]"
-					data-member-phone="[[${member.memberPhone}]]"
-					data-member-email="[[${member.memberAccount}]]"
-					data-member-address="[[${member.memberAddress}]]"></div>
-
-
-<form th:action="@{/cart/checkout}" method="post">
-
-				<div class="radio-group" th:action="@{/cart/checkout}" method="post">
-					<input type="checkbox" id="sameAsOrder" name="sameAsOrder" checked
-						onchange="toggleRecipientInfo()"> <label for="sameAsOrder">同訂購人</label>
-				</div>
-				<div class="form-group">
-					<label for="recipientName">姓名：</label> <input type="text"
-						id="recipientName" name="recipientName">
-				</div>
-				<div class="form-group">
-					<label for="recipientPhone">電話：</label> <input type="tel"
-						id="recipientPhone" name="recipientPhone">
-				</div>
-				<div class="form-group">
-					<label for="recipientEmail">E-mail：</label> <input type="email"
-						id="recipientEmail" name="recipientEmail">
-				</div>
-				<div class="form-group">
-					<label for="address">地址：</label> <input type="text" id="address"
-						name="address">
-</form>
-						
-				</div>
-			</div>
-
--->
 			<!--訂購人資料-->
 			<div class="form-section">
 				<h3>訂購人資料</h3>
@@ -454,19 +334,7 @@ th {
 
 
 
-			<!--收件人資料 
-			
-
-<form th:action="@{/cart/checkout}" method="post">
-    <input type="text" name="recipient" required>
-    <input type="tel" name="recipientPhone" required>
-    <input type="email" name="recipientEmail" required>
-    <input type="text" name="recipientAddress" required>
-    <input type="hidden" name="memberCouponId" th:value="${selectedCouponId}">
-    <button type="submit">確認付款</button>
-</form>
-
--->
+			<!--收件人資料-->
 
 			<div class="form-section">
 				<h3>收件人資料</h3>
@@ -522,26 +390,31 @@ th {
 				<div class="payment-info">
 					<div class="payment-methods">
 						<!-- 付款方式圖標 -->
+						<img
+							src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png"
+							alt="Visa"> <img
+							src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png"
+							alt="Mastercard"> <img
+							src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/JCB_logo.svg/2560px-JCB_logo.svg.png"
+							alt="JCB">
 					</div>
-					<div class="form-group">
-						<label for="cardHolder">持卡人：</label> <input type="text"
-							id="cardHolder" name="cardHolder" placeholder="請輸入持卡人姓名">
-					</div>
-					<div class="form-group">
-						<label for="cardNumber">信用卡號：</label>
-						<div class="card-number">
-							<input type="text" maxlength="4" name="cardNumber1"
-								placeholder="xxxx"> <input type="text" maxlength="4"
-								name="cardNumber2" placeholder="xxxx"> <input
-								type="text" maxlength="4" name="cardNumber3" placeholder="xxxx">
-							<input type="text" maxlength="4" name="cardNumber4"
-								placeholder="xxxx">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="cvv">信用卡安全碼：</label> <input type="text" id="cvv"
-							name="cvv" maxlength="3" placeholder="xxx">
-					</div>
+					 <div class="form-group">
+      <label for="cardHolder">持卡人：</label>
+      <input type="text" id="cardHolder" name="cardHolder" placeholder="請輸入持卡人姓名" required>
+    </div>
+    <div class="form-group">
+      <label for="cardNumber">信用卡號：</label>
+      <div class="card-number">
+        <input type="text" maxlength="4" name="cardNumber1" placeholder="xxxx" required pattern="\d{4}" inputmode="numeric">
+        <input type="text" maxlength="4" name="cardNumber2" placeholder="xxxx" required pattern="\d{4}" inputmode="numeric">
+        <input type="text" maxlength="4" name="cardNumber3" placeholder="xxxx" required pattern="\d{4}" inputmode="numeric">
+        <input type="text" maxlength="4" name="cardNumber4" placeholder="xxxx" required pattern="\d{4}" inputmode="numeric">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="cvv">信用卡安全碼：</label>
+      <input type="text" id="cvv" name="cvv" maxlength="3" placeholder="xxx" required pattern="\d{3}" inputmode="numeric">
+    </div>
 					<div class="form-group">
 						<label>信用卡有效月年：</label>
 						<div class="expiry-date">

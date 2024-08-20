@@ -45,11 +45,11 @@ public class AnnouncementController {
 
     // 管理員公告頁面 沒有側邊攔
     @GetMapping("/listAllAnnouncement")
-    public String listAllAnnouncement(/*HttpSession session,*/ Model model, @RequestParam(defaultValue = "1") int page) {
+    public String listAllAnnouncement(HttpSession session, Model model, @RequestParam(defaultValue = "1") int page) {
     	
-//    	if(session.getAttribute("adminID") == null) {
-//    		return "redirect:/adminLogin";
-//    	}
+    	if(session.getAttribute("administratorID") == null) {
+    		return "redirect:/adminLogin";
+    	}
     	
         int pageSize = 10; // 每頁顯示的公告數量
         Page<Announcement> announcementPage = announcementSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
@@ -69,8 +69,8 @@ public class AnnouncementController {
     		return "redirect:/partnermember/partnerLogin";
     	}
     	
-        List<Announcement> announcementList = announcementSvc.getAll();
-        model.addAttribute("announcements", announcementList);
+//        List<Announcement> announcementList = announcementSvc.getAll();
+//        model.addAttribute("announcements", announcementList);
 
         int pageSize = 5; // 每頁顯示的公告數量
         Page<Announcement> announcementPage = announcementSvc.getAllPaginated(PageRequest.of(page - 1, pageSize));
@@ -85,73 +85,87 @@ public class AnnouncementController {
 
    
 
-    // 新增公告
+ // 新增公告頁面
     @GetMapping("addAnnouncement")
-    public String addAnnouncement(ModelMap model) {
-//        Announcement announcement = new Announcement();
-//        model.addAttribute("announcement", announcement);
+    public String addAnnouncement(HttpSession session, ModelMap model) {
+        // 檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
+        }
+
         Announcement announcement = new Announcement();
-        announcement.setAdministrator(new Administrator()); // 初始化 Administrator 對象
+        Administrator admin = new Administrator();
+        admin.setAdministratorID(administratorID);
+        announcement.setAdministrator(admin);
         model.addAttribute("announcement", announcement);
-//        List<Administrator> administratorList = administratorSvc.getAll();
-//        model.addAttribute("administratorListData", administratorList);
 
         return "back-end-admin/announcement-news/addAnnouncement";
-//        return "front-end/announcement-news/addAnnouncement";
-
     }
 
+    // 處理新增公告
     @PostMapping("insert")
-    public String insert(@Valid Announcement announcement, BindingResult result, ModelMap model) throws IOException {
+    public String insert(@Valid Announcement announcement, BindingResult result, HttpSession session, ModelMap model) throws IOException {
+        // 再次檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
+        }
+
         if (result.hasErrors()) {
             return "back-end-admin/announcement-news/addAnnouncement";
-//            return "front-end/announcement-news/addAnnouncement";
-
         }
+
+        // 設置管理員ID
+        announcement.getAdministrator().setAdministratorID(administratorID);
 
         announcementSvc.addAnnouncement(announcement);
 
-        List<Announcement> list = announcementSvc.getAll();
-        model.addAttribute("announcementListData", list);
         model.addAttribute("success", "- (新增成功)");
         return "redirect:/announcement/listAllAnnouncement";
     }
 
-
-    // 修改公告
+ // 獲取要更新的公告
     @PostMapping("getOne_For_Update")
-    public String getOne_For_Update(@RequestParam("announcementID") String announcementIDStr, ModelMap model) {
+    public String getOne_For_Update(@RequestParam("announcementID") String announcementIDStr, HttpSession session, ModelMap model) {
+        // 檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
+        }
+
         Integer announcementID = Integer.valueOf(announcementIDStr);
         Announcement announcement = announcementSvc.getOneAnnouncement(announcementID);
 
-//        List<Administrator> administratorList = administratorSvc.getAll();
-//        model.addAttribute("administratorListData", administratorList);
+        if (!announcement.getAdministrator().getAdministratorID().equals(administratorID)) {
+            model.addAttribute("error", "您沒有權限更新這個公告");
+            return "back-end-admin/announcement-news/announcement"; // 返回列表頁面
+        }
 
         model.addAttribute("announcement", announcement);
-//        return "back-end/announcement/update_announcement_input";
         return "back-end-admin/announcement-news/updateAnnouncement";
-
     }
-    
-    
 
+    // 處理公告更新
     @PostMapping("update")
-    public String update(@Valid Announcement announcement, BindingResult result, ModelMap model) throws IOException {
-        if (result.hasErrors()) {
-//            return "back-end/announcement/update_announcement_input";
-            return "back-end-admin/announcement-news/updateAnnouncement";
-
+    public String update(@Valid Announcement announcement, BindingResult result, HttpSession session, ModelMap model) throws IOException {
+        // 檢查是否登入
+        Integer administratorID = (Integer) session.getAttribute("administratorID");
+        if (administratorID == null) {
+            return "redirect:/adminLogin";
         }
+
+        if (result.hasErrors()) {
+            return "back-end-admin/announcement-news/updateAnnouncement";
+        }
+
+        // 設置當前登入的管理員ID
+        announcement.getAdministrator().setAdministratorID(administratorID);
 
         announcementSvc.updateAnnouncement(announcement);
 
         model.addAttribute("success", "- (修改成功)");
-        announcement = announcementSvc.getOneAnnouncement(announcement.getAnnouncementID());
-        model.addAttribute("announcement", announcement);
-//        return "back-end/announcement/listOneAnnouncement";
-//        return "back-end-admin/announcement-news/announcement";
         return "redirect:/announcement/listAllAnnouncement";
-
     }
 
     @PostMapping("delete")
