@@ -253,7 +253,7 @@ public class ActivityController {
 		activity = activitySvc.getOneActivity(Integer.valueOf(activity.getActivityID()));
 		model.addAttribute("activity", activity);
 		
-		return "back-end-partner/activity/activityDisplay"; // 修改成功後轉交activityDispaly.html
+		return "redirect:/activity/activityDisplay"; // 修改成功後轉交activityDisplay.html
 	}
 	
 	//activityInfoAll 搜尋
