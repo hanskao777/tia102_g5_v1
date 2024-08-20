@@ -39,7 +39,7 @@
         
         <table id="example" class="display" style="width: 100%">
             <thead>
-                <tr style="background-color:#CCCCFF">
+                <tr style="background-color:#E18D96">
                     <th></th>
                     <th>申請編號</th>
                     <th>活動名稱</th>
@@ -47,7 +47,7 @@
                     <!-- <th>排程時間</th> -->
                     <!-- <th>起售日</th> -->
                     <th>設定狀態</th>
-                    <th>設定</th>
+                    <th>新增</th>
                 </tr>
             </thead>
                 
@@ -66,7 +66,9 @@
                         </td>
                         <td>
                             <form method="post" th:action="@{/activity/activityAdd}" style="margin-bottom: 0px;">
-                                <input type="submit" value="設定">
+                                <div th:switch="${venueRental.activity.activityStatus}">
+                                    <input th:case="0" type="submit" value="設定">
+                                </div>
                                 <input type="hidden" name="venueRentalID" th:value="${venueRental.venueRentalID}">
                             </form>
                         </td>
