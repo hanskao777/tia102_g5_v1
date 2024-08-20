@@ -60,17 +60,25 @@
                         <td th:text="${venueRental.venue.venueName}"></td>
                         <!-- <td th:text="${activity.activityPostTime}"></td> -->
                         <!-- <td th:text="${activity.sellTime}"></td> -->
-                        <td th:switch="${venueRental.activity.activityStatus}">
-                            <div th:case="0">未設定</div>
-                            <div th:case="1">已設定</div>
+                        <td>
+                            <th:block th:if="${venueRental.activity == null}">
+                                未新增
+                            </th:block>
+                            <th:block th:if="${venueRental.activity != null}">
+                                <span th:text="${venueRental.activity.activityStatus == 0 ? '未新增' : '已新增'}"></span>
+                            </th:block>
                         </td>
                         <td>
                             <form method="post" th:action="@{/activity/activityAdd}" style="margin-bottom: 0px;">
-                                <div th:switch="${venueRental.activity.activityStatus}">
-                                    <input th:case="0" type="submit" value="設定">
-                                </div>
+                                <th:block th:if="${venueRental.activity == null}">
+                                    <input type="submit" value="設定">
+                                </th:block>
+                                <th:block th:if="${venueRental.activity != null and venueRental.activity.activityStatus == 0}">
+                                    <input type="submit" value="設定">
+                                </th:block>
                                 <input type="hidden" name="venueRentalID" th:value="${venueRental.venueRentalID}">
                             </form>
+                        
                         </td>
                     </tr>
                 </th:block>

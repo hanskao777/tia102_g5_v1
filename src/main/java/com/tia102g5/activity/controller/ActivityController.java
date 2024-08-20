@@ -163,6 +163,8 @@ public class ActivityController {
 			return "redirect:/partnermember/partnerLogin";
 		}
 		
+		System.out.println(venueRentalID);
+		
 		//錯誤驗證
 		if (result.hasErrors()) {
 			return "back-end-partner/activity/activityAdd";
