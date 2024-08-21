@@ -13,4 +13,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	@Query(value = "DELETE FROM activity WHERE activityID = ?1", nativeQuery = true)
 	void deleteByActivityID(Integer activityID);
 	
+    boolean existsByActivityIDAndPartnerMemberPartnerID(Integer activityID, Integer partnerID);
+
+	
 }

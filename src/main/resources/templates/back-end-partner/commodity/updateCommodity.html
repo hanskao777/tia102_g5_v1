@@ -90,8 +90,8 @@
     <div class="container">
       <h1>修改商品</h1>
       <form th:action="@{/commodity/update}" th:object="${commodity}" method="post" enctype="multipart/form-data">
-        <input type="hidden" th:field="*{commodityID}" />
-<!--        <input type="hidden" th:field="*{activity.activityID}" />-->
+<input type="hidden" name="commodityID" th:value="${commodity.commodityID}">
+    <input type="hidden" name="activityID" th:value="${activityID}"><!--        <input type="hidden" th:field="*{activity.activityID}" />-->
 
 
 <!--        <div class="form-group">-->
@@ -169,7 +169,8 @@
 
         <div class="form-group">
           <button type="submit" class="btn btn-primary">確定</button>
-          <a th:href="@{/commodity/listAllCommodity}" class="btn btn-secondary">取消</a>
+          <a th:href="@{/commodity/listAllCommodity(activityID=${activityID})}" class="btn btn-secondary">取消</a>
+          
         </div>
       </form>
     </div>

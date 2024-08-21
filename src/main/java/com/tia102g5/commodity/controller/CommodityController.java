@@ -29,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tia102g5.commodity.model.Commodity;
 import com.tia102g5.commodity.model.CommodityService;
@@ -40,11 +41,15 @@ import com.tia102g5.activity.model.Activity;
 import com.tia102g5.activity.model.ActivityService;
 import com.tia102g5.announcement.model.Announcement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 @RequestMapping("/commodity")
 @Validated
 public class CommodityController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommodityController.class);
 
 	@Autowired
 	CommodityService commoditySvc;
@@ -135,7 +140,7 @@ public class CommodityController {
 	    Integer partnerID = (Integer) session.getAttribute("partnerID");
 	    if (partnerID == null) {
 	        // 如果 session 中沒有 partnerID，可能用戶未登錄
-	        return "redirect:/login"; // 重定向到登錄頁面
+	        return "redirect:/partnermember/partnerLogin"; // 重定向到登錄頁面
 	    }
 //		Integer partnerID = 1; // 這裡應該是從session或其他地方獲取當前登錄的partnermember ID
 		List<Activity> activities = commoditySvc.getActivitiesByPartnerMember(partnerID);
@@ -149,56 +154,64 @@ public class CommodityController {
 	
 	
 
-//  後台商城商品頁面,根據 activityID 顯示該活動的商品
-//  要用這個 @GetMapping("/listAllCommodity/{activityID}")
-//  public String listAllCommodity(@PathVariable Integer activityID, ModelMap model) {
 	@GetMapping("/listAllCommodity")
-	public String listAllCommodity(/*@RequestParam(required = false) Integer activityID,*/ ModelMap model,
-			@RequestParam(defaultValue = "1") int page) {
-		
-//		if (activityID == null) {
-//	        // 如果沒有提供 activityID，可以重定向到一個錯誤頁面或者首頁
-//	        return "redirect:/error";  // 或者 "redirect:/"
-//	    }
+	public String listAllCommodity(@RequestParam Integer activityID,
+	                               @RequestParam(defaultValue = "1") int page,
+	                               ModelMap model,
+	                               HttpSession session) {
 
-		Integer activityID = 1; // 固定的 activityID
-		int pageSize = 5; // 每頁顯示的商品數量
+	    Integer partnerID = (Integer) session.getAttribute("partnerID");
+	    if (partnerID == null) {
+	        logger.warn("Attempt to access commodity list without login");
+	        return "redirect:/partnermember/partnerLogin";
+	    }
 
-		Page<Commodity> commodityPage = commoditySvc.getCommoditiesByActivityPaginated(activityID,
-				PageRequest.of(page - 1, pageSize));
+	    int pageSize = 5; // 每頁顯示的商品數量
 
-		model.addAttribute("commodityList", commodityPage.getContent());
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", commodityPage.getTotalPages());
-		model.addAttribute("activityID", activityID);
+	    try {
+	        // 首先獲取活動信息
+	        Activity activity = activitySvc.getOneActivity(activityID);
+	        if (activity == null) {
+	            logger.warn("Activity not found for ID: {}", activityID);
+	            model.addAttribute("error", "找不到指定的活動");
+	            return "back-end-partner/error";
+	        }
 
-//        if (activityID == null) {
-//            // 如果沒有提供 activityID，可以顯示所有商品或者重定向到活動選擇頁面
-//            List<Commodity> allCommodities = commoditySvc.getAll();
-//            model.addAttribute("commodityList", allCommodities);
-//        } else {
-//            // 根據 activityID 獲取該活動的商品
-//            List<Commodity> commodities = commoditySvc.getCommoditiesByActivity(activityID);
-//            model.addAttribute("commodityList", commodities);
-//        }
+	        // 檢查該活動是否屬於當前登錄的合作夥伴
+	        if (!commoditySvc.isActivityOwnedByPartner(activityID, partnerID)) {
+	            logger.warn("Partner {} attempted to access activity {} which they don't own", partnerID, activityID);
+	            model.addAttribute("error", "您沒有權限查看此活動的商品");
+	            return "back-end-partner/error";
+	        }
 
-//        List<Commodity> commodities;
-//        if (activityID == null) {
-//            // 如果沒有提供 activityID，顯示所有商品
-//            commodities = commoditySvc.getAll();
-//        } else {
-//            // 根據 activityID 獲取該活動的商品
-//            commodities = commoditySvc.getCommoditiesByActivity(activityID);
-//        }
-//        model.addAttribute("commodityList", commodities);
-//
-//        // 獲取所有活動列表，用於可能的下拉選擇
-//        List<Activity> activities = activitySvc.getAll();
-//        model.addAttribute("activityList", activities);
+	        // 獲取分頁的商品列表
+	        Page<Commodity> commodityPage = commoditySvc.getCommoditiesByActivityPaginated(activityID, PageRequest.of(page - 1, pageSize));
 
-		return "/back-end-partner/commodity/commodity";
+	        // 獲取該活動的所有商品（不分頁）
+	        List<Commodity> commodities = commoditySvc.getCommoditiesByActivity(activityID);
+
+	        // 添加活動信息到模型
+	        model.addAttribute("activity", activity);
+	        model.addAttribute("activityName", activity.getActivityName());
+	        model.addAttribute("activityID", activityID);
+
+	        // 添加商品信息到模型
+	        model.addAttribute("commodityList", commodityPage.getContent());
+	        model.addAttribute("commodities", commodities);
+	        model.addAttribute("currentPage", page);
+	        model.addAttribute("totalPages", commodityPage.getTotalPages());
+
+	        logger.info("Retrieved {} commodities for activity ID: {} ({}), partner ID: {}", 
+	                    commodityPage.getContent().size(), activityID, activity.getActivityName(), partnerID);
+
+	    } catch (Exception e) {
+	        logger.error("Error retrieving commodities for activity ID: " + activityID + " and partner ID: " + partnerID, e);
+	        model.addAttribute("error", "無法獲取商品列表，請稍後再試");
+	        return "back-end-partner/error";
+	    }
+
+	    return "back-end-partner/commodity/commodity";
 	}
-
 //    @Controller
 //    public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
 //
@@ -242,121 +255,166 @@ public class CommodityController {
 //        return "back-end-partner/commodity/addCommodity";
 //    }
 
+	
+	
 	// 新增商品
-//  要加這個   @GetMapping("addCommodity/{activityID}")
-//    public String addCommodity(@PathVariable Integer activityID, ModelMap model) {
-//        Commodity commodity = new Commodity();
-//        Activity activity = activitySvc.getOneActivity(activityID);
-//        commodity.setActivity(activity);
-//        model.addAttribute("commodity", commodity);
-//
-//        List<PartnerMember> partnerMemberList = partnerMemberSvc.getAll();
-//        model.addAttribute("partnerMemberListData", partnerMemberList);
-//
-//        return "back-end-partner/commodity/addCommodity";
-//    }
 	@GetMapping("addCommodity")
-	public String addCommodity(ModelMap model) {
-		Commodity commodity = new Commodity();
-		model.addAttribute("commodity", commodity);
+	public String addCommodity(@RequestParam Integer activityID, 
+	                           ModelMap model, 
+	                           HttpSession session) {
+	    Integer partnerID = (Integer) session.getAttribute("partnerID");
+	    if (partnerID == null) {
+	        return "redirect:/partnermember/partnerLogin";
+	    }
 
-		List<PartnerMember> partnerMemberList = partnerMemberSvc.getAll();
-		model.addAttribute("partnerMemberListData", partnerMemberList);
+	    Commodity commodity = new Commodity();
+	    PartnerMember partnerMember = partnerMemberSvc.getOnePartnerMember(partnerID);
+	    Activity activity = activitySvc.getOneActivity(activityID);
 
-		List<Activity> activityList = activitySvc.getAll();
-		model.addAttribute("activityListData", activityList);
-		model.addAttribute("activityList", activityList);
+	    if (activity == null || !activity.getPartnerMember().getPartnerID().equals(partnerID)) {
+	        model.addAttribute("error", "無效的活動ID");
+	        return "redirect:/commodity/listAllCommodity?activityID=" + activityID;
+	    }
 
-		return "back-end-partner/commodity/addCommodity";
+	    commodity.setPartnerMember(partnerMember);
+	    commodity.setActivity(activity);
+	    model.addAttribute("commodity", commodity);
+	    model.addAttribute("activityID", activityID);
+
+	    return "back-end-partner/commodity/addCommodity";
 	}
 
 	@PostMapping("insert")
-	public String insert(@Valid Commodity commodity, BindingResult result, ModelMap model,
-			@RequestParam(value = "commodityPic", required = false) MultipartFile[] parts) throws IOException {
-		if (result.hasErrors()) {
-			return "back-end-partner/commodity/addCommodity";
-		}
+	public String insert(@Valid Commodity commodity, 
+	                     BindingResult result, 
+	                     @RequestParam Integer activityID,
+	                     @RequestParam(value = "commodityPic", required = false) MultipartFile[] parts,
+	                     RedirectAttributes redirectAttributes,
+	                     HttpSession session) throws IOException {
+	    Integer partnerID = (Integer) session.getAttribute("partnerID");
+	    if (partnerID == null) {
+	        return "redirect:/partnermember/partnerLogin";
+	    }
 
-		// 先保存 Commodity
-		commoditySvc.addCommodity(commodity);
+	    if (result.hasErrors()) {
+	        return "back-end-partner/commodity/addCommodity";
+	    }
 
-		// 處理圖片上傳邏輯
-		if (parts != null && parts.length > 0) {
-			for (MultipartFile part : parts) {
-				if (!part.isEmpty()) {
-					CommodityPicture commodityPicture = new CommodityPicture();
-					commodityPicture.setCommodity(commodity);
-					commodityPicture.setCommodityPicture(part.getBytes());
-					commodityPictureSvc.addCommodityPicture(commodityPicture);
-				}
-			}
-		}
+	    // 確保商品關聯到正確的合作夥伴和活動
+	    PartnerMember partnerMember = partnerMemberSvc.getOnePartnerMember(partnerID);
+	    Activity activity = activitySvc.getOneActivity(activityID);
+	    commodity.setPartnerMember(partnerMember);
+	    commodity.setActivity(activity);
 
-//        commoditySvc.addCommodity(commodity, commodity.getActivity().getActivityID(), commodity.getPartnerMember().getPartnerID());
+	    // 保存商品
+	    commoditySvc.addCommodity(commodity);
 
-//        commoditySvc.addCommodity(commodity);
+	    // 處理圖片上傳邏輯
+	    if (parts != null && parts.length > 0) {
+	        for (MultipartFile part : parts) {
+	            if (!part.isEmpty()) {
+	                CommodityPicture commodityPicture = new CommodityPicture();
+	                commodityPicture.setCommodity(commodity);
+	                commodityPicture.setCommodityPicture(part.getBytes());
+	                commodityPictureSvc.addCommodityPicture(commodityPicture);
+	            }
+	        }
+	    }
 
-		List<Commodity> list = commoditySvc.getAll();
-		model.addAttribute("commodityListData", list);
-		model.addAttribute("success", "- (新增成功)");
-		return "redirect:/commodity/listAllCommodity";
+	    redirectAttributes.addFlashAttribute("success", "商品新增成功");
+	    return "redirect:/commodity/listAllCommodity?activityID=" + activityID;
 	}
-
-	// 修改
+	
+	
+	
+	
+	
 	@PostMapping("updateCommodity")
-	public String updateCommodity(@RequestParam("commodityID") String commodityIDStr, ModelMap model) {
-		Integer commodityID = Integer.valueOf(commodityIDStr);
-		Commodity commodity = commoditySvc.getOneCommodity(commodityID);
+	public String updateCommodity(@RequestParam("commodityID") String commodityIDStr, 
+	                              @RequestParam("activityID") Integer activityID,
+	                              ModelMap model,
+	                              HttpSession session) {
+	    Integer partnerID = (Integer) session.getAttribute("partnerID");
+	    if (partnerID == null) {
+	        return "redirect:/partnermember/partnerLogin";
+	    }
 
-		List<PartnerMember> partnerMemberList = partnerMemberSvc.getAll();
-		model.addAttribute("partnerMemberListData", partnerMemberList);
+	    Integer commodityID = Integer.valueOf(commodityIDStr);
+	    Commodity commodity = commoditySvc.getOneCommodity(commodityID);
 
-		List<Activity> activityList = activitySvc.getAll();
-		model.addAttribute("activityListData", activityList);
+	    // 檢查商品是否屬於當前登錄的合作夥伴
+	    if (!commodity.getPartnerMember().getPartnerID().equals(partnerID)) {
+	        model.addAttribute("error", "您沒有權限修改此商品");
+	        return "redirect:/commodity/listAllCommodity?activityID=" + activityID;
+	    }
 
-		model.addAttribute("commodity", commodity);
-		model.addAttribute("activityList", activityList);
+	    model.addAttribute("commodity", commodity);
+	    model.addAttribute("activityID", activityID);
 
-		return "back-end-partner/commodity/updateCommodity";
+	    return "back-end-partner/commodity/updateCommodity";
 	}
-
+	
+	
+	
 	@PostMapping("update")
-	public String update(@Valid Commodity commodity, BindingResult result, ModelMap model,
-			@RequestParam(value = "commodityPic", required = false) MultipartFile[] parts) throws IOException {
-		if (result.hasErrors()) {
-			return "back-end-partner/commodity/updateCommodity";
-		}
+	public String update(@Valid Commodity commodity, 
+	                     BindingResult result, 
+	                     @RequestParam("activityID") Integer activityID,
+	                     @RequestParam(value = "commodityPic", required = false) MultipartFile[] parts, 
+	                     RedirectAttributes redirectAttributes,
+	                     HttpSession session) throws IOException {
+	    Integer partnerID = (Integer) session.getAttribute("partnerID");
+	    if (partnerID == null) {
+	        redirectAttributes.addFlashAttribute("error", "請先登錄");
+	        return "redirect:/partnermember/partnerLogin";
+	    }
 
-		if (result.hasErrors()) {
-			List<Activity> activityList = activitySvc.getAll();
-			model.addAttribute("activityList", activityList);
-			return "back-end-partner/commodity/updateCommodity";
-		}
-		// 確保 activity 不為 null
-		if (commodity.getActivity() == null || commodity.getActivity().getActivityID() == null) {
-			// 如果沒有選擇活動,可以設置一個默認值或返回錯誤
-			model.addAttribute("error", "請選擇一個活動");
-			return "back-end-partner/commodity/updateCommodity";
-		}
-		// 處理圖片更新邏輯
-		if (parts != null && parts.length > 0) {
-			for (MultipartFile part : parts) {
-				if (!part.isEmpty()) {
-					CommodityPicture commodityPicture = new CommodityPicture();
-					commodityPicture.setCommodity(commodity);
-					commodityPicture.setCommodityPicture(part.getBytes());
-					commodityPictureSvc.addCommodityPicture(commodityPicture);
-				}
-			}
-		}
+	    if (result.hasErrors()) {
+	        redirectAttributes.addFlashAttribute("error", "表單驗證失敗，請檢查輸入");
+	        return "redirect:/commodity/updateCommodity?commodityID=" + commodity.getCommodityID() + "&activityID=" + activityID;
+	    }
 
-		commoditySvc.updateCommodity(commodity);
+	    try {
+	        // 獲取原有的商品信息
+	        Commodity originalCommodity = commoditySvc.getOneCommodity(commodity.getCommodityID());
 
-		model.addAttribute("success", "- (修改成功)");
-		commodity = commoditySvc.getOneCommodity(commodity.getCommodityID());
-		model.addAttribute("commodity", commodity);
-		return "redirect:/commodity/listAllCommodity";
+	        // 檢查商品是否屬於當前登錄的合作夥伴
+	        if (!originalCommodity.getPartnerMember().getPartnerID().equals(partnerID)) {
+	            redirectAttributes.addFlashAttribute("error", "您沒有權限修改此商品");
+	            return "redirect:/commodity/listAllCommodity?activityID=" + activityID;
+	        }
+
+	        // 確保活動ID和合作夥伴ID不變
+	        commodity.setActivity(originalCommodity.getActivity());
+	        commodity.setPartnerMember(originalCommodity.getPartnerMember());
+
+	        // 處理圖片更新邏輯
+	        if (parts != null && parts.length > 0) {
+	            for (MultipartFile part : parts) {
+	                if (!part.isEmpty()) {
+	                    CommodityPicture commodityPicture = new CommodityPicture();
+	                    commodityPicture.setCommodity(commodity);
+	                    commodityPicture.setCommodityPicture(part.getBytes());
+	                    commodityPictureSvc.addCommodityPicture(commodityPicture);
+	                }
+	            }
+	        }
+
+	        // 更新商品
+	        commoditySvc.updateCommodity(commodity);
+
+	        redirectAttributes.addFlashAttribute("success", "商品修改成功");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("error", "更新商品時發生錯誤: " + e.getMessage());
+	        return "redirect:/commodity/updateCommodity?commodityID=" + commodity.getCommodityID() + "&activityID=" + activityID;
+	    }
+
+	    return "redirect:/commodity/listAllCommodity?activityID=" + activityID;
 	}
+	
+	
+	
+	
 
 	@PostMapping("delete")
 	public String delete(@RequestParam("commodityID") String commodityID, ModelMap model) {

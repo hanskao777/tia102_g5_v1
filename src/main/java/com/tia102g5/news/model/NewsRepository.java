@@ -20,5 +20,10 @@ public interface NewsRepository extends JpaRepository<News, Integer>{
 	Page<News> findByNewsStatus(Integer status, Pageable pageable);
 
 	// 添加按創建時間範圍查詢的方法
-	Page<News> findByNewsCreateTimeBetween(Date startDate, Date endDate, Pageable pageable);
+//	Page<News> findByNewsCreateTimeBetween(Date startDate, Date endDate, Pageable pageable);
+	
+	Page<News> findByNewsTitleContaining(String title, Pageable pageable);
+    Page<News> findByNewsCreateTimeGreaterThanEqual(Date createTime, Pageable pageable);
+    Page<News> findByNewsTitleContainingAndNewsCreateTimeGreaterThanEqual(String title, Date createTime, Pageable pageable);
+	
 }

@@ -2,9 +2,12 @@ package com.tia102g5.news.model;
 
 import com.tia102g5.announcement.model.Announcement;
 import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery_News3;
+import org.springframework.data.domain.Sort;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +49,30 @@ public class NewsService {
 
     // 獲取所有消息
     public List<News> getAll() {
-        return repository.findAll();
+        return repository.findAll(Sort.by(Sort.Direction.DESC, "newsCreateTime"));
     }
-
     // 分頁查詢
     public Page<News> getAllPaginated(Pageable pageable) {
-        return repository.findAll(pageable);
+    	// 創建一個新的 Pageable 對象，加入排序條件
+        Pageable sortedPageable = PageRequest.of(
+            pageable.getPageNumber(),
+            pageable.getPageSize(),
+            Sort.by(Sort.Direction.DESC, "newsCreateTime")
+        );
+        return repository.findAll(sortedPageable);
     }
+    
+//    public Page<News> searchNews(String title, Date createTime, Pageable pageable) {
+//        if (title != null && !title.isEmpty() && createTime != null) {
+//            return repository.findByNewsTitleContainingAndNewsCreateTimeGreaterThanEqual(title, createTime.atStartOfDay(), pageable);
+//        } else if (title != null && !title.isEmpty()) {
+//            return repository.findByNewsTitleContaining(title, pageable);
+//        } else if (createTime != null) {
+//            return repository.findByNewsCreateTimeGreaterThanEqual(createTime.atStartOfDay(), pageable);
+//        } else {
+//            return repository.findAll(pageable);
+//        }
+//    }
 
     // 按狀態分頁查詢公告
     public Page<News> getNewsByStatus(Integer status, Pageable pageable) {
@@ -60,9 +80,9 @@ public class NewsService {
     }
 
     // 按日期範圍分頁查詢公告
-    public Page<News> getNewsByDateRange(Date startDate, Date endDate, Pageable pageable) {
-        return repository.findByNewsCreateTimeBetween(startDate, endDate, pageable);
-    }
+//    public Page<News> getNewsByDateRange(Date startDate, Date endDate, Pageable pageable) {
+//        return repository.findByNewsCreateTimeBetween(startDate, endDate, pageable);
+//    }
 
     // 複合查詢
     public List<News> getAll(Map<String, String[]> map) {
