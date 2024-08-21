@@ -124,9 +124,12 @@ public class ActivityController {
 		
 		Activity activity = new Activity();
 		VenueRental venueRental = venueRentalSvc.getOneVenueRental(Integer.valueOf(venueRentalID));
+		activity.setVenueRental(venueRental);
 		
 		model.addAttribute("activity", activity);
-		model.addAttribute("venueRental", venueRental);
+//		model.addAttribute("venueRental", venueRental);
+		
+		System.out.println(activity.getVenueRental().getActivityName());
 		
 		return "back-end-partner/activity/activityAdd";
 	}
@@ -155,7 +158,7 @@ public class ActivityController {
 	//activityAdd 送出新增
 	@PostMapping("add")
 	public String addActivity(@Valid Activity activity, BindingResult result,
-							  @RequestParam("venueRentalID") String venueRentalID, 
+							  /*@RequestParam("venueRentalID") String venueRentalID,*/ 
 							  @RequestParam("activityPictures") MultipartFile[] parts, 
 							  HttpSession session, ModelMap model) throws IOException {
 		//確認是否登入，未登入重導至廠商登入頁面
@@ -163,7 +166,7 @@ public class ActivityController {
 			return "redirect:/partnermember/partnerLogin";
 		}
 		
-		System.out.println(venueRentalID);
+//		System.out.println(venueRentalID + "this");
 		
 		//錯誤驗證
 		if (result.hasErrors()) {
@@ -175,10 +178,10 @@ public class ActivityController {
 		PartnerMember partner = partnerSvc.getOnePartnerMember(partnerID);
 		
 		//取得 VenueRental
-		VenueRental venueRental = venueRentalSvc.getOneVenueRental(Integer.valueOf(venueRentalID));
+//		VenueRental venueRental = venueRentalSvc.getOneVenueRental(Integer.valueOf(venueRentalID));
 		
 		//取得 Venue
-		Venue venue = venueRental.getVenue();
+		Venue venue = activity.getVenueRental().getVenue();
 		
 		//取得上傳圖片並設置
 		Set<ActivityPicture> activityPictures = activity.getActivityPictures();
@@ -193,7 +196,7 @@ public class ActivityController {
 		//////// 設置未在表單中的資訊 ////////////
 		activity.setPartnerMember(partner);
 		activity.setVenue(venue);
-		activity.setVenueRental(venueRental);
+//		activity.setVenueRental(venueRental);
 		activity.setActivityStatus(1);
 		//////// 設置未在表單中的資訊 ////////////
 		
