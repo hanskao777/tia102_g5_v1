@@ -28,7 +28,7 @@
 #example thead th {
     background-color: #D1C4E9; /* 薄荷綠背景（或你選擇的顏色） */
     color: #000000; /* 黑色文字 */
-    text-align: left; /* 左對齊文字，以避免與排序按鈕重疊 */
+    text-align: center; /* 左對齊文字，以避免與排序按鈕重疊 */
     padding: 10px 20px; /* 增加右側內邊距以避免排序按鈕與文字重疊 */
     font-weight: bold; /* 文字加粗 */
     letter-spacing: 1px; /* 增加字母間距 */
