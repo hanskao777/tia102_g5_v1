@@ -36,7 +36,7 @@
 					<div class="form-group col-md-6">
 						<label>場館：</label> <select class="form-control"
 							th:field="*{venue.venueID}">
-							<option value="">請選擇場館</option>
+<!-- 							<option value="">請選擇場館</option> -->
 							<!-- 動態生成選項 -->
 							<option th:each="venue : ${venueList}"
 								th:value="${venue.venueID}" th:text="${venue.venueName}"></option>

@@ -40,10 +40,10 @@ public class VenueRentalPageController {
 //        partnerMember.setPartnerID(1);
 //        venueRental.setPartnerMember(partnerMember);
 		venueRental.setVenue(venue);
-		venueRental.setActivityName("2024宇多田光演唱會");
+		venueRental.setActivityName("");
 		venueRental.setVenueRentalStatus(2);
-		venueRental.setVenueRentalStartDate(java.sql.Date.valueOf("2024-09-18"));
-		venueRental.setVenueRentalEndDate(java.sql.Date.valueOf("2024-09-18"));
+		venueRental.setVenueRentalStartDate(java.sql.Date.valueOf("2024-09-19"));
+		venueRental.setVenueRentalEndDate(java.sql.Date.valueOf("2024-09-19"));
 
 		model.addAttribute("venueRental", venueRental);
 		return "/back-end-partner/venue/venueRentalPage";
@@ -80,7 +80,7 @@ public class VenueRentalPageController {
 
 		// 處理文件上傳
 		if (proposalFile.isEmpty()) {
-			result.rejectValue("proposal", "error.venueRental", "請上傳檔案");
+			result.rejectValue("proposal", "error.venueRental", "請上傳PDF檔");
 		} else {
 			// 處理文件上傳
 			try {
