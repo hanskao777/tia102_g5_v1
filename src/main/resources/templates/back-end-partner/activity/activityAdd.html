@@ -134,7 +134,7 @@
                 <div class="form-group">
                     <strong>名稱:</strong>
                     <div class="form-input">
-                        <input type="text" th:field="*{activityName}" th:value="${venueRental.activityName}" onclick="hideContent('activityName.errors');"/>
+                        <input type="text" name="activityName" th:value="${venueRental.activityName}" onclick="hideContent('activityName.errors');"/>
                         <span  th:if="${#fields.hasErrors('activityName')}" th:errors="*{activityName}" class="error" id="activityName.errors"></span>
                     </div>
                 </div>

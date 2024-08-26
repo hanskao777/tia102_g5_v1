@@ -124,12 +124,15 @@ public class ActivityController {
 		
 		Activity activity = new Activity();
 		VenueRental venueRental = venueRentalSvc.getOneVenueRental(Integer.valueOf(venueRentalID));
-		activity.setVenueRental(venueRental);
+//		activity.setVenueRental(venueRental);
 		
 		model.addAttribute("activity", activity);
-//		model.addAttribute("venueRental", venueRental);
-		
-		System.out.println(activity.getVenueRental().getActivityName());
+    	model.addAttribute("venueRental", venueRental);
+    	System.out.println("----------------------------------------");
+    	System.out.println(venueRental.getVenueRentalID());
+    	System.out.println(venueRental.getActivityName());
+    	System.out.println("----------------------------------------");
+//		System.out.println(activity.getVenueRental().getActivityName());
 		
 		return "back-end-partner/activity/activityAdd";
 	}
@@ -161,12 +164,17 @@ public class ActivityController {
 							  /*@RequestParam("venueRentalID") String venueRentalID,*/ 
 							  @RequestParam("activityPictures") MultipartFile[] parts, 
 							  HttpSession session, ModelMap model) throws IOException {
+		
+		System.out.println("*****************************************");	
+		System.out.println(activity.getActivityName());	
+		System.out.println("*****************************************");	
+		
 		//確認是否登入，未登入重導至廠商登入頁面
 		if(session.getAttribute("partnerID") == null) {
 			return "redirect:/partnermember/partnerLogin";
 		}
 		
-//		System.out.println(venueRentalID + "this");
+		
 		
 		//錯誤驗證
 		if (result.hasErrors()) {
